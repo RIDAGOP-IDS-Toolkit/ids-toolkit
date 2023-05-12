@@ -23,7 +23,11 @@ module.exports = {
     devtool: 'inline-source-map',
     devServer: {
         watchFiles: ['src/**/*'],
-        static: './dist',
+        static: {
+            directory: path.join(__dirname, 'public'),
+            publicPath: '/',
+            watch: true,
+        }
     },
     plugins: [
         new HtmlWebpackPlugin({
