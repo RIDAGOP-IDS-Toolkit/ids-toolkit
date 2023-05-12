@@ -5,6 +5,16 @@
     <title>Getting Started</title>
 </head>
 <body>
-<div>Hello new</div>
+<script>
+    window.onload = function() {
+        let queryParams = new URLSearchParams(window.location.search)
+        let process = queryParams.get("process") || "lc_hub_labels"
+        try {
+            _init_toolkit_(`data/instances/process_page/${process}.json`)
+        } catch (e) {
+            console.log(e)
+        }
+    }
+</script>
 </body>
 </html>

@@ -14,7 +14,7 @@ module.exports = {
         ],
     },
     resolve: {
-        extensions: ['.tsx', '.ts', '.js'],
+        extensions: ['.tsx', '.ts', '.js']
     },
     output: {
         filename: 'index.js',
@@ -27,6 +27,9 @@ module.exports = {
             directory: path.join(__dirname, 'public'),
             publicPath: '/',
             watch: true,
+        },
+        client: {
+            overlay: false,
         }
     },
     plugins: [
