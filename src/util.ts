@@ -64,50 +64,38 @@ export function findInOpenApiSpec(openapi_spec: OpenAPISpecSimple,
                              operationParameters: BasicOpenApiMethodParameter[] = [])
         : BasicOpenApiMethodParameter[] => {
         // debugger
-        const resultParameters = cloneDeep(operationParameters)
+        const resultParameters = cloneDeep(pathParameters)
         // console.log("adding parameters", operationParameters)
-        for (let opParam of pathParameters) {
-            const overwriteIndex = findIndex(p => p.name === opParam.name && p.in === opParam.in)
+        for (let opParam of operationParameters) {
+            const overwriteIndex = findIndex(pathParameters,p => p.name === opParam.name && p.in === opParam.in)
             if (overwriteIndex !== -1) {
                 resultParameters[overwriteIndex] = opParam
-            }
-            else {
+            } else {
                 resultParameters.push(opParam)
             }
         }
-        console.log("merged parameters", resultParameters)
+        // console.log("merged parameters", resultParameters)
         return resultParameters
     }
 
     // if the operation has a path, we can directly look it up
-    if (capability.operation.path) {
+    if (capability.operation.path && capability.operation.method) {
         console.debug("searching operation-path: ", capability.operation.path, capability.operation.method)
         const operationPath = get(openapi_spec.paths, capability.operation.path)
         // console.log(openapi_spec.paths)
         if (!operationPath) {
             throw getMsg("OPENAPI_PATH_NOT_FOUND", {capabilityString: JSON.stringify(capability)})
         }
+
         const operation: BasicOpenApiMethod = get(operationPath, capability.operation.method)
         if (!operation) {
             throw getMsg("OPENAPI_METHOD_NOT_FOUND",
                 {capabilityString: JSON.stringify(capability), path: capability.operation.path})
         }
         console.debug("found operation", operation)
+
         // console.log("merge params...")
-        // operation.parameters = mergeParameters(operationPath.parameters, operation.parameters)
-        //
-        // operation.parameters = cloneDeep(operationPath?.parameters || [])
-        for (let opParam of operationPath?.parameters ?? []) {
-            console.log("x", opParam)
-            const overwriteIndex = findIndex(p => p.name === opParam.name && p.in === opParam.in)
-            if (overwriteIndex !== -1) {
-                operation.parameters[overwriteIndex] = opParam
-            } else {
-                operation.parameters.push(opParam)
-            }
-            console.log("aa", opParam)
-        }
-        //
+        operation.parameters = mergeParameters(operationPath.parameters, operation.parameters)
         // console.log("merge params done...")
         return operation
     } else {
@@ -133,19 +121,19 @@ export function findInOpenApiSpec(openapi_spec: OpenAPISpecSimple,
     }
 }
 
-export function matchBridgeExecutionParameters(capability: CapabilityType, executionParams: {
-    [paramName: string]: object
-})
-    : { [paramName: string]: string } {
-    /**
-     * Check matching names. currently not used
-     * @deprecated
-     */
-    const op_param_names = Object.keys(executionParams)
-    const capability_param_names = Object.keys(capability.parameters || {});
-    // return all names that are in both name lists
-    return intersection(op_param_names, capability_param_names)
-}
+// export function matchBridgeExecutionParameters(capability: CapabilityType, executionParams: {
+//     [paramName: string]: object
+// })
+//     : { [paramName: string]: string } {
+//     /**
+//      * Check matching names. currently not used
+//      * @deprecated
+//      */
+//     const op_param_names = Object.keys(executionParams)
+//     const capability_param_names = Object.keys(capability.parameters || {});
+//     // return all names that are in both name lists
+//     return intersection(op_param_names, capability_param_names)
+// }
 
 export function getFunctionArguments(func: Function) {
     return (func + '')
@@ -227,6 +215,6 @@ export function removeLoadingAnimation() {
     }
 }
 
-export function createFunctionSourceMap(module: ModuleType, source: string): { [functionName: string]: string } {
-    return mapValues(Object.keys(module), () => source)
-}
+// export function createFunctionSourceMap(module: ModuleType, source: string): { [functionName: string]: string } {
+//     return mapValues(Object.keys(module), () => source)
+// }

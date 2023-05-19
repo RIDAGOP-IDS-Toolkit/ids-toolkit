@@ -166,7 +166,7 @@ export class Activity {
                 const functionSource = this.service.getProcess().module.srcMap[preProcessFunctionName]
                 const preProcessFunction = new ModuleFunction(function_, functionSource)
                 if (!isEqual(preProcessFunction.getParameterNames(), this.execution.getParameterNames())) {
-                    console.error(`preProcessFunction ${preProcessFunctionName} has different parameters than 
+                    console.error(`${this.service.name}: preProcessFunction ${preProcessFunctionName} has different parameters than 
                     the execution of the activity ${this.name}`)
                     console.error(
                         "preProcessFunction", preProcessFunction.getParameterNames(),

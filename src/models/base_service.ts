@@ -78,7 +78,9 @@ export abstract class BaseService<T extends ProcessType | ServiceData> extends S
             // get priorities (take inf as default)
             const activitiesPriorities = map(activitiesData, d => get(d, "priority", Number.POSITIVE_INFINITY))
             // zip props with names again, sort by prio and only take names
-            const sortedActivities = map(sortBy(zip(activityNames, activitiesPriorities), [a => a[1]]), a => a[0])
+            // todo...
+            // @ts-ignore
+            const sortedActivities: string[] = map(sortBy(zip(activityNames, activitiesPriorities), [a => a[1]]), a => a[0])
             return [activities, sortedActivities]
         }
 

@@ -42,7 +42,7 @@ export abstract class Bridge<T extends BridgeCapability> {
         this.serviceName = serviceName
         this.bridgeData = bridgeData
         if (supportModule) {
-            const sourceMap = mapValues(Object.keys(supportModule), () => FunctionSourceEnum.supportModule)
+            const sourceMap = mapValues(supportModule, () => FunctionSourceEnum.supportModule)
             this.supportModule = new Module_wrapper(supportModule, sourceMap)
         }
     }
@@ -191,7 +191,6 @@ export class BridgeAsOpenApi extends Bridge<BridgeOpenApiCapability> {
     async createSwaggerClient() {
         const schemaUri = this.bridgeData.execute.openapiSchemaUri as string
         this.swaggerClient = await new SwaggerClient(schemaUri, {spec: this.openapiSchema})
-        // debugger
         if (isEmpty(this.openapiSchema)) {
             const errMsg = getMsg("OPENAPI_SPEC_NOT_VALID", {serviceName: this.serviceName})
             console.error(errMsg)
@@ -261,8 +260,8 @@ export class BridgeAsOpenApi extends Bridge<BridgeOpenApiCapability> {
     }
 
     updateAuthorization() {
-        debugger
-        console.log("AUTH", this.authorization)
+        // console.log("AUTH", this.authorization, "swagger", )
+
         if (this.authorization) {
             for (let [authName, configuration] of Object.entries(this.authorization)) {
                 let authValue: string | null = null
@@ -279,15 +278,13 @@ export class BridgeAsOpenApi extends Bridge<BridgeOpenApiCapability> {
                 }
                 if (authValue) {
                     console.log("auth-value", authValue)
+                    console.log(this.swaggerClient,authName)
                     this.swaggerClient.authorizations = {
-                        [authName]: {
-                            value: authValue
-                        }
+                        [authName]: authValue
                     }
                 }
             }
         }
-
     }
 }
 
@@ -297,7 +294,7 @@ export class BridgeAsModule extends Bridge<BridgeClientCapability> implements Ha
 
     constructor(serviceName: string, bridgeData: BridgeType, bridgeExecution: ModuleType, supportModule?: ModuleType) {
         super(serviceName, bridgeData, supportModule)
-        const sourceMap = mapValues(Object.keys(bridgeExecution), () => FunctionSourceEnum.bridgeModule)
+        const sourceMap = mapValues(bridgeExecution, () => FunctionSourceEnum.bridgeModule)
         this.module = new Module_wrapper(bridgeExecution, sourceMap)
         for (let [capabilityName, capabilityData] of Object.entries(bridgeData.capabilities)) {
             // console.log(capabilityData)

@@ -1,5 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const LodashWebpackPlugin = require('lodash-webpack-plugin');
 
 module.exports = {
     mode: 'development',
@@ -10,6 +12,11 @@ module.exports = {
                 test: /\.tsx?$/,
                 use: 'ts-loader',
                 exclude: /node_modules/,
+            },
+            {
+                test: /\.js$/,
+                enforce: 'pre',
+                use: ['source-map-loader'],
             },
         ],
     },
@@ -23,6 +30,7 @@ module.exports = {
     devtool: 'inline-source-map',
     devServer: {
         watchFiles: ['src/**/*'],
+        // ignore public folder
         static: {
             directory: path.join(__dirname, 'public'),
             publicPath: '/',
@@ -33,8 +41,14 @@ module.exports = {
         }
     },
     plugins: [
+        // todo currently not included, cuz otherwise swagger-client will not work
+        // new LodashWebpackPlugin(),
         new HtmlWebpackPlugin({
             template: path.resolve(__dirname, './index.html'), // path to your index.html file
         }),
-    ],
+        new CopyWebpackPlugin({
+            patterns: [
+                {from: 'dist/index.js', to: '../public/toolkit/index.js'}
+            ],
+        })]
 };

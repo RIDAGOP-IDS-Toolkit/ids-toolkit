@@ -178,7 +178,7 @@ export class BridgeOpenApiCapability extends BridgeCapability {
 
         try {
             // console.log(this.client)
-            console.log("swaggy... execute")
+            // console.log("swaggy... execute. auth...:", this.client.authorizations)
             response = await this.client.execute(request)
             console.log("response", response)
         } catch (e) {

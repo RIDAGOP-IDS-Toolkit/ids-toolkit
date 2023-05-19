@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LC Hub labels</title>
+    <script src="../../toolkit/index.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+
+        header {
+            padding: 15px;
+            background: linear-gradient(180deg, #016ba7 0%, #058b79 100%);
+        }
+
+        details[open] {
+            background: #04897a
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1 class="text-white text-xl font-bold">Assign Local Contexts Labels to dataverse datasets</h1>
+    <div class="container mx-auto px-5 py-2" style="width: 50%">
+        <div class="-m-1 flex flex-wrap md:-m-2">
+            <div class="flex w-1/2 flex-wrap">
+                <div class="w-full p-1 md:p-2">
+                    <img
+                            alt="gallery"
+                            class="block h-full w-full rounded-lg object-contain object-center"
+                            src="assets/logo.png" width="140px" height="140px"/>
+                </div>
+            </div>
+            <div class="flex w-1/2 flex-wrap">
+                <div class="w-full p-1 md:p-2">
+                    <img
+                            alt="gallery"
+                            class="block h-full w-full rounded-lg object-contain object-center"
+                            src="assets/dataverse_logo.png" width="140px" height="140px"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="shadow sm:overflow-hidden sm:rounded-md">
+    <div class="space-y-6 bg-white px-4 py-5 sm:p-6">
+        <div class="grid grid-cols-3 gap-6">
+            <div class="col-span-3 sm:col-span-2">
+                <label class="block text-md font-medium leading-6 text-gray-900">Local Contexts Project
+                    ID</label>
+                <div class="block text-sm font-medium">Copy the Project ID of your Local Contexts Project, from which
+                    you want
+                    to use the labels. The ID can be
+                    taken from the Identifiers section of the project description or the project address
+                </div>
+                <div class="mt-2 flex rounded-md shadow-sm">
+                    <span class="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 px-3 text-gray-500 sm:text-sm">https://localcontextshub.org/projects/</span>
+                    <input type="text" id="input_lc_hub_dataset_id"
+                           class="block px-2 w-full flex-1 rounded-none rounded-r-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                           placeholder="e1ab3fa-120a-127c-94e2-b7d23ce61878">
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="bg-gray-50 px-4 py-3 text-right sm:px-6">
+        <button id="button_lc_hub_fetch_labels"
+                class="inline-flex justify-center rounded-md bg-indigo-500 py-2 px-3 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
+            Fetch Labels
+        </button>
+    </div>
+</div>
+<details class="bg-gray-300  duration-300" open="">
+    <summary class="bg-inherit px-5 py-3 text-lg cursor-pointer">See the project details here, once you fetched them
+    </summary>
+    <div class="bg-white px-5 py-3 border border-gray-300 text-sm font-light" id="lc_hub_output">
+    </div>
+</details>
+
+<div class="shadow sm:overflow-hidden sm:rounded-md">
+    <div class="space-y-6 bg-white px-4 py-5 sm:p-6">
+        <div class="grid grid-cols-3 gap-6">
+            <div class="col-span-3 sm:col-span-2">
+                <label class="block text-md font-medium leading-6 text-gray-900">Dataverse details</label>
+                <div class="block text-sm font-medium">Please specify the dataverse instance (e.g.
+                    https://data.harvard.edu/dataverse), the repository DOI (which you find in the metadata) and the API
+                    key
+                </div>
+                <div class="mt-2 flex rounded-md shadow-sm">
+                    <span class="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 px-3 text-gray-500 sm:text-sm">Dataverse instance:</span>
+                    <input type="text" id="input_data_repo_dataverseInstance"
+                           class="block px-2 w-full flex-1 rounded-none rounded-r-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                           placeholder="https://data.harvard.edu/dataverse">
+                </div>
+                <div class="mt-2 flex rounded-md shadow-sm">
+                    <span class="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 px-3 text-gray-500 sm:text-sm">DOI:</span>
+                    <input type="text" id="input_data_repo_data_repo_id"
+                           class="block px-2 w-full flex-1 rounded-none rounded-r-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                           placeholder="https://data.harvard.edu/dataverse">
+                </div>
+                <div class="mt-2 flex rounded-md shadow-sm">
+                    <span class="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 px-3 text-gray-500 sm:text-sm">API Key:</span>
+                    <input type="text" id="input_data_repo_apiKey"
+                           class="block px-2 w-full flex-1 rounded-none rounded-r-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                           placeholder="">
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="bg-gray-50 px-4 py-3 text-right sm:px-6">
+        <button id="button_data_repo_read"
+                class="inline-flex justify-center rounded-md bg-indigo-500 py-2 px-3 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
+            Read dataset
+        </button>
+    </div>
+</div>
+<details class="bg-gray-300  duration-300" open="">
+    <summary class="bg-inherit px-5 py-3 text-lg cursor-pointer">Dataset description (eventually updated, if labels do
+        not exists yet)
+    </summary>
+    <div class="bg-white px-5 py-3 border border-gray-300 text-sm font-light" id="udpated_dataset">
+    </div>
+</details>
+
+<div class="shadow sm:overflow-hidden sm:rounded-md">
+    <div class="bg-gray-50 px-4 py-3 text-right sm:px-6">
+        <button id="button_data_repo_udpate"
+                class="inline-flex justify-center rounded-md bg-indigo-700 py-2 px-3 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
+            Update metadata
+        </button>
+    </div>
+</div>
+
+<script>
+    window.onload = function() {
+        try {
+            _init_toolkit_(`http://localhost:8080/data/instances/process_page/lc_hub_labels_no_ui.json`)
+        } catch (e) {
+            console.log(e)
+        }
+    }
+</script>
+</body>
+</html>

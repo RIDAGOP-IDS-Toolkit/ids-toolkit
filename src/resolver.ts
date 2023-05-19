@@ -1,7 +1,7 @@
 import {errorsToString, get_data} from "./util";
 import {anyDataInstanceType, DevSourceLocationType, DevSourceType} from "./data_types/generic";
 import {validation} from "./validate_schemas";
-import {InstanceTypeEnum, ModuleTypes, schemaNameMap, SchemaTypes} from "./const";
+import {InstanceTypeEnum, ModuleTypes, schemaNameMap} from "./const";
 import DevHelper from "./dev_helper";
 import {getMsg} from "./i18nLLL";
 import {ModuleType} from "./data_types/bridge_types";
@@ -69,12 +69,15 @@ export class LoadsFiles {
                               moduleName?: string,
                               ignoreUndefined: boolean = true): Promise<ModuleType> {
         if (moduleUri) {
-            const uri = "./" + addPrefix(moduleUri)
+            let uri = addPrefix(moduleUri)
             try {
                 console.debug(uri)
+                if (!uri.startsWith("http")) {
+                    uri = "./"+uri
+                }
                 // const module = (await import(uri))
                 const module = (await import(/* webpackIgnore: true */uri ))
-                // todo, that is actually strance that I can pass the module as instance
+                // todo, that is actually strange that I can pass the module as instance
                 DevHelper.addSource({
                     type: moduleType,
                     name: moduleName ?? moduleType,
@@ -85,6 +88,7 @@ export class LoadsFiles {
                 return module
             } catch (e) {
                 console.error(e)
+                console.log("****")
                 return Promise.reject(getMsg("MODULE_LOAD_FAILED", {moduleName, moduleUri, resolvedUri: uri}))
             }
         } else {

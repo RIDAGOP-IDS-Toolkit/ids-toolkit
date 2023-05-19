@@ -31,9 +31,8 @@ export async function _init_toolkit_(process_page_url: string,
                                  throw_: boolean = true,
                                  eventCallback: Function): Promise<IDS> {
     const NODE_ENV = process.env.NODE_ENV
-    console.debug("VERSION:", packageJson.version, NODE_ENV)
+    console.info("VERSION:", packageJson.version, "mode:", NODE_ENV)
     if (NODE_ENV === 'development') {
-        console.log('Project is in development mode')
         window.__DevHelper = new DevHelper()
     }
     let processPageData: ProcessPageType
