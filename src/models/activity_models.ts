@@ -385,13 +385,12 @@ export class Activity {
             } catch (e) {
                 if (e.cause === PreProcessErrorCancelCommand) {
                     console.info("PreProcess cancelled execution of activity", this.name)
-                    await Promise.resolve()
+                    return await Promise.resolve()
                 } else {
                     return Promise.reject(`PreProcess failed ${e}; ${this.preProcess}`)
                 }
             }
         }
-
         // 3. Execute activity (either bridge.openapi call, bridge.module-function or process.module-function)
         let result
         //
