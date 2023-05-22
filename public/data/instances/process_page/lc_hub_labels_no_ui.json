@@ -2,20 +2,13 @@
   "title": "Local Contexts Hub Labels",
   "services": {
     "lc_hub": {
-      "title": "LC Hub",
-      "parameters": {
-        "project_id": {
-          "field": "dataset_id"
-        }
-      },
       "ui": {
         "sections": {
           "status": {
             "display": true
           }
         }
-      },
-      "autostart": []
+      }
     },
     "data_repo": {
       "title": "Dataverse",
@@ -53,7 +46,7 @@
           "title": "LC Hub",
           "ui": {
             "inputFields": {
-              "dataset_id": {
+              "project_id": {
                 "label": "LC Hub Project ID",
                 "default": ""
               }
@@ -65,6 +58,9 @@
             }
           },
           "parameters": {
+            "project_id": {
+              "field": "project_id"
+            }
           },
           "activities": {
             "read_lc_hub_data": {
@@ -96,7 +92,8 @@
             "source": {
               "instance": {
                 "execute": {
-                "openapiSchemaUri": "openapi/localcontextshub.json"             },
+                  "openapiSchemaUri": "openapi/localcontextshub.json"
+                },
                 "capabilities": {
                   "read_dataset_metadata": {
                     "operation": {

@@ -5,7 +5,7 @@
       "title": "LC Hub",
       "parameters": {
         "project_id": {
-          "field": "dataset_id"
+          "field": "project_id"
         }
       },
       "ui": {
@@ -53,7 +53,7 @@
           "title": "LC Hub",
           "ui": {
             "inputFields": {
-              "dataset_id": {
+              "project_id": {
                 "label": "LC Hub Project ID",
                 "default": "259854f7-b261-4c8c-8556-4b153deebc18"
               }
@@ -67,7 +67,7 @@
           },
           "activities": {
             "read_lc_hub_data": {
-              "title": "fetch project data",
+              "title": "Fetch project data",
               "bridgeCapability": "read_dataset_metadata",
               "preProcess": "checkProjectID",
               "storeResult": {
@@ -164,7 +164,7 @@
               "subActivities": {
                 "findReference": {
                   "moduleFunction": "findLCHubProjectReference",
-                  "title": "find LCHub Project Reference",
+                  "title": "Find LCHub Project Reference",
                   "parameters": {
                     "datasetData": {
                       "parent": true
@@ -181,7 +181,7 @@
                   },
                   "subActivities": {
                     "createLCHubReference": {
-                      "title": "create LCHub Reference text",
+                      "title": "Create LCHub Reference text",
                       "moduleFunction": "createLCHubReference",
                       "priority": 1,
                       "parameters": {
