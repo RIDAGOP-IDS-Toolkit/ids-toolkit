@@ -1,31 +1,5 @@
 {
   "title": "Local Contexts Hub Labels",
-  "services": {
-    "data_repo": {
-      "title": "Dataverse",
-      "bridge": {
-        "source": {
-          "uri": "instances/bridge/dataverse_bridge_OPENAPI.json"
-        },
-        "server": {
-          "field": "dataverseInstance"
-        },
-        "authorization": {
-          "ApiKeyAuth": {
-            "field": "apiKey"
-          }
-        }
-      },
-      "parameters": {
-        "datasetId": {
-          "field": "data_repo_id"
-        },
-        "serverUri": {
-          "field": "dataverseInstance"
-        }
-      }
-    }
-  },
   "process": {
     "comment": "uri:http://localhost:8000/data/schema/idstk_schema/process/instances/lc_hub_labels.json",
     "instance": {
@@ -129,6 +103,14 @@
                 "label": "Update Metadata",
                 "triggerActivity": "postDatasetMetadata"
               }
+            }
+          },
+          "parameters": {
+            "datasetId": {
+              "field": "data_repo_id"
+            },
+            "serverUri": {
+              "field": "dataverseInstance"
             }
           },
           "activities": {
@@ -264,6 +246,19 @@
                     }
                   }
                 }
+              }
+            }
+          },
+          "bridge": {
+            "source": {
+              "uri": "instances/bridge/dataverse_bridge_OPENAPI.json"
+            },
+            "server": {
+              "field": "dataverseInstance"
+            },
+            "authorization": {
+              "ApiKeyAuth": {
+                "field": "apiKey"
               }
             }
           }

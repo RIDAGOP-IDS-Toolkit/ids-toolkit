@@ -33,6 +33,7 @@
       },
       "oneOf": [
         {
+          "type": "object",
           "properties": {
             "uri": {
               "title": "URI to process",
@@ -46,6 +47,7 @@
           ]
         },
         {
+          "type": "object",
           "properties": {
             "instance": {
               "title": "Process instance",
@@ -120,7 +122,6 @@
   },
   "required": [
     "process",
-    "services",
     "schemaUri"
   ],
   "additionalProperties": false,
@@ -202,10 +203,10 @@
       "type": "object",
       "properties": {
         "execute": {
-          "type": "object",
           "description": "Defines the type of execution. Either by using an OpenAPI-Specification or by using a client library.",
           "oneOf": [
             {
+              "type": "object",
               "description": "OpenAPI-Specification",
               "properties": {
                 "openapiSchemaUri": {
@@ -219,6 +220,7 @@
               ]
             },
             {
+              "type": "object",
               "description": "Client library module",
               "properties": {
                 "apiClientModuleUri": {
@@ -830,6 +832,7 @@
               }
             },
             "storeResult": {
+              "type": "object",
               "description": "Storing the result of the activity for later use. Not exactly like in a service. The context can only be process or activity.",
               "properties": {
                 "context": {
@@ -1648,8 +1651,7 @@
           "additionalProperties": {
             "description": "Keys are service names.",
             "$ref": "#/$defs/PP-Service"
-          },
-          "minProperties": 1
+          }
         },
         "uri": {
           "$comment": "/DOCS-IGNORE. not sure why this is here",
@@ -1701,7 +1703,6 @@
       },
       "required": [
         "process",
-        "services",
         "schemaUri"
       ],
       "additionalProperties": false

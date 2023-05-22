@@ -62,7 +62,8 @@ export default class ProcessPage {
     async loadServicesBridges(validate: boolean = true) {
         const bridgePromises: Promise<object>[] = []
         // load bridges in parallel
-        for (let [serviceName, service_description] of Object.entries(this.processPageData.services)) {
+        const process_page_services = this.processPageData.services || {}
+        for (let [serviceName, service_description] of Object.entries(process_page_services)) {
             if (service_description.bridge) {
                 const promise = Bridge.loadBridge(
                     serviceName,
@@ -99,7 +100,8 @@ export default class ProcessPage {
      * Get the names of all services
      */
     getServiceNames(): string[] {
-        return Object.keys(this.processPageData.services)
+        // todo, actually kick this out...
+        return Object.keys(this.processPageData.services || {})
     }
 
     /**
@@ -107,7 +109,7 @@ export default class ProcessPage {
      * @param serviceName name of the service
      */
     getServiceDescription(serviceName: string): ProcessPageServiceType {
-        return this.processPageData.services[serviceName] || {}
+        return ((this.processPageData?.services || {})[serviceName]) || {}
     }
 
     /**

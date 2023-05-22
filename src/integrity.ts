@@ -179,7 +179,7 @@ export function checkAutoStartActivities(processData: ProcessType, processPageDa
     // run for each service
     for (let [serviceName, serviceData] of Object.entries(processData.services)) {
         // todo, this should be validated before. it should exist.
-        const processPageServiceData = processPageData.services[serviceName] || {}
+        const processPageServiceData = (processPageData?.services || {})[serviceName] || {}
         checkServiceAutostartActivities(serviceData, processPageServiceData, serviceName)
     }
     return not_found
