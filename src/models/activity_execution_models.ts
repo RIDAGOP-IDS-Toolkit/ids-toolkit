@@ -178,7 +178,7 @@ export class BridgeOpenApiCapability extends BridgeCapability {
 
         try {
             // console.log(this.client)
-            // console.log("swaggy... execute. auth...:", this.client.authorizations)
+            // console.log("swagger... execute. auth...:", this.client.authorizations)
             response = await this.client.execute(request)
             console.log("response", response)
         } catch (e) {
@@ -271,7 +271,7 @@ export class BridgeClientCapability extends BridgeCapability {
 
     /**
      * Process the response from the clientFunction
-     * Checks if the response.status-code is in the 200 range. If not, it returns a Promise.reject
+     * Checks if the response.status-code is in the 200 range. If not, it returns a Promise. reject
      * Also converts the response to json if the content-type is application/json
      * or into a blob if the content-type is not application/json
      * @param resp the response from the clientFunction
@@ -292,8 +292,7 @@ export class BridgeClientCapability extends BridgeCapability {
         } else {
             // console.log(Array.from(resp.headers.entries()))
             if ((resp.headers.get("content-type") ?? "").startsWith("application/json")) {
-                const json = await resp.json()
-                return json
+                return await resp.json()
             } else {
                 return Promise.resolve(resp.blob())
             }

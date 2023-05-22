@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "es6",
     "module": "es2022", // commonjs, esnext
+    "lib": ["esnext", "dom"],
     "sourceMap": true,
     "outDir": "./dist/",
     "esModuleInterop": true,

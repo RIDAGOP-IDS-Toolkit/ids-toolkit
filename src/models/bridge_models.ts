@@ -18,7 +18,6 @@ import {FunctionSourceEnum, InputTypeEnum, InstanceTypeEnum, SchemaTypes} from "
 import SwaggerClient from "swagger-client"
 // import _ from "lodash"
 import mapValues from "lodash/mapValues"
-import map from "lodash/map"
 import isEmpty from "lodash/isEmpty"
 
 import {anyBridgeExecutionType, DevSourceLocationType} from "../data_types/generic";

@@ -1,16 +1,8 @@
-function init_process() {
-    console.log("init LC HUB labels process")
-    const inputs = document.querySelectorAll("input")
-    for (let input of inputs) {
-        input.addEventListener('keyup', function ({key, srcElement}) {
-            if (key === "Enter") {
-                let text = srcElement.value
-                console.log(srcElement.name, text)
-            }
-        })
-    }
-}
-
+/**
+ * this is for when one would have a client-module bridge
+ * @param project_id
+ * @return {Promise<Response>}
+ */
 export async function read_project_data(project_id) {
     const data =  fetch(`https://localcontextshub.org/api/v1/projects/${project_id}`)
     return Promise.resolve(data)

@@ -255,7 +255,7 @@ export class Activity {
             if (findInCollection("process", processParamMapping))
                 continue
 
-            // this is an automatic mapping from an 'executionParameter' parameter to a input of the same name
+            // this is an automatic mapping from an 'executionParameter' parameter to an input of the same name
             if (executionParameter in uiInputs) {
                 // console.log("direct mapping")
                 this.parameters[executionParameter] = uiInputs[executionParameter]
@@ -297,7 +297,7 @@ export class Activity {
         }
     }
 
-    async getRequestBody(parantResult?: any): Promise<any> {
+    async getRequestBody(parentResult?: any): Promise<any> {
         let requestBody
         if (!isEmpty(this.requestBody)) {
             requestBody = {}
@@ -306,7 +306,7 @@ export class Activity {
                 if (size(this.requestBody) > 1) {
                     console.warn("There should be no other key, when 'data' is present")
                 }
-                requestBody = await this.requestBody.data.getValue(parantResult)
+                requestBody = await this.requestBody.data.getValue(parentResult)
             } else {
                 for (let [key, parameter] of Object.entries(this.requestBody)) {
                     requestBody[key] = await parameter.getValue()
@@ -318,10 +318,11 @@ export class Activity {
 
     /**
      *
-     * @param parantResult
+     * @param parentResult
      * @param previousActivityResult
+     * @param config
      */
-    async execute(parantResult?: any, previousActivityResult?: any, config?: ActivtiyConfig): Promise<any> {
+    async execute(parentResult?: any, previousActivityResult?: any, config?: ActivityConfig): Promise<any> {
         /**
          * Execute the activity:
          * steps:
@@ -349,13 +350,13 @@ export class Activity {
             if (!getIDS().isActivityExecuted(requiredActivity)) {
                 console.error("Required Activity not executed", requiredActivity.activityName)
                 // const activityTitle = this.service.getProcess().getActivity(requiredActivity).title
-                const activiyTitle = getIDS().processPage.process.getActivity(requiredActivity).title
+                const activityTitle = getIDS().processPage.process.getActivity(requiredActivity).title
                 let errorMsg: string
                 if (requiredActivity.errorMessage) {
                     errorMsg = requiredActivity.errorMessage
                 } else {
                     errorMsg = getMsg("OTHER_ACTIVITY_REQUIRED",
-                        {requiredActivity: activiyTitle, serviceName: this.service.title})
+                        {requiredActivity: activityTitle, serviceName: this.service.title})
                 }
                 this.service.activityError(new ActivityError(
                     this.service.title, this.title,
@@ -366,10 +367,10 @@ export class Activity {
         // console.debug(`exec: ${this.name} 2`)
         // 2. collect parameters values
         // console.log("this.params", this.parameters)
-        const parameters = await this.getParameterValues(parantResult, previousActivityResult)
+        const parameters = await this.getParameterValues(parentResult, previousActivityResult)
         console.debug("parameters", parameters, "<-", this.parameters)
 
-        let requestBody = await this.getRequestBody(parantResult)
+        let requestBody = await this.getRequestBody(parentResult)
         // console.error("requestBody", this.requestBody)
 
         if (this.preProcess) {
@@ -417,7 +418,7 @@ export class Activity {
             try {
                 previousSubActivityResult = await this.subActivities[orderedSubActivityName].execute(result, previousSubActivityResult)
             } catch (error) {
-                await Promise.reject(getMsg("SUBACTIVITY_FAILED", {error}))
+                await Promise.reject(getMsg("SUB-ACTIVITY_FAILED", {error}))
             }
         }
 
@@ -613,6 +614,6 @@ export class Activity {
     }
 }
 
-type ActivtiyConfig = {
+type ActivityConfig = {
     alert: boolean
 }
