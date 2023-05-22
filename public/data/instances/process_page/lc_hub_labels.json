@@ -1,22 +1,6 @@
 {
   "title": "Local Contexts Hub Labels",
   "services": {
-    "lc_hub": {
-      "title": "LC Hub",
-      "parameters": {
-        "project_id": {
-          "field": "project_id"
-        }
-      },
-      "ui": {
-        "sections": {
-          "status": {
-            "display": true
-          }
-        }
-      },
-      "autostart": []
-    },
     "data_repo": {
       "title": "Dataverse",
       "bridge": {
@@ -70,6 +54,11 @@
               "title": "Fetch project data",
               "bridgeCapability": "read_dataset_metadata",
               "preProcess": "checkProjectID",
+              "parameters": {
+                "project_id": {
+                  "field": "project_id"
+                }
+              },
               "storeResult": {
                 "context": "process",
                 "key": "lc_hub_project_labels"

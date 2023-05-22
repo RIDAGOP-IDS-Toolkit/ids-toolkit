@@ -43,7 +43,7 @@ export class Service extends BaseService<ServiceData> {
     }
 
     getUiSettings(): ProcessPageServiceUiType {
-        return this.data.processPageServiceDescription.ui
+        return this.data.processPageServiceDescription.ui || {}
     }
 
     getAutostartActivities(): string[] {

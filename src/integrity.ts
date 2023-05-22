@@ -48,15 +48,6 @@ export function checkProcessPageServices(process: ProcessType, processPage: Proc
         }
     }
 
-    for (let serviceName of Object.keys(process.services)) {
-        if (!serviceNames.includes(serviceName)) {
-            const msg = `Service '${serviceName}' from Process is not defined in Process-Page`
-            if (throw_.processPageService)
-                throw msg
-            else
-                console.error(msg)
-        }
-    }
 
     // general service checks
     for (let [serviceName, service] of Object.entries(process.services)) {
@@ -188,7 +179,7 @@ export function checkAutoStartActivities(processData: ProcessType, processPageDa
     // run for each service
     for (let [serviceName, serviceData] of Object.entries(processData.services)) {
         // todo, this should be validated before. it should exist.
-        const processPageServiceData = processPageData.services[serviceName]
+        const processPageServiceData = processPageData.services[serviceName] || {}
         checkServiceAutostartActivities(serviceData, processPageServiceData, serviceName)
     }
     return not_found

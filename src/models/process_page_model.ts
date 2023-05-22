@@ -107,7 +107,7 @@ export default class ProcessPage {
      * @param serviceName name of the service
      */
     getServiceDescription(serviceName: string): ProcessPageServiceType {
-        return this.processPageData.services[serviceName]
+        return this.processPageData.services[serviceName] || {}
     }
 
     /**
