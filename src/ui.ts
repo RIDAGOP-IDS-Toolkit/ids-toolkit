@@ -257,7 +257,7 @@ function createStatusArea(parentName: string, activities: { [name: string]: Acti
         const ids = getIDS()
 
         const getActivityElement = (activity: Activity): HTMLElement | null => {
-            console.log(activity)
+            // console.log(activity)
             if (!(activity.activityData()?.ui?.includeInStatus ?? true)) {
                 return null
             }
@@ -285,7 +285,7 @@ function createStatusArea(parentName: string, activities: { [name: string]: Acti
         }
 
         map(activities, getActivityElement).forEach(elem => {
-            console.log(elem)
+            // console.log(elem)
             if (elem)
                 statusList.appendChild(elem)
         })

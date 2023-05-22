@@ -163,7 +163,7 @@
               "bridgeCapability": "read_dataset_metadata",
               "subActivities": {
                 "findReference": {
-                  "moduleFunction": "findLCHubProjectReference2",
+                  "moduleFunction": "findLCHubProjectReference",
                   "title": "find LCHub Project Reference",
                   "parameters": {
                     "datasetData": {
@@ -182,7 +182,7 @@
                   "subActivities": {
                     "createLCHubReference": {
                       "title": "create LCHub Reference text",
-                      "moduleFunction": "createLCHubReference2",
+                      "moduleFunction": "createLCHubReference",
                       "priority": 1,
                       "parameters": {
                         "lc_hub_project_data": {
@@ -198,7 +198,7 @@
                     },
                     "updateDatasetMetadata": {
                       "title": "Update the metadata of the dataset",
-                      "moduleFunction": "updateDatasetMetadata2",
+                      "moduleFunction": "updateDatasetMetadata",
                       "storeResult": {
                         "key": "edited_metadata"
                       },
@@ -291,7 +291,6 @@
   },
   "local_prefix_path": "/data/",
   "schemaUri": "http://localhost:8080/data/schemas/ridagop-ids-toolkit.schema.json",
-  "scriptUri": "scripts/process_page/lc_hub_labels.js",
   "view": {
     "type": "map"
   }
