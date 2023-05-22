@@ -331,6 +331,7 @@ function createOutputElements(parentName: string, settings?: ProcessPageServiceU
  * @param inputName
  * @param inputField The inputfield object of the service
  * @param ppInputfieldsSettings
+ * @param id_postfix
  */
 function createInputFieldElement(serviceName: string,
                                  inputName: string,
@@ -373,7 +374,7 @@ function createInputFieldElement(serviceName: string,
     wrapper.appendChild(input_label)
     wrapper.appendChild(input_field)
     inputField.setHtmlElem(input_field)
-    // actually dont display the field, if specified like this in the settings
+    // actually don't display the field, if specified like this in the settings
     if (ppInputfieldsSettings?.display === false) {
         wrapper.style.display = "none"
     }
@@ -434,7 +435,7 @@ function createSelectElement(serviceName: string, selectName: string, select: Se
     selectElem.id = selectElem_id
     selectElem.style.flex = "1 0 48%"
     // options
-    for (let [optionName, option] of Object.entries(select.options)) {
+    for (let [_, option] of Object.entries(select.options)) {
         const optionElem = document.createElement("option")
         optionElem.value = option.value
         optionElem.innerText = option.label

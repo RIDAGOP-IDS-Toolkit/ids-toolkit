@@ -21,9 +21,9 @@ let currentLanguage = "en"
  * The initialization function. Takes the process-page description file url as input.
  * It starts with initializing Ajv (json-schema validation library), with the all required schemas.
  *
- * @param process_page_url the url of the process-page desription file
+ * @param process_page_url the url of the process-page description file
  * @param alert_ flag, if alerts should be evoked, if some steps of the initialization fail
- * @param throw_ flag, if exceptions should be thrown, if some steps of the initializaion fail
+ * @param throw_ flag, if exceptions should be thrown, if some steps of the initialization fail
  * @param eventCallback callback function, that will be called, when an event is triggered (experimental)
  */
 export async function _init_toolkit_(process_page_url: string,

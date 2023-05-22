@@ -9,7 +9,6 @@ import {
     ProcessPageType,
     ProcessPageViewType
 } from "../data_types/process_page_types";
-import {ModuleType} from "../data_types/bridge_types";
 import {Activity} from "./activity_models";
 import {InstanceTypeEnum, UIModeEnum} from "../const";
 

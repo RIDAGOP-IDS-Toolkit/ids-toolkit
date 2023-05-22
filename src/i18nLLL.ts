@@ -33,9 +33,9 @@ export function getMsg(msgName: string, args?: object): string {
     return L[window.currentLanguage][msgName](args)
 }
 
-export function loadLocale(langCode: string, data, formaters) {
+export function loadLocale(langCode: string, data, formatters) {
     try {
-        return i18n(data, formaters)
+        return i18n(data, formatters)
     } catch (e) {
         console.error(`Count not import language: ${langCode}`)
     }

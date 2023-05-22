@@ -84,7 +84,7 @@ export class ServiceButton {
 
     private readonly service: BaseService<any>
     private htmlElem: HTMLButtonElement
-    private data: ProcessServiceButtonType
+    private readonly data: ProcessServiceButtonType
 
     constructor(data: ProcessServiceButtonType | ProcessCommonButtonType, service: BaseService<any>) {
         this.data = data

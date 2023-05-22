@@ -1,8 +1,6 @@
 import cloneDeep from "lodash/cloneDeep"
 import get from "lodash/get"
-import intersection from "lodash/intersection"
 import isArray from "lodash/isArray"
-import mapValues from "lodash/mapValues"
 import findIndex from "lodash/findIndex"
 
 import {ErrorObject} from "ajv/lib/types";
@@ -11,12 +9,8 @@ import {
     BasicOpenApiMethod,
     BasicOpenApiMethodParameter,
     BridgeCapabilityOpenApiType,
-    CapabilityType,
-    ModuleType,
     OpenAPISpecSimple
 } from "./data_types/bridge_types";
-import {ModuleTypes} from "./const";
-import DevHelper from "./dev_helper";
 
 
 export async function get_data<Type>(url: string): Promise<Type> {

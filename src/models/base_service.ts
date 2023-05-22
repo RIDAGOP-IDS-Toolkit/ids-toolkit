@@ -64,8 +64,8 @@ export abstract class BaseService<T extends ProcessType | ServiceData> extends S
 
             for (let [activityName, activityData] of Object.entries(activitiesMap || {})) {
                 // console.log(activityName, activityData, "activityName" in activityData)
-                // check if activityData has a the key "activityName" (which is the case if it is a reference)
-                // not sure why "in" doesnt work here
+                // check if activityData has a key "activityName" (which is the case if it is a reference)
+                // not sure why "in" doesn't work here
                 const activity = new Activity(activityName, this, activityData, parentActivity)
                 // console.log(activity.title, activityData.subActivities)
                 const [subActivities, activityOrder] = createActivityObjects(activityData.subActivities || {}, activity)
@@ -153,7 +153,7 @@ export abstract class BaseService<T extends ProcessType | ServiceData> extends S
         if (this.currentlyRunningActivity) {
             return Promise.reject("Activity already running")
         }
-        // go trough all activities in the sequence and execute them
+        // go through all activities in the sequence and execute them
         for (let activity of this.sequences[sequenceName]) {
             try {
                 this.currentlyRunningActivity = activity
@@ -195,7 +195,7 @@ export abstract class BaseService<T extends ProcessType | ServiceData> extends S
     }
 
     /**
-     * Preparation of Activies:
+     * Preparation of Activities:
      * - map parameters
      */
     mapActivitiesParameters() {

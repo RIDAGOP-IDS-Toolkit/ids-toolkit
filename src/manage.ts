@@ -3,7 +3,7 @@ import {ProcessPageType} from "./data_types/process_page_types";
 import {InstanceTypeEnum, schemaNameMap} from "./const";
 import {alert_throw, errorsToString} from "./util";
 import {initAjv, validation} from "./validate_schemas";
-import {getMsg, L} from "./i18nLLL";
+import {getMsg} from "./i18nLLL";
 
 export async function loadPP(process_page_url: string, validate: boolean = true,error_handle: { alert_: boolean, throw_: boolean } = {
     alert_: false, throw_: false
@@ -54,6 +54,6 @@ async function start(process_pages: string[]) {
 }
 
 export default {
-    loadPP, initAjv, start
+    loadPP, start
 }
 

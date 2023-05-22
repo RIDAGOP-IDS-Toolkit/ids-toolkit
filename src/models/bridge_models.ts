@@ -165,6 +165,7 @@ export class BridgeAsOpenApi extends Bridge<BridgeOpenApiCapability> {
             this.authorization = bridgeDescription.authorization
         }
         this.openapiSchema = openAPISchema
+        // todo this is async...
         this.createSwaggerClient()
     }
 
@@ -238,7 +239,7 @@ export class BridgeAsOpenApi extends Bridge<BridgeOpenApiCapability> {
             let hostName: string
             if (typeof server === "string") {
                 hostName = server
-            } // if its contstant do the same
+            } // if its constant do the same
             else if ("constant" in server) {
                 hostName = server.constant
             } else if ("queryParam" in server) {

@@ -78,9 +78,9 @@ export default class IDS {
     }
 
     /**
-     * Get a strage value from the process (when no service name is given) or from a service
+     * Get a storage value from the process (when no service name is given) or from a service
      * @param key
-     * @param service
+     * @param serviceName
      */
     getStorageValue(key: string, serviceName?: string) {
         if (serviceName) {

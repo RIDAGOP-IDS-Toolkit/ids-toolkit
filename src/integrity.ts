@@ -67,7 +67,7 @@ export function checkProcessPageServices(process: ProcessType, processPage: Proc
             if (throw_.sequencesInvalid)
                 throw failed
             else
-                console.error(failed)
+                console.error(`${msg}; ${failed}`)
         }
     }
 
@@ -108,7 +108,7 @@ export function checkServiceActivitiesOnlyModuleFunctions(service: any) {
 // TODO maybe in init.
     /*
     check if the service-definitions that do not have a bridge, if all their activities
-    are module-functions not capabilites
+    are module-functions not capabilities
      */
 }
 

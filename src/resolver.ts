@@ -25,7 +25,7 @@ export class LoadsFiles {
 
     static async loadInstance<Type extends anyDataInstanceType>(source: DevSourceType,
                                                                 validate: boolean = true): Promise<Type> {
-        // console.log("LOADINSTANCE", source.uri)
+        // console.log("LOAD INSTANCE", source.uri)
         let instance: Type
         if (source.uri) {
             const uri = addPrefix(source.uri)
@@ -42,7 +42,7 @@ export class LoadsFiles {
         } else if (source.instance) {
             instance = source.instance
         } else {
-            // cought with json schema
+            // caught with json schema
             return Promise.reject("No uri or schema provided")
         }
         if (validate) {

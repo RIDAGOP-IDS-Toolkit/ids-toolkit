@@ -1,7 +1,6 @@
 import {
-    anyDataInstanceType,
     DevSourceInstanceType,
-    DevSourceType, anyInstanceType
+    DevSourceType
 } from "./data_types/generic";
 import _ from "lodash"
 export default class DevHelper {
