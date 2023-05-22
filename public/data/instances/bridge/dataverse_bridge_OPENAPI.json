@@ -1,0 +1,38 @@
+{
+  "capabilities": {
+    "read_dataset_metadata": {
+      "operation": {
+        "path": "/api/datasets/:persistentId/",
+        "method": "get"
+      }
+    },
+    "write_dataset_file": {
+      "functionName": "getDataSetData",
+      "operation": {
+        "path": "/api/datasets/:persistentId/add",
+        "method": "post"
+      }
+    },
+    "update_dataset_metadata": {
+      "operation": {
+        "path": "/api/datasets/:persistentId/versions/{versionId}/",
+        "method": "put"
+      }
+    },
+    "create_dataset": {
+      "operation": {
+        "path": "/api/dataverses/{identifier}/datasets",
+        "method": "post"
+      }
+    },
+    "publish_dataset": {
+      "operation": {
+        "path": "/api/datasets/:persistentId/actions/:publish",
+        "method": "post"
+      }
+    }
+  },
+  "execute": {
+    "openapiSchemaUri": "openapi/dataverse3.json"
+  }
+}
