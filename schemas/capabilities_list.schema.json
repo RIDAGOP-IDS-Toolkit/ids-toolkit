@@ -1,0 +1,23 @@
+{
+  "enum": [
+    "read_dataset",
+    "read_dataset_metadata",
+    "create_dataset",
+    "delete_dataset",
+    "list_datasets",
+    "publish_dataset",
+    "download_dataset_metadata",
+    "update_dataset_metadata",
+    "read_dataset_file",
+    "write_dataset_file",
+    "delete_dataset_file",
+    "create_dataset_shareUrl",
+    "delete_dataset_shareUrl",
+    "create_dataset_share_url",
+    "get_dataset_share_url",
+    "delete_dataset_share_url",
+    "list_dataset_files",
+    "download_dataset_file",
+    "copy_dataset_files"
+  ]
+}

@@ -1,0 +1,182 @@
+{
+  "title": "RIDAGOP toolkit Bridge-Schema",
+  "description": "Describes the capabilities.",
+  "type": "object",
+  "properties": {
+    "execute": {
+      "description": "Defines the type of execution. Either by using an OpenAPI-Specification or by using a client library.",
+      "oneOf": [
+        {
+          "type": "object",
+          "description": "OpenAPI-Specification",
+          "properties": {
+            "openapiSchemaUri": {
+              "type": "string",
+              "format": "uri-reference",
+              "description": "The URI of the OpenAPI-Specification."
+            }
+          },
+          "required": [
+            "openapiSchemaUri"
+          ]
+        },
+        {
+          "type": "object",
+          "description": "Client library module",
+          "properties": {
+            "apiClientModuleUri": {
+              "type": "string",
+              "format": "uri-reference",
+              "description": "The URI of the module that contains the client library."
+            }
+          },
+          "required": [
+            "apiClientModuleUri"
+          ]
+        }
+      ]
+    },
+    "capabilities": {
+      "type": "object",
+      "$comment": "todo: the EITHER OR DEFINITION with required...",
+      "description": "Defines the capabilities of the bridge.",
+      "additionalProperties": {
+        "type": "object",
+        "description": "Each name defines a capability. The allowed names are defined in the capabilities_names_list.json file.",
+        "properties": {
+          "operation": {
+            "description": "Specifies an OpenAPI operation that should be executed.",
+            "$ref": "#/$defs/B-Operation"
+          },
+          "functionName": {
+            "description": "Specifies the name of the function (in case of a client library).",
+            "type": "string"
+          },
+          "postProcess": {
+            "$comment": "function in the supportModule. Not sure if this is implemented /DOCS-IGNORE",
+            "type": "string"
+          }
+        },
+        "anyOf": [
+          {
+            "properties": {
+              "operation": {
+                "$comment": "in case OpenAPI ",
+                "$ref": "capabilities_list.schema.json"
+              }
+            },
+            "required": [
+              "operation"
+            ]
+          },
+          {
+            "properties": {
+              "functionName": {
+                "$comment": "in case of a client library",
+                "type": "string"
+              }
+            },
+            "required": [
+              "functionName"
+            ]
+          }
+        ]
+      },
+      "propertyNames": {
+        "$ref": "capabilities_list.schema.json"
+      }
+    },
+    "errorMessagePath": {
+      "type": "string",
+      "description": "Relative json-path in the response, where an error-message is located, if the response is not a 2XX answer."
+    },
+    "supportModuleUri": {
+      "type": "string",
+      "format": "uri",
+      "description": "The URI of the module that contains the support functions."
+    },
+    "uri": {
+      "type": "string",
+      "format": "uri-reference",
+      "$comment": "/DOCS-IGNORE"
+    }
+  },
+  "required": [
+    "capabilities",
+    "execute"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "B-Operation": {
+      "type": "object",
+      "description": "Specifies an OpenAPI operation that is executed.",
+      "examples": [
+        {
+          "path": "/api/v1/endpoint",
+          "method": "get"
+        },
+        {
+          "operationId": "getEndpoint"
+        }
+      ],
+      "$comment": "Use either path+method or operationId.",
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "The path of the OpenAPI operation"
+        },
+        "method": {
+          "type": "string",
+          "description": "The method of the OpenAPI operation",
+          "enum": [
+            "get",
+            "post",
+            "patch",
+            "put",
+            "delete"
+          ]
+        },
+        "operationId": {
+          "type": "string",
+          "description": "The operationId of the OpenAPI operation"
+        }
+      },
+      "anyOf": [
+        {
+          "properties": {
+            "operationId": {
+              "type": "string",
+              "description": "The operationId of the OpenAPI operation"
+            }
+          },
+          "required": [
+            "operationId"
+          ]
+        },
+        {
+          "properties": {
+            "path": {
+              "type": "string",
+              "description": "The path of the OpenAPI operation"
+            },
+            "method": {
+              "type": "string",
+              "description": "The method of the OpenAPI operation",
+              "enum": [
+                "get",
+                "post",
+                "patch",
+                "put",
+                "delete"
+              ]
+            }
+          },
+          "required": [
+            "path",
+            "method"
+          ]
+        }
+      ]
+    }
+  }
+}

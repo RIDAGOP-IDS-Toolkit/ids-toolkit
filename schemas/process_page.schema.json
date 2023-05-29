@@ -1,0 +1,298 @@
+{
+  "title": "RIDAGOP IDS Toolkit ProcessPage Schema",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "The title of the process page"
+    },
+    "process": {
+      "type": "object",
+      "title": "Process",
+      "description": "The process to be used. Either the full instance or a uri to the process description.",
+      "$comment": "formatted like this, there are no strict-mode errors",
+      "properties": {
+        "comment": {
+          "type": "string",
+          "description": "A comment for other developers."
+        },
+        "uri": {
+          "type": "string",
+          "title": "URI to process",
+          "description": "The uri to the process description. (Not required)",
+          "format": "uri"
+        },
+        "instance": {
+          "title": "Process instance",
+          "description": "The full process instance, which needs to be a valid Process",
+          "$ref": "process.schema.json"
+        }
+      },
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "uri": {
+              "title": "URI to process",
+              "description": "The uri to the process description.",
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "required": [
+            "uri"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "instance": {
+              "title": "Process instance",
+              "description": "The full process instance, which needs to be a valid Process",
+              "$ref": "process.schema.json"
+            }
+          },
+          "required": [
+            "instance"
+          ]
+        }
+      ],
+      "additionalProperties": false
+    },
+    "services": {
+      "type": "object",
+      "title": "Map of services (service-name: description)",
+      "description": "Process-page description for the services to be used in the process. The services here must match the services in the process.",
+      "additionalProperties": {
+        "description": "Keys are service names.",
+        "$ref": "#/$defs/PP-Service"
+      },
+      "minProperties": 1
+    },
+    "uri": {
+      "$comment": "/DOCS-IGNORE. not sure why this is here",
+      "type": "string"
+    },
+    "view": {
+      "type": "object",
+      "title": "Page view mode",
+      "description": "The type property of the view defines if the page view should be generated (build) or if specified ui elements should be mapped to existing ui elements in the html page.",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "The type of the view ('build' or 'map')",
+          "enum": [
+            "build",
+            "map"
+          ]
+        }
+      }
+    },
+    "scriptUri": {
+      "title": "ProcessPage module",
+      "description": "Absolute or relative url to the process-page module. this module will be merged with the process module. Activities can use the module function when they specify a 'moduleFunction' instead of 'bridgeCapability'.",
+      "type": "string",
+      "format": "uri-reference"
+    },
+    "common": {
+      "type": "object",
+      "title": "Common User interface",
+      "description": "Settings for the common part. Common activities can reference to all services",
+      "properties": {
+        "ui": {
+          "title": "Common UI settings",
+          "description": "Settings of the common UI part",
+          "$ref": "#/$defs/PP-UISettings"
+        }
+      }
+    },
+    "schemaUri": {
+      "title": "Ridagop schema uri",
+      "description": "The uri to the RIDAGOP schema to be used. The uri of this file",
+      "type": "string"
+    },
+    "local_prefix_path": {
+      "type": "string",
+      "title": "Prefix path",
+      "description": "Prefix path for all files specified with relative path"
+    }
+  },
+  "required": [
+    "process",
+    "schemaUri"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "PP-Service": {
+      "type": "object",
+      "title": "A service",
+      "description": "A service as it is defined in the ProcessPage. Compared to Services defined in the Process, these cannot define activities",
+      "properties": {
+        "title": {
+          "type": "string",
+          "title": "Service title",
+          "description": "The title of the service. Overwrites the til"
+        },
+        "ui": {
+          "default": {},
+          "title": "Service UI settings",
+          "description": "Settings of the service UI part",
+          "$ref": "#/$defs/PP-UISettings"
+        },
+        "parameters": {
+          "type": "object",
+          "title": "Global service parameters",
+          "description": "Parameters that are available to all activities of the service",
+          "additionalProperties": {
+            "$ref": "process.schema.json#/$defs/P-Parameter"
+          }
+        },
+        "autostart": {
+          "title": "Autostart activities",
+          "description": "List of activities (names/keys in the the activities objects) that should be started automatically on startup (either a string or a list of strings)",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "bridge": {
+          "title": "Bridge definition",
+          "description": "The bridge definition for the service",
+          "$ref": "process.schema.json#/$defs/P-BridgeDefinition"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PP-UISettings": {
+      "type": "object",
+      "title": "UI settings",
+      "description": "UI settings",
+      "$comment": "default in Service.properties",
+      "properties": {
+        "sections": {
+          "type": "object",
+          "title": "Sections of the UI",
+          "description": "Each service has three sections: input, output and status.",
+          "properties": {
+            "input": {
+              "type": "object",
+              "title": "Input section",
+              "description": "The input section of the UI. This section is used to specify all the UI input elements (inputFields, buttons, checkboxes, ...)for the service.",
+              "properties": {
+                "display": {
+                  "title": "Display input section",
+                  "description": "Whether to display the input section. Note that the service UI is more elaborate in the process description",
+                  "type": "boolean",
+                  "default": true
+                },
+                "inputFields": {
+                  "title": "Input fields",
+                  "description": "The input fields (textfields) of the service",
+                  "$comment": "WHY HERE",
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "object",
+                    "properties": {
+                      "default": {
+                        "title": "Default value",
+                        "description": "Overwrite the default parameter of the process",
+                        "type": "string"
+                      },
+                      "display": {
+                        "title": "Display input field",
+                        "description": "Whether to display the input field",
+                        "type": "boolean",
+                        "default": true
+                      }
+                    }
+                  }
+                },
+                "buttons": {
+                  "type": "object",
+                  "$comment": "/DOCS-IGNORE not yet implemented"
+                },
+                "checkBoxes": {
+                  "type": "object",
+                  "$comment": "/DOCS-IGNOREnot yet implemented"
+                },
+                "blocks": {
+                  "type": "array",
+                  "description": "Block are used for generated UI and allows grouping UI-Elements",
+                  "items": {
+                    "type": "object",
+                    "description": "Each item in the list is a block.",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "description": "Name of the block."
+                      },
+                      "title": {
+                        "type": "string",
+                        "description": "Title of the block visible in the UI."
+                      },
+                      "description": {
+                        "type": "string",
+                        "description": "Description of the block visible in the UI."
+                      },
+                      "items": {
+                        "type": "array",
+                        "description": "List of items in the UI block. Each item is a UI-Element name",
+                        "items": {
+                          "type": "string",
+                          "description": "Name of the UI-Element"
+                        }
+                      }
+                    },
+                    "required": [
+                      "name",
+                      "items"
+                    ]
+                  }
+                }
+              }
+            },
+            "output": {
+              "type": "object",
+              "title": "Output section",
+              "description": "Settings for the output section. This can be used to display results of an activity",
+              "properties": {
+                "display": {
+                  "title": "Display output section",
+                  "description": "Whether to display the output section",
+                  "type": "boolean",
+                  "default": true
+                }
+              }
+            },
+            "status": {
+              "type": "object",
+              "description": "Settings for the status section. This section shows which activities have been executed.",
+              "properties": {
+                "display": {
+                  "type": "boolean",
+                  "description": "Whether to display the status section.",
+                  "default": true
+                }
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "display": {
+          "title": "Display settings",
+          "description": "Whether for the display of the page. This is only relevant when the page is generated (build)",
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}
