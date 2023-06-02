@@ -1,7 +1,7 @@
 import {Service} from "./models/service_model";
 import {genActivityId} from "./util";
 import ProcessPage from "./models/process_page_model";
-import {CheckBox, FileInput, InputField, SelectInput} from "./models/parameter_models";
+import {CheckBox, FileInput, InputField, SelectInput, UIInput} from "./models/parameter_models";
 import {
     ProcessPageServiceUiInputFieldsType,
     ProcessPageServiceUiInputType,
@@ -12,7 +12,7 @@ import {
 import {ServiceInputFieldsType} from "./data_types/ProcessTypes";
 import {BaseService} from "./models/base_service";
 import {Activity} from "./models/activity_models";
-import {ServiceUIElements} from "./models/ui_element_models";
+import {ServiceButton, ServiceUIElements} from "./models/ui_element_models";
 import {getIDS} from "./models/ids_model";
 import isEmpty from "lodash/isEmpty";
 import map from "lodash/map";
@@ -58,15 +58,15 @@ export function createServiceElements(service: Service) {
     serviceWrapper.appendChild(service_header)
 
     // UIElements
-    const uiElements = createUiElements(service.UIElements, service.name, uiSettings?.sections?.input)
-    serviceWrapper.appendChild(uiElements)
+    const uiElementsSection = createUiElements(service.UIElements, service.name, uiSettings?.sections?.input)
+    serviceWrapper.appendChild(uiElementsSection)
 
     // const dynamic UISection
     createDynamicUIElements(service.name, serviceWrapper)
 
     // status area
-    const statusWrapper = createStatusArea(service.name, service.activities, uiSettings?.sections?.status)
-    serviceWrapper.appendChild(statusWrapper)
+    const statusSection = createStatusArea(service.name, service.activities, uiSettings?.sections?.status)
+    serviceWrapper.appendChild(statusSection)
     // output
     const outputSection = createOutputElements(service.name, uiSettings?.sections?.output)
     serviceWrapper.appendChild(outputSection)
@@ -235,9 +235,9 @@ function createUiElements(uiElements: ServiceUIElements,
     return inputWrapper
 }
 
-function createDynamicUIElements(parentName: string, serviceWrapper: HTMLDivElement) {
+function createDynamicUIElements(serviceName: string, serviceWrapper: HTMLDivElement) {
     const dynamicUI = document.createElement("div")
-    dynamicUI.id = parentName + "_dyn_ui"
+    dynamicUI.id = serviceName + "_dyn_ui"
     dynamicUI.style.display = "none"
     const dynamicUiHeader = document.createElement("h4")
     dynamicUiHeader.style.color = "darkgreen"
@@ -617,73 +617,112 @@ function mapServiceElements(service: Service) {
     const uiElements = service.UIElements
     const id_postfix = ""
 
-    for (let [inputName, inputField] of Object.entries(uiElements.inputFields)) {
-        // const process_page_settings = uiSettings?.inputFields?.[input_name]
-        // const inputfieldElemWrapper = createInputFieldElement(serviceName, input_name, input_data, process_page_settings, id_postfix)
-        const fieldId = `input_${serviceName}_${inputName}${id_postfix !== "" ? "_" + id_postfix : ""}`
-        const element = document.querySelector("#" + fieldId)
-        // console.log("Checking for input field: ", fieldId)
-        // console.log(element)
-        // console.log(typeof element)
-        if (element) {
-            if (element instanceof HTMLInputElement) {
-                inputField.setHtmlElem(element)
+    const elements: {
+        typeName: string,
+        elementType: any,//HTMLInputElement | HTMLButtonElement | HTMLElement,
+        elements: { [p: string]: UIInput | ServiceButton }
+    }[] = [{
+        typeName: "input field",
+        elementType: HTMLInputElement,
+        elements: uiElements.inputFields
+    }, {
+        typeName: "button",
+        elementType: HTMLButtonElement,
+        elements: uiElements.buttons
+    }, {
+        typeName: "select",
+        elementType: HTMLElement,
+        elements: uiElements.selects
+
+    }, {
+        typeName: "checkbox",
+        elementType: HTMLInputElement,
+        elements: uiElements.checkBoxes
+    }, {
+        typeName: "fileinput",
+        elementType: HTMLInputElement,
+        elements: uiElements.fileinputs
+    }]
+
+    for (let elementType of elements) {
+        for (let [elementName, element] of Object.entries(elementType.elements)) {
+            const elementId = `input_${serviceName}_${elementName}${id_postfix !== "" ? "_" + id_postfix : ""}`
+            const htmlElement = document.querySelector("#" + elementId)
+            if (htmlElement) {
+                if (element instanceof ServiceButton && htmlElement instanceof HTMLButtonElement) {
+                    element.setHtmlElem(htmlElement)
+                } else if (element instanceof SelectInput && htmlElement instanceof HTMLSelectElement) {
+                    element.setHtmlElem(htmlElement)
+                } else if (
+                    (element instanceof InputField || element instanceof CheckBox ||
+                        element instanceof FileInput) &&
+                    htmlElement instanceof HTMLInputElement) {
+                    element.setHtmlElem(htmlElement)
+                }
+            } else {
+                console.error(`Could not find element with id: ${elementId} for ${elementType.typeName}: ${elementName} of service: ${serviceName}`)
             }
         }
     }
 
-    for (let [buttonName, button] of Object.entries(uiElements.buttons)) {
-        const buttonId = `button_${serviceName}_${buttonName}${id_postfix !== "" ? "_" + id_postfix : ""}`
-        const element = document.querySelector("#" + buttonId)
-        // console.log("Checking for input field: ", buttonId)
-        // console.log(element)
-        // console.log(typeof element)
-        if (element) {
-            if (element instanceof HTMLButtonElement) {
-                button.setHtmlElem(element)
-            }
-        }
-    }
 
-    // map select-options
-    for (let [selectName, select] of Object.entries(uiElements.selects)) {
-        const selectId = `select_${serviceName}_${selectName}${id_postfix !== "" ? "_" + id_postfix : ""}`
-        const element = document.querySelector("#" + selectId)
-        // console.log("Checking for select: ", selectId)
-        // console.log(element)
-        // console.log(typeof element)
-        if (element) {
-            if (element instanceof HTMLSelectElement) {
-                select.setHtmlElem(element)
-            }
-        }
-    }
-
-    // map checkboxes
-    for (let [checkboxName, checkbox] of Object.entries(uiElements.checkBoxes)) {
-        const checkboxId = `checkbox_${serviceName}_${checkboxName}${id_postfix !== "" ? "_" + id_postfix : ""}`
-        const element = document.querySelector("#" + checkboxId)
-        // console.log("Checking for checkbox: ", checkboxId)
-        // console.log(element)
-        // console.log(typeof element)
-        if (element) {
-            if (element instanceof HTMLInputElement) {
-                checkbox.setHtmlElem(element)
-            }
-        }
-    }
-
-    // map file-inputs
-    for (let [fileinputName, fileinput] of Object.entries(uiElements.fileinputs)) {
-        const fileinputId = `fileinput_${serviceName}_${fileinputName}${id_postfix !== "" ? "_" + id_postfix : ""}`
-        const element = document.querySelector("#" + fileinputId)
-        // console.log("Checking for fileinput: ", fileinputId)
-        // console.log(element)
-        // console.log(typeof element)
-        if (element) {
-            if (element instanceof HTMLInputElement) {
-                fileinput.setHtmlElem(element)
-            }
-        }
-    }
+    // for (let [inputName, inputField] of Object.entries(uiElements.inputFields)) {
+    //     const fieldId = `input_${serviceName}_${inputName}${id_postfix !== "" ? "_" + id_postfix : ""}`
+    //     const element = document.querySelector("#" + fieldId)
+    //     if (element) {
+    //         if (element instanceof HTMLInputElement) {
+    //             inputField.setHtmlElem(element)
+    //         }
+    //     } else {
+    //         console.error(`Could not find element with id: ${fieldId} for input field: ${inputName} of service: ${serviceName}`)
+    //     }
+    // }
+    //
+    // for (let [buttonName, button] of Object.entries(uiElements.buttons)) {
+    //     const buttonId = `button_${serviceName}_${buttonName}${id_postfix !== "" ? "_" + id_postfix : ""}`
+    //     const element = document.querySelector("#" + buttonId)
+    //     if (element) {
+    //         if (element instanceof HTMLButtonElement) {
+    //             button.setHtmlElem(element)
+    //         }
+    //     } else {
+    //         console.error(`Could not find element with id: ${buttonId} for button: ${buttonName} of service: ${serviceName}`)
+    //     }
+    // }
+    //
+    // for (let [selectName, select] of Object.entries(uiElements.selects)) {
+    //     const selectId = `select_${serviceName}_${selectName}${id_postfix !== "" ? "_" + id_postfix : ""}`
+    //     const element = document.querySelector("#" + selectId)
+    //     if (element) {
+    //         if (element instanceof HTMLSelectElement) {
+    //             select.setHtmlElem(element)
+    //         }
+    //     } else {
+    //         console.error(`Could not find element with id: ${selectId} for select: ${selectName} of service: ${serviceName}`)
+    //     }
+    // }
+    //
+    // for (let [checkboxName, checkbox] of Object.entries(uiElements.checkBoxes)) {
+    //     const checkboxId = `checkbox_${serviceName}_${checkboxName}${id_postfix !== "" ? "_" + id_postfix : ""}`
+    //     const element = document.querySelector("#" + checkboxId)
+    //     if (element) {
+    //         if (element instanceof HTMLInputElement) {
+    //             checkbox.setHtmlElem(element)
+    //         }
+    //     } else {
+    //         console.error(`Could not find element with id: ${checkboxId} for checkbox: ${checkboxName} of service: ${serviceName}`)
+    //     }
+    // }
+    //
+    // for (let [fileInputName, fileInput] of Object.entries(uiElements.fileinputs)) {
+    //     const fileinputId = `fileinput_${serviceName}_${fileInputName}${id_postfix !== "" ? "_" + id_postfix : ""}`
+    //     const element = document.querySelector("#" + fileinputId)
+    //     if (element) {
+    //         if (element instanceof HTMLInputElement) {
+    //             fileInput.setHtmlElem(element)
+    //         }
+    //     } else {
+    //         console.error(`Could not find element with id: ${fileinputId} for file input: ${fileInputName} of service: ${serviceName}`)
+    //     }
+    // }
 }

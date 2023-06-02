@@ -141,7 +141,7 @@ export class BridgeOpenApiCapability extends BridgeCapability {
             // spec: this.bridge.openapiSchema,
             operationId,
             requestInterceptor: async req => {
-                console.log("requestInterceptor", req)
+                // console.log("requestInterceptor", req)
                 // merge into the header of the request the headers from the openapi spec
                 req.headers = merge(req.headers, this.openApiOperation.headers)
                 req.mode = "cors"
@@ -173,14 +173,14 @@ export class BridgeOpenApiCapability extends BridgeCapability {
             },
             parameters,
         }
-        console.log("******")
-        console.log("request", request)
+        // console.log("******")
+        // console.log("request", request)
 
         try {
             // console.log(this.client)
             // console.log("swagger... execute. auth...:", this.client.authorizations)
             response = await this.client.execute(request)
-            console.log("response", response)
+            // console.log("response", response)
         } catch (e) {
             const errorMsgPath = this.bridge.errorMessagePath()
             let errorMsg = e

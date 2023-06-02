@@ -272,6 +272,8 @@ export abstract class UIInput extends ActivityParameter {
     description(): string {
         return `${this.getParameterType()}: ${this?.htmlElem?.id ?? "HTML-ELEM NOT SET"}`
     }
+
+    abstract setHtmlElem(elem: HTMLElement)
 }
 
 

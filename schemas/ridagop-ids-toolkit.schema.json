@@ -1,137 +1,310 @@
 {
-  "title": "RIDAGOP toolkit Process-Schema",
-  "description": "A process in the IDS toolkit",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "http://localhost:8000/data/schema/idstk_schema/ridagop-ids-toolkit.schema.json",
+  "title": "Ridagop IDS Toolkit Schema",
   "type": "object",
   "properties": {
-    "name": {
-      "type": "string",
-      "title": "Name of the process",
-      "description": "The name of the process. This is the name for internal identification (although there is only one process)",
-      "pattern": "^[a-z_][a-zA-Z0-9_]*$"
-    },
     "title": {
       "type": "string",
-      "description": "The title of the process"
+      "description": "The title of the process page"
     },
-    "description": {
-      "type": "string",
-      "description": "A description of the process. (For other developers)"
+    "process": {
+      "type": "object",
+      "title": "Process",
+      "description": "The process to be used. Either the full instance or a uri to the process description.",
+      "$comment": "formatted like this, there are no strict-mode errors",
+      "properties": {
+        "comment": {
+          "type": "string",
+          "description": "A comment for other developers."
+        },
+        "uri": {
+          "type": "string",
+          "title": "URI to process",
+          "description": "The uri to the process description. (Not required)",
+          "format": "uri"
+        },
+        "instance": {
+          "title": "Process instance",
+          "description": "The full process instance, which needs to be a valid Process",
+          "$ref": "#/$defs/Process"
+        }
+      },
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "uri": {
+              "title": "URI to process",
+              "description": "The uri to the process description.",
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "required": [
+            "uri"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "instance": {
+              "title": "Process instance",
+              "description": "The full process instance, which needs to be a valid Process",
+              "$ref": "#/$defs/Process"
+            }
+          },
+          "required": [
+            "instance"
+          ]
+        }
+      ],
+      "additionalProperties": false
     },
     "services": {
-      "description": "Services with their UI-elements and activities.",
-      "$comment": "types.ts/ProcessServiceType",
       "type": "object",
+      "title": "Map of services (service-name: description)",
+      "description": "Process-page description for the services to be used in the process. The services here must match the services in the process.",
       "additionalProperties": {
-        "description": "Each key specifies the name of a service",
-        "$ref": "#/$defs/P-Service"
+        "description": "Keys are service names.",
+        "$ref": "#/$defs/PP-Service"
       },
       "minProperties": 1
     },
-    "common": {
+    "uri": {
+      "$comment": "/DOCS-IGNORE. not sure why this is here",
+      "type": "string"
+    },
+    "view": {
       "type": "object",
-      "description": "Common activities and ui elements (access to activities of other services)",
-      "$comment": "KEEP THE default UP-TO-DATE",
-      "default": {
-        "ui": {},
-        "activities": {}
-      },
+      "title": "Page view mode",
+      "description": "The type property of the view defines if the page view should be generated (build) or if specified ui elements should be mapped to existing ui elements in the html page.",
       "properties": {
-        "ui": {
-          "type": "object",
-          "description": "UI-elements that are available for the activities defined in the common section",
-          "default": {},
-          "properties": {
-            "buttons": {
-              "$comment": "this is almost a copy of what is in the services, but with 'activityService' required",
-              "type": "object",
-              "description": "UI-Buttons. These buttons can trigger activities of all services of this process.",
-              "additionalProperties": {
-                "type": "object",
-                "description": "key is the name of the button",
-                "properties": {
-                  "label": {
-                    "type": "string",
-                    "description": "The label of the button"
-                  },
-                  "triggerActivity": {
-                    "type": "string",
-                    "description": "The name of the activity that is triggered. The activity must be of the same service."
-                  },
-                  "activityService": {
-                    "$comment": "activities of other services. ServiceButtons do not have that",
-                    "description": "The name of the service that contains the activity that is triggered.",
-                    "type": "string"
-                  },
-                  "triggerSequence": {
-                    "type": "string",
-                    "description": "The name of the sequence that is triggered. The sequence must be of the same service."
-                  }
-                },
-                "additionalProperties": false,
-                "required": [
-                  "label",
-                  "triggerActivity"
-                ]
-              }
-            }
-          }
-        },
-        "activities": {
-          "type": "object",
-          "description": "Some activities. Consider that the bridge does not have a bridge, so these activities can only have module-functions",
-          "additionalProperties": {
-            "type": "object",
-            "description": "Each key specifies the name of an activity",
-            "oneOf": [
-              {
-                "$ref": "#/$defs/P-Activity"
-              },
-              {
-                "$ref": "#/$defs/P-CommonActivity"
-              }
-            ]
-          }
-        },
-        "sequences": {
-          "type": "object",
-          "description": "A sequence is a list of activities. This is for convenience for triggering multiple activities at once.",
-          "additionalProperties": {
-            "type": "object",
-            "properties": {
-              "title": {
-                "type": "string",
-                "description": "The user visible title of the sequence"
-              },
-              "activities": {
-                "description": "The list of activities that are executed when the sequence is triggered",
-                "type": "array",
-                "items": {
-                  "type": "string",
-                  "description": "The name of an activity"
-                }
-              }
-            }
-          }
+        "mode": {
+          "type": "string",
+          "description": "The type of the view ('build' or 'map')",
+          "enum": [
+            "build",
+            "map"
+          ]
         }
       }
     },
     "scriptUri": {
+      "title": "ProcessPage module",
+      "description": "Absolute or relative url to the process-page module. this module will be merged with the process module. Activities can use the module function when they specify a 'moduleFunction' instead of 'bridgeCapability'.",
       "type": "string",
-      "format": "uri-reference",
-      "description": "The URI of the script that is used to run the process"
+      "format": "uri-reference"
     },
-    "uri": {
+    "common": {
+      "type": "object",
+      "title": "Common User interface",
+      "description": "Settings for the common part. Common activities can reference to all services",
+      "properties": {
+        "ui": {
+          "title": "Common UI settings",
+          "description": "Settings of the common UI part",
+          "$ref": "#/$defs/PP-UISettings"
+        }
+      }
+    },
+    "schemaUri": {
+      "title": "Ridagop schema uri",
+      "description": "The uri to the RIDAGOP schema to be used. The uri of this file",
+      "type": "string"
+    },
+    "local_prefix_path": {
       "type": "string",
-      "$comment": "/DOCS-IGNORE",
-      "description": "uri of this process"
+      "title": "Prefix path",
+      "description": "Prefix path for all files specified with relative path"
     }
   },
-  "additionalProperties": false,
   "required": [
-    "name",
-    "services"
+    "process",
+    "schemaUri"
   ],
+  "additionalProperties": false,
   "$defs": {
+    "B-Operation": {
+      "type": "object",
+      "description": "Specifies an OpenAPI operation that is executed.",
+      "examples": [
+        {
+          "path": "/api/v1/endpoint",
+          "method": "get"
+        },
+        {
+          "operationId": "getEndpoint"
+        }
+      ],
+      "$comment": "Use either path+method or operationId.",
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "The path of the OpenAPI operation"
+        },
+        "method": {
+          "type": "string",
+          "description": "The method of the OpenAPI operation",
+          "enum": [
+            "get",
+            "post",
+            "patch",
+            "put",
+            "delete"
+          ]
+        },
+        "operationId": {
+          "type": "string",
+          "description": "The operationId of the OpenAPI operation"
+        }
+      },
+      "anyOf": [
+        {
+          "properties": {
+            "operationId": {
+              "type": "string",
+              "description": "The operationId of the OpenAPI operation"
+            }
+          },
+          "required": [
+            "operationId"
+          ]
+        },
+        {
+          "properties": {
+            "path": {
+              "type": "string",
+              "description": "The path of the OpenAPI operation"
+            },
+            "method": {
+              "type": "string",
+              "description": "The method of the OpenAPI operation",
+              "enum": [
+                "get",
+                "post",
+                "patch",
+                "put",
+                "delete"
+              ]
+            }
+          },
+          "required": [
+            "path",
+            "method"
+          ]
+        }
+      ]
+    },
+    "Bridge": {
+      "title": "RIDAGOP toolkit Bridge-Schema",
+      "description": "Describes the capabilities.",
+      "type": "object",
+      "properties": {
+        "execute": {
+          "description": "Defines the type of execution. Either by using an OpenAPI-Specification or by using a client library.",
+          "oneOf": [
+            {
+              "type": "object",
+              "description": "OpenAPI-Specification",
+              "properties": {
+                "openapiSchemaUri": {
+                  "type": "string",
+                  "format": "uri-reference",
+                  "description": "The URI of the OpenAPI-Specification."
+                }
+              },
+              "required": [
+                "openapiSchemaUri"
+              ]
+            },
+            {
+              "type": "object",
+              "description": "Client library module",
+              "properties": {
+                "apiClientModuleUri": {
+                  "type": "string",
+                  "format": "uri-reference",
+                  "description": "The URI of the module that contains the client library."
+                }
+              },
+              "required": [
+                "apiClientModuleUri"
+              ]
+            }
+          ]
+        },
+        "capabilities": {
+          "type": "object",
+          "$comment": "todo: the EITHER OR DEFINITION with required...",
+          "description": "Defines the capabilities of the bridge.",
+          "additionalProperties": {
+            "type": "object",
+            "description": "Each name defines a capability. The allowed names are defined in the capabilities_names_list.json file.",
+            "properties": {
+              "operation": {
+                "description": "Specifies an OpenAPI operation that should be executed.",
+                "$ref": "#/$defs/B-Operation"
+              },
+              "functionName": {
+                "description": "Specifies the name of the function (in case of a client library).",
+                "type": "string"
+              },
+              "postProcess": {
+                "$comment": "function in the supportModule. Not sure if this is implemented /DOCS-IGNORE",
+                "type": "string"
+              }
+            },
+            "anyOf": [
+              {
+                "properties": {
+                  "operation": {
+                    "$comment": "in case OpenAPI ",
+                    "$ref": "#/$defs/CapabilityNames"
+                  }
+                },
+                "required": [
+                  "operation"
+                ]
+              },
+              {
+                "properties": {
+                  "functionName": {
+                    "$comment": "in case of a client library",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "functionName"
+                ]
+              }
+            ]
+          },
+          "propertyNames": {
+            "$ref": "#/$defs/CapabilityNames"
+          }
+        },
+        "errorMessagePath": {
+          "type": "string",
+          "description": "Relative json-path in the response, where an error-message is located, if the response is not a 2XX answer."
+        },
+        "supportModuleUri": {
+          "type": "string",
+          "format": "uri",
+          "description": "The URI of the module that contains the support functions."
+        },
+        "uri": {
+          "type": "string",
+          "format": "uri-reference",
+          "$comment": "/DOCS-IGNORE"
+        }
+      },
+      "required": [
+        "capabilities",
+        "execute"
+      ],
+      "additionalProperties": false
+    },
     "P-Service": {
       "type": "object",
       "title": "A service as it is defined in the Process",
@@ -221,7 +394,7 @@
           "$comment": "(name of the moduleFunction. Throwing a Error with cause 'cancel' will cancel the activity"
         },
         "bridgeCapability": {
-          "$ref": "capabilities_list.schema.json",
+          "$ref": "#/$defs/CapabilityNames",
           "description": "The name of the bridge capability that is used to execute the activity."
         },
         "moduleFunction": {
@@ -380,7 +553,7 @@
               "description": "The user visible title of the activity."
             },
             "bridgeCapability": {
-              "$ref": "capabilities_list.schema.json",
+              "$ref": "#/$defs/CapabilityNames",
               "description": "The name of the bridge capability that is used to execute the activity."
             }
           },
@@ -586,7 +759,7 @@
               "$comment": "(name of the moduleFunction. Throwing a Error with cause 'cancel' will cancel the activity"
             },
             "bridgeCapability": {
-              "$ref": "capabilities_list.schema.json",
+              "$ref": "#/$defs/CapabilityNames",
               "description": "The name of the bridge capability that is used to execute the activity."
             },
             "moduleFunction": {
@@ -662,9 +835,10 @@
               "properties": {
                 "context": {
                   "type": "string",
-                  "description": "The context of the variable.\n\n- Process: Variable is available by all services and their activities.\n\n- Service: Variable is available by all activities of this service.\n\n- Activity: Variable is available to this activity and its sub-activities and deleted afterwards. (default: process)\n",
+                  "description": "The context of the variable.\n\n- Process: Variable is available by all services and their activities.\n\n- Service: Variable is available by all activities of this service.\n\n- Activity: Variable is available to this activity and its sub-activities and deleted afterwards.\n",
                   "enum": [
                     "process",
+                    "service",
                     "activity"
                   ]
                 },
@@ -710,7 +884,7 @@
                   "description": "The title of the activity."
                 },
                 "bridgeCapability": {
-                  "$ref": "capabilities_list.schema.json",
+                  "$ref": "#/$defs/CapabilityNames",
                   "description": "The bridge-capability that is used for this activity."
                 }
               },
@@ -913,7 +1087,7 @@
           "description": "The URI of the bridge description json file."
         },
         "instance": {
-          "$ref": "bridge.schema.json",
+          "$ref": "#/$defs/Bridge",
           "description": "The bridge description."
         }
       },
@@ -933,7 +1107,7 @@
         {
           "properties": {
             "instance": {
-              "$ref": "bridge.schema.json",
+              "$ref": "#/$defs/Bridge",
               "description": "The bridge description."
             }
           },
@@ -1060,7 +1234,7 @@
       "properties": {
         "context": {
           "type": "string",
-          "description": "The context of the variable.\n\n- Process: Variable is available by all services and their activities.\n\n- Service: Variable is available by all activities of this service.\n\n- Activity: Variable is available to this activity and its sub-activities and deleted afterwards. (default: service)\n",
+          "description": "The context of the variable.\n\n- Process: Variable is available by all services and their activities.\n\n- Service: Variable is available by all activities of this service.\n\n- Activity: Variable is available to this activity and its sub-activities and deleted afterwards.\n",
           "enum": [
             "process",
             "service",
@@ -1084,13 +1258,12 @@
       "properties": {
         "context": {
           "type": "string",
-          "description": "From which context to access the variable. See [P-Store](#p-store)",
+          "description": "From which context to access the variable. See [P-Store](#p-store) (default: service).",
           "enum": [
             "service",
             "process",
             "activity"
-          ],
-          "default": "service"
+          ]
         },
         "key": {
           "type": "string",
@@ -1099,6 +1272,334 @@
       },
       "required": [
         "key"
+      ]
+    },
+    "Process": {
+      "title": "RIDAGOP toolkit Process-Schema",
+      "description": "A process in the IDS toolkit",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "Name of the process",
+          "description": "The name of the process. This is the name for internal identification (although there is only one process)",
+          "pattern": "^[a-z_][a-zA-Z0-9_]*$"
+        },
+        "title": {
+          "type": "string",
+          "description": "The title of the process"
+        },
+        "description": {
+          "type": "string",
+          "description": "A description of the process. (For other developers)"
+        },
+        "services": {
+          "description": "Services with their UI-elements and activities.",
+          "$comment": "types.ts/ProcessServiceType",
+          "type": "object",
+          "additionalProperties": {
+            "description": "Each key specifies the name of a service",
+            "$ref": "#/$defs/P-Service"
+          },
+          "minProperties": 1
+        },
+        "common": {
+          "type": "object",
+          "description": "Common activities and ui elements (access to activities of other services)",
+          "$comment": "KEEP THE default UP-TO-DATE",
+          "default": {
+            "ui": {},
+            "activities": {}
+          },
+          "properties": {
+            "ui": {
+              "type": "object",
+              "description": "UI-elements that are available for the activities defined in the common section",
+              "default": {},
+              "properties": {
+                "buttons": {
+                  "$comment": "this is almost a copy of what is in the services, but with 'activityService' required",
+                  "type": "object",
+                  "description": "UI-Buttons. These buttons can trigger activities of all services of this process.",
+                  "additionalProperties": {
+                    "type": "object",
+                    "description": "key is the name of the button",
+                    "properties": {
+                      "label": {
+                        "type": "string",
+                        "description": "The label of the button"
+                      },
+                      "triggerActivity": {
+                        "type": "string",
+                        "description": "The name of the activity that is triggered. The activity must be of the same service."
+                      },
+                      "activityService": {
+                        "$comment": "activities of other services. ServiceButtons do not have that",
+                        "description": "The name of the service that contains the activity that is triggered.",
+                        "type": "string"
+                      },
+                      "triggerSequence": {
+                        "type": "string",
+                        "description": "The name of the sequence that is triggered. The sequence must be of the same service."
+                      }
+                    },
+                    "additionalProperties": false,
+                    "required": [
+                      "label",
+                      "triggerActivity"
+                    ]
+                  }
+                }
+              }
+            },
+            "activities": {
+              "type": "object",
+              "description": "Some activities. Consider that the bridge does not have a bridge, so these activities can only have module-functions",
+              "additionalProperties": {
+                "type": "object",
+                "description": "Each key specifies the name of an activity",
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/P-Activity"
+                  },
+                  {
+                    "$ref": "#/$defs/P-CommonActivity"
+                  }
+                ]
+              }
+            },
+            "sequences": {
+              "type": "object",
+              "description": "A sequence is a list of activities. This is for convenience for triggering multiple activities at once.",
+              "additionalProperties": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "description": "The user visible title of the sequence"
+                  },
+                  "activities": {
+                    "description": "The list of activities that are executed when the sequence is triggered",
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "description": "The name of an activity"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "scriptUri": {
+          "type": "string",
+          "format": "uri-reference",
+          "description": "The URI of the script that is used to run the process"
+        },
+        "uri": {
+          "type": "string",
+          "$comment": "/DOCS-IGNORE",
+          "description": "uri of this process"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "services"
+      ]
+    },
+    "PP-Service": {
+      "type": "object",
+      "title": "A service",
+      "description": "A service as it is defined in the ProcessPage. Compared to Services defined in the Process, these cannot define activities",
+      "properties": {
+        "title": {
+          "type": "string",
+          "title": "Service title",
+          "description": "The title of the service. Overwrites the til"
+        },
+        "ui": {
+          "default": {},
+          "title": "Service UI settings",
+          "description": "Settings of the service UI part",
+          "$ref": "#/$defs/PP-UISettings"
+        },
+        "parameters": {
+          "type": "object",
+          "title": "Global service parameters",
+          "description": "Parameters that are available to all activities of the service",
+          "additionalProperties": {
+            "$ref": "#/$defs/P-Parameter"
+          }
+        },
+        "autostart": {
+          "title": "Autostart activities",
+          "description": "List of activities (names/keys in the the activities objects) that should be started automatically on startup (either a string or a list of strings)",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "bridge": {
+          "title": "Bridge definition",
+          "description": "The bridge definition for the service",
+          "$ref": "#/$defs/P-BridgeDefinition"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PP-UISettings": {
+      "type": "object",
+      "title": "UI settings",
+      "description": "UI settings",
+      "$comment": "default in Service.properties",
+      "properties": {
+        "sections": {
+          "type": "object",
+          "title": "Sections of the UI",
+          "description": "Each service has three sections: input, output and status.",
+          "properties": {
+            "input": {
+              "type": "object",
+              "title": "Input section",
+              "description": "The input section of the UI. This section is used to specify all the UI input elements (inputFields, buttons, checkboxes, ...)for the service.",
+              "properties": {
+                "display": {
+                  "title": "Display input section",
+                  "description": "Whether to display the input section. Note that the service UI is more elaborate in the process description",
+                  "type": "boolean",
+                  "default": true
+                },
+                "inputFields": {
+                  "title": "Input fields",
+                  "description": "The input fields (textfields) of the service",
+                  "$comment": "WHY HERE",
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "object",
+                    "properties": {
+                      "default": {
+                        "title": "Default value",
+                        "description": "Overwrite the default parameter of the process",
+                        "type": "string"
+                      },
+                      "display": {
+                        "title": "Display input field",
+                        "description": "Whether to display the input field",
+                        "type": "boolean",
+                        "default": true
+                      }
+                    }
+                  }
+                },
+                "buttons": {
+                  "type": "object",
+                  "$comment": "/DOCS-IGNORE not yet implemented"
+                },
+                "checkBoxes": {
+                  "type": "object",
+                  "$comment": "/DOCS-IGNOREnot yet implemented"
+                },
+                "blocks": {
+                  "type": "array",
+                  "description": "Block are used for generated UI and allows grouping UI-Elements",
+                  "items": {
+                    "type": "object",
+                    "description": "Each item in the list is a block.",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "description": "Name of the block."
+                      },
+                      "title": {
+                        "type": "string",
+                        "description": "Title of the block visible in the UI."
+                      },
+                      "description": {
+                        "type": "string",
+                        "description": "Description of the block visible in the UI."
+                      },
+                      "items": {
+                        "type": "array",
+                        "description": "List of items in the UI block. Each item is a UI-Element name",
+                        "items": {
+                          "type": "string",
+                          "description": "Name of the UI-Element"
+                        }
+                      }
+                    },
+                    "required": [
+                      "name",
+                      "items"
+                    ]
+                  }
+                }
+              }
+            },
+            "output": {
+              "type": "object",
+              "title": "Output section",
+              "description": "Settings for the output section. This can be used to display results of an activity",
+              "properties": {
+                "display": {
+                  "title": "Display output section",
+                  "description": "Whether to display the output section",
+                  "type": "boolean",
+                  "default": true
+                }
+              }
+            },
+            "status": {
+              "type": "object",
+              "description": "Settings for the status section. This section shows which activities have been executed.",
+              "properties": {
+                "display": {
+                  "type": "boolean",
+                  "description": "Whether to display the status section.",
+                  "default": true
+                }
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "display": {
+          "title": "Display settings",
+          "description": "Whether for the display of the page. This is only relevant when the page is generated (build)",
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "CapabilityNames": {
+      "enum": [
+        "read_dataset",
+        "read_dataset_metadata",
+        "create_dataset",
+        "delete_dataset",
+        "list_datasets",
+        "publish_dataset",
+        "download_dataset_metadata",
+        "update_dataset_metadata",
+        "read_dataset_file",
+        "write_dataset_file",
+        "delete_dataset_file",
+        "create_dataset_shareUrl",
+        "delete_dataset_shareUrl",
+        "create_dataset_share_url",
+        "get_dataset_share_url",
+        "delete_dataset_share_url",
+        "list_dataset_files",
+        "download_dataset_file",
+        "copy_dataset_files"
       ]
     }
   }

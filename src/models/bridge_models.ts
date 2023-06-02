@@ -16,7 +16,6 @@ import {InputField, QueryParameter} from "./parameter_models";
 import {Service} from "./service_model";
 import {FunctionSourceEnum, InputTypeEnum, InstanceTypeEnum, SchemaTypes} from "../const";
 import SwaggerClient from "swagger-client"
-// import _ from "lodash"
 import mapValues from "lodash/mapValues"
 import isEmpty from "lodash/isEmpty"
 

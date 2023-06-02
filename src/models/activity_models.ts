@@ -20,8 +20,8 @@ import {StoreContextEnum} from "../store_wrapper";
 
 export enum ActivityErrorType {
     requiredActivitiesNotExecuted,
-    parametersError,
-    executionFailed
+    parametersError, // atm not used
+    executionFailed // atm not used
 }
 
 export class ActivityError {
@@ -187,7 +187,7 @@ export class Activity {
          * 2. get the parameters from the activity definition
          * Check if their length is the same. If not warning!
          * Repeat for each parameter of the execution
-         *  - check if the parameter is mapped in the process-page, if yes check if there is an input-field OK
+         *  - check if the parameter is mapped in the process-page, if yes: check if there is an input-field OK
          *  - check if there is an automatic mapping inputfieldName == parameterName
          *  - use given parameter type...
          *
@@ -544,7 +544,7 @@ export class Activity {
             } else if (storeResult.context === StoreContextEnum.ACTIVITY) {
                 console.debug("storing activityStore", storeResult.key, ":", result)
                 getIDS().activityStore.setStoreValue(storeResult.key, result)
-            } else {
+            } else { // default service
                 console.debug("storing cache", storeResult.key, ":", result)
                 this.service.setStoreValue(storeResult.key, result)
             }
@@ -606,7 +606,7 @@ export class Activity {
         result += "\nExecution: Type:" + this.execution.getExecutionType() + "\n" + this.execution.description()
 
         if (includeSubActivities) {
-            if (typeof includeParameters == "boolean") {
+            if (typeof includeParameters === "boolean") {
                 result += "\nSub-activities:\n" + Object.values(this.subActivities).map(a => a.description(false, false)).join("\n")
             }
         }
