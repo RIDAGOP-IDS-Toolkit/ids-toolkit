@@ -80,7 +80,7 @@
       "title": "Page view mode",
       "description": "The type property of the view defines if the page view should be generated (build) or if specified ui elements should be mapped to existing ui elements in the html page.",
       "properties": {
-        "mode": {
+        "type": {
           "type": "string",
           "description": "The type of the view ('build' or 'map')",
           "enum": [
@@ -835,10 +835,9 @@
               "properties": {
                 "context": {
                   "type": "string",
-                  "description": "The context of the variable.\n\n- Process: Variable is available by all services and their activities.\n\n- Service: Variable is available by all activities of this service.\n\n- Activity: Variable is available to this activity and its sub-activities and deleted afterwards.\n",
+                  "description": "The context of the variable.\n\n- Process: Variable is available by all services and their activities.\n\n- Service: Variable is available by all activities of this service.\n\n- Activity: Variable is available to this activity and its sub-activities and deleted afterwards. (default: process)\n",
                   "enum": [
                     "process",
-                    "service",
                     "activity"
                   ]
                 },
@@ -1234,7 +1233,7 @@
       "properties": {
         "context": {
           "type": "string",
-          "description": "The context of the variable.\n\n- Process: Variable is available by all services and their activities.\n\n- Service: Variable is available by all activities of this service.\n\n- Activity: Variable is available to this activity and its sub-activities and deleted afterwards.\n",
+          "description": "The context of the variable.\n\n- Process: Variable is available by all services and their activities.\n\n- Service: Variable is available by all activities of this service.\n\n- Activity: Variable is available to this activity and its sub-activities and deleted afterwards. (default: service)\n",
           "enum": [
             "process",
             "service",
@@ -1258,12 +1257,13 @@
       "properties": {
         "context": {
           "type": "string",
-          "description": "From which context to access the variable. See [P-Store](#p-store) (default: service).",
+          "description": "From which context to access the variable. See [P-Store](#p-store)",
           "enum": [
             "service",
             "process",
             "activity"
-          ]
+          ],
+          "default": "service"
         },
         "key": {
           "type": "string",
