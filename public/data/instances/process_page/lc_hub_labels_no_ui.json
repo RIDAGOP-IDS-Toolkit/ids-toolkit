@@ -14,7 +14,7 @@
       "title": "Dataverse",
       "bridge": {
         "source": {
-          "uri": "instances/bridge/dataverse_bridge_OPENAPI.json"
+          "uri": "instances/bridge/dataverse_bridge_openapi.json"
         },
         "server": {
           "field": "dataverseInstance"
@@ -92,7 +92,7 @@
             "source": {
               "instance": {
                 "execute": {
-                  "openapiSchemaUri": "openapi/localcontextshub.json"
+                  "openapiSchemaUri": "openapi/localcontextshub_openapi.json"
                 },
                 "capabilities": {
                   "read_dataset_metadata": {
@@ -289,6 +289,6 @@
   "local_prefix_path": "/data/",
   "schemaUri": "http://localhost:8080/data/schemas/ridagop-ids-toolkit.schema.json",
   "view": {
-    "type": "map"
+    "mode": "map"
   }
 }

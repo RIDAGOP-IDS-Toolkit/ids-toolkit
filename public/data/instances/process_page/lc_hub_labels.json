@@ -58,7 +58,7 @@
             "source": {
               "instance": {
                 "execute": {
-                  "openapiSchemaUri": "openapi/localcontextshub.json"
+                  "openapiSchemaUri": "openapi/localcontextshub_openapi.json"
                 },
                 "capabilities": {
                   "read_dataset_metadata": {
@@ -115,7 +115,7 @@
           },
           "activities": {
             "read_dataset": {
-              "title": "fetch dataset metadata",
+              "title": "Fetch dataset metadata",
               "storeResult": {
                 "key": "dataset"
               },
@@ -152,7 +152,7 @@
                   },
                   "subActivities": {
                     "createLCHubReference": {
-                      "title": "Create LCHub Reference text",
+                      "title": "Create LCHub Reference",
                       "moduleFunction": "createLCHubReference",
                       "priority": 1,
                       "parameters": {
@@ -214,7 +214,7 @@
               }
             },
             "postDatasetMetadata": {
-              "title": "post updated metadata",
+              "title": "Post updated metadata",
               "bridgeCapability": "update_dataset_metadata",
               "parameters": {
                 "persistentId": {
@@ -234,7 +234,7 @@
               },
               "subActivities": {
                 "publishUpdatedDataset": {
-                  "title": "publish updated dataset",
+                  "title": "Publish updated dataset",
                   "bridgeCapability": "publish_dataset",
                   "preProcess": "shouldPublish",
                   "parameters": {
@@ -251,7 +251,7 @@
           },
           "bridge": {
             "source": {
-              "uri": "instances/bridge/dataverse_bridge_OPENAPI.json"
+              "uri": "instances/bridge/dataverse_bridge_openapi.json"
             },
             "server": {
               "field": "dataverseInstance"

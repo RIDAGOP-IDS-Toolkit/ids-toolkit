@@ -33,6 +33,6 @@
     }
   },
   "execute": {
-    "openapiSchemaUri": "openapi/dataverse3.json"
+    "openapiSchemaUri": "openapi/dataverse_openapi.json"
   }
 }
