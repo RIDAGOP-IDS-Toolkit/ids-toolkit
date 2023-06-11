@@ -4,7 +4,7 @@ import {ActivityReferenceType, BasicActivityReferenceType} from "../data_types/P
 import {Store} from "../store_wrapper";
 import {ToolkitEventType, ToolkitEventTypeEnum} from "../data_types/generic";
 
-export default class IDS {
+export default class DSToolkit {
 
     readonly processPage: ProcessPage
     // private store: Store = new Store("Global store")
@@ -57,13 +57,17 @@ export default class IDS {
         return cloneDeep(this.executedActivities)
     }
 
+    /**
+     * Execute an activity of a service
+     * * @param serviceName: The name of the service
+     * * @param activityName: The name of the activity
+     * * @param params: additional parameters, overwriting the default parameters the activity would use.
+     * * @param body: the body (for POST requests of OpenAPI bridges)
+     */
     async executeActivity(serviceName: string,
                           activityName: string,
-                          params: any[],
-                          body?: any,
-                          config?: {
-                              getParams: boolean
-                          }) {
+                          params: { [paramName: string]: any } = {},
+                          body?: any) {
         const activity = this.processPage.process.getActivity({serviceName, activityName})
         if (!activity) {
             const msg = `Service-activity ${serviceName}:${activityName} not found`
@@ -71,7 +75,7 @@ export default class IDS {
             throw new Error(msg)
         }
         try {
-            return await activity.externalCall(params, body, config)
+            return await activity.externalCall(params, body)
         } catch (e) {
             throw new Error(`Service-activity ${serviceName}:${activityName} failed: ${e}`)
         }
@@ -79,8 +83,8 @@ export default class IDS {
 
     /**
      * Get a storage value from the process (when no service name is given) or from a service
-     * @param key
-     * @param serviceName
+     * @param key: key of the stored value
+     * @param serviceName: name of the service (optional)
      */
     getStorageValue(key: string, serviceName?: string) {
         if (serviceName) {
@@ -91,6 +95,11 @@ export default class IDS {
         }
     }
 
+    /**
+     * Get a parameter value from a service
+     * @param serviceName
+     * @param uiElemName
+     */
     async getParameterValue(serviceName: string, uiElemName: string) {
         try {
             return await this.processPage.process.services[serviceName].UIElements.getInput(uiElemName).getValue()
@@ -103,11 +112,11 @@ export default class IDS {
 
 }
 
-export function getIDS(): IDS {
-    return window.__IDS_GLOBALS__
+export function getToolkit(): DSToolkit {
+    return window.__TOOLKIT_GLOBALS__
 }
 
-export function setIDS(ids_object: IDS) {
-    window.__IDS_GLOBALS__ = ids_object
+export function setToolkit(ids_object: DSToolkit) {
+    window.__TOOLKIT_GLOBALS__ = ids_object
 }
 

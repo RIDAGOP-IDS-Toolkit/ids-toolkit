@@ -14,7 +14,7 @@ import {Service} from "./service_model";
 import isEmpty from "lodash/isEmpty";
 import size from "lodash/size";
 import isEqual from "lodash/isEqual";
-import {getIDS} from "./ids_model";
+import {getToolkit} from "./tk_model";
 import {ActivityExecution, ModuleFunction, ReferenceActivity} from "./activity_execution_models";
 import {StoreContextEnum} from "../store_wrapper";
 
@@ -347,10 +347,10 @@ export class Activity {
         // console.debug(`exec: ${this.name} 1`)
         console.debug(`*** Execute Activity: ${this.name} *** `)
         for (let requiredActivity of this.requiredActivities) {
-            if (!getIDS().isActivityExecuted(requiredActivity)) {
+            if (!getToolkit().isActivityExecuted(requiredActivity)) {
                 console.error("Required Activity not executed", requiredActivity.activityName)
                 // const activityTitle = this.service.getProcess().getActivity(requiredActivity).title
-                const activityTitle = getIDS().processPage.process.getActivity(requiredActivity).title
+                const activityTitle = getToolkit().processPage.process.getActivity(requiredActivity).title
                 let errorMsg: string
                 if (requiredActivity.errorMessage) {
                     errorMsg = requiredActivity.errorMessage
@@ -436,7 +436,7 @@ export class Activity {
         }
         // console.debug(`exec: ${this.name} 7`)
         // 7. add this activity to executed activities
-        getIDS().addExecutedActivity({
+        getToolkit().addExecutedActivity({
             title: this.title,
             serviceName: this.service.name,
             activityName: this.name
@@ -447,7 +447,6 @@ export class Activity {
     private async getParameterValues(parentResult?: any, previousActivityResult?: any): Promise<{
         [paramName: string]: any
     }> {
-        // debugger
         const parameters: { [paramName: string]: any } = {}
         for (let [paramName, parameter] of Object.entries(this.parameters)) {
             parameters[paramName] = await parameter.getValue(parentResult, previousActivityResult)
@@ -487,14 +486,11 @@ export class Activity {
      * Call the activity from IDS
      * @param extParameters merge into parameters
      * @param extRequestBody overwrite requestBody
-     * @param config
      */
-    async externalCall(extParameters: { [paramName: string]: any }, extRequestBody?: any, config?: {
-        getParams: boolean
-    }): Promise<any> {
+    async externalCall(extParameters: { [paramName: string]: any }, extRequestBody?: any): Promise<any> {
         try {
             this.service.registerRunningActivity(this)
-            const parameters = (config?.getParams ?? true) ? await this.getParameterValues() : {}
+            const parameters = await this.getParameterValues()
             // merge parameters with assign
             Object.assign(parameters, extParameters)
             let requestBody: any
@@ -543,13 +539,13 @@ export class Activity {
                 this.service.getProcess().setStoreValue(storeResult.key, result)
             } else if (storeResult.context === StoreContextEnum.ACTIVITY) {
                 console.debug("storing activityStore", storeResult.key, ":", result)
-                getIDS().activityStore.setStoreValue(storeResult.key, result)
+                getToolkit().activityStore.setStoreValue(storeResult.key, result)
             } else { // default service
                 console.debug("storing cache", storeResult.key, ":", result)
                 this.service.setStoreValue(storeResult.key, result)
             }
             // console.debug("storing", this.storeKey, ":", result)
-            // getIDS().setStoreValue(this.storeKey, result)
+            // getToolkit().setStoreValue(this.storeKey, result)
         }
     }
 

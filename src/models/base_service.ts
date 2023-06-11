@@ -21,7 +21,7 @@ import sortBy from "lodash/sortBy";
 import Process from "./process_model";
 import {Activity, ActivityError} from "./activity_models";
 import {ServiceUIElements} from "./ui_element_models";
-import {getIDS} from "./ids_model";
+import {getToolkit} from "./tk_model";
 import {UIInput} from "./parameter_models";
 import {dynamicUIValidation} from "../validate_schemas";
 
@@ -125,7 +125,7 @@ export abstract class BaseService<T extends ProcessType | ServiceData> extends S
             await this.activities[activityName].execute()
         } catch (e) {
             // alert is triggered by catch in the activity itself calling activityError
-            getIDS().activityFailed({
+            getToolkit().activityFailed({
                 title: this.activities[activityName].title,
                 serviceName: this.name,
                 activityName: this.activities[activityName].name
@@ -145,7 +145,7 @@ export abstract class BaseService<T extends ProcessType | ServiceData> extends S
     activityFinished() {
         updateUI()
         this.currentlyRunningActivity = null
-        getIDS().activityStore.clearStore()
+        getToolkit().activityStore.clearStore()
         this.getProcess().processPage.activityFinished()
     }
 
@@ -166,7 +166,7 @@ export abstract class BaseService<T extends ProcessType | ServiceData> extends S
                 this.currentlyRunningActivity = null
             }
         }
-        getIDS().activityStore.clearStore()
+        getToolkit().activityStore.clearStore()
     }
 
     /**

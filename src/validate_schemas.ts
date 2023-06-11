@@ -3,7 +3,7 @@ import addFormats from "ajv-formats"
 import {get_data} from "./util";
 import isEmpty from "lodash/isEmpty"
 import {ProcessServiceUIType} from "./data_types/ProcessTypes";
-import {getIDS} from "./models/ids_model";
+import {getToolkit} from "./models/tk_model";
 import {AnyValidateFunction, ErrorObject} from "ajv/dist/core";
 
 
@@ -23,6 +23,8 @@ export async function initAjv(schemaUri: string): Promise<any> {
         throw "No schemaUri in processPageData"
     }
     try {
+        // TODO use new URL with the schemaUri if its relative, to get an absolute url,
+        // that might prevent the error in the next line for when the url is relative
         const schema = await get_data<AnySchema>(schemaUri)
         globalSchemaUri = schemaUri
         if(schemaUri !== schema["$id"]) {
@@ -51,14 +53,14 @@ export function validation(schemaId_ref: string, instance: object):
         const errors = validate.errors
         // console.log("errors", errors)
         if (errors) {
-            console.error(`Validation errors for ${name}`)
+            console.error(`Validation errors for ${schemaId_ref}`)
             console.error(errors)
             return errors
         } else {
             return []
         }
     }
-    const existing = ajv.getSchema(globalSchemaUri)
+    ajv.getSchema(globalSchemaUri)
     console.error(ajv.schemas)
     throw `Critical Ajv Error. Cannot find Sub-schema: ${schemaId_ref} in schema: ${globalSchemaUri}`
 }
@@ -71,7 +73,7 @@ export function validation(schemaId_ref: string, instance: object):
 export function dynamicUIValidation(uiData: ProcessServiceUIType): boolean {
     // @ts-ignore
     // todo, do we need this?
-    const uiSchema: JSONSchemaType<any> = getIDS().schemas.processSchema.$defs.ServiceUI as JSONSchemaType<any>
+    const uiSchema: JSONSchemaType<any> = getToolkit().schemas.processSchema.$defs.ServiceUI as JSONSchemaType<any>
     if (!uiSchema) {
         const errors = validation("P-ServicesUI", uiData)
         // TODO What todo on errors!

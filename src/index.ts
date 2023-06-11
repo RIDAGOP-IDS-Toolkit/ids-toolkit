@@ -5,7 +5,7 @@ import {checkAutoStartActivities} from "./integrity";
 import {getMsg, L} from "./i18nLLL";
 import isEmpty from "lodash/isEmpty";
 import ProcessPage from "./models/process_page_model";
-import IDS, {getIDS, setIDS} from "./models/ids_model";
+import DSToolkit, {getToolkit, setToolkit} from "./models/tk_model";
 import {ProcessPageType} from "./data_types/process_page_types";
 import {InstanceTypeEnum, schemaNameMap, UIModeEnum} from "./const";
 import DevHelper from "./dev_helper";
@@ -29,7 +29,7 @@ let currentLanguage = "en"
 export async function _init_toolkit_(process_page_url: string,
                                  alert_: boolean = true,
                                  throw_: boolean = true,
-                                 eventCallback: Function): Promise<IDS> {
+                                 eventCallback: Function): Promise<DSToolkit> {
     const NODE_ENV = process.env.NODE_ENV
     console.info("VERSION:", packageJson.version, "mode:", NODE_ENV)
     if (NODE_ENV === 'development') {
@@ -54,7 +54,7 @@ export async function _init_toolkit_(process_page_url: string,
     }
 
     let processPage: ProcessPage
-    let ids: IDS
+    let ids: DSToolkit
     let errorMsg: string
     try {
         // validate the process-page description file
@@ -69,9 +69,9 @@ export async function _init_toolkit_(process_page_url: string,
         // create Process-page object
         processPage = new ProcessPage(process_page_url, processPageData)
         // create IDS-TK object
-        ids = new IDS(processPage, eventCallback)
+        ids = new DSToolkit(processPage, eventCallback)
         // add the IDS-TK object to the window, for global access
-        setIDS(ids)
+        setToolkit(ids)
         // load the process-page data (including, bridges, the process and script files)
         await processPage.load()
         // create the service activities
@@ -150,8 +150,8 @@ declare global {
         currentLanguage: string
         _init_toolkit_: Function
         manage: object
-        __IDS_GLOBALS__: IDS
-        getIDS: Function
+        __TOOLKIT_GLOBALS__: DSToolkit
+        getToolkit: Function
         __DevHelper: DevHelper
     }
 }
@@ -159,6 +159,6 @@ declare global {
 window.currentLanguage = currentLanguage
 window._init_toolkit_ = _init_toolkit_
 window.manage = manage
-window.getIDS = getIDS
+window.getToolkit = getToolkit
 
 

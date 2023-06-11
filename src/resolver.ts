@@ -8,8 +8,8 @@ import {ModuleType} from "./data_types/bridge_types";
 
 function addPrefix(uri: string) {
     let prefix_path = ""
-    if (window.getIDS()) {
-        prefix_path = window.getIDS().processPage.local_prefix_path
+    if (window.getToolkit()) {
+        prefix_path = window.getToolkit().processPage.local_prefix_path
         // console.log(prefix_path)
     }
     try {

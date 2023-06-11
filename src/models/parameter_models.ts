@@ -13,7 +13,7 @@ import {
 import {BaseService} from "./base_service";
 import {Activity} from "./activity_models";
 import {StoreContextEnum} from "../store_wrapper";
-import {getIDS} from "./ids_model";
+import {getToolkit} from "./tk_model";
 import get from "lodash/get";
 
 enum ActivityParameterType {
@@ -153,7 +153,7 @@ export class StoreParameter extends ActivityParameter {
         if (this.storeSettings.context === StoreContextEnum.PROCESS) {
             resultValue = this.service.getProcess().getStoreValue(key)
         } else if (this.storeSettings.context === StoreContextEnum.ACTIVITY) {
-            resultValue = getIDS().activityStore.getStoreValue(key)
+            resultValue = getToolkit().activityStore.getStoreValue(key)
         } else { // implicit default this.storeSettings.context === StoreContextEnum.SERVICE
             resultValue = this.service.getStoreValue(key)
         }

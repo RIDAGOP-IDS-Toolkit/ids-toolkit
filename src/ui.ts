@@ -13,14 +13,14 @@ import {ServiceInputFieldsType} from "./data_types/ProcessTypes";
 import {BaseService} from "./models/base_service";
 import {Activity} from "./models/activity_models";
 import {ServiceButton, ServiceUIElements} from "./models/ui_element_models";
-import {getIDS} from "./models/ids_model";
+import {getToolkit} from "./models/tk_model";
 import isEmpty from "lodash/isEmpty";
 import map from "lodash/map";
 import findIndex from "lodash/findIndex";
 import {UIModeEnum} from "./const";
 
 function getUIMode(): ProcessPageViewType {
-    return getIDS().processPage.view
+    return getToolkit().processPage.view
 }
 
 export function createProcessUI(processPage: ProcessPage) {
@@ -254,7 +254,7 @@ function createStatusArea(parentName: string, activities: { [name: string]: Acti
         statusHeader.innerText = "Status"
         statusWrapper.appendChild(statusHeader)
         const statusList = document.createElement("ul")
-        const ids = getIDS()
+        const ids = getToolkit()
 
         const getActivityElement = (activity: Activity): HTMLElement | null => {
             // console.log(activity)
@@ -452,7 +452,7 @@ function createSelectElement(serviceName: string, selectName: string, select: Se
 }
 
 export function updateUI() {
-    const ids = getIDS()
+    const ids = getToolkit()
     for (let execActivity of ids.getAllExecutedActivities()) {
         // console.log(execActivity)
         // console.log(ids.uiElements)
@@ -619,34 +619,27 @@ function mapServiceElements(service: Service) {
 
     const elements: {
         typeName: string,
-        elementType: any,//HTMLInputElement | HTMLButtonElement | HTMLElement,
         elements: { [p: string]: UIInput | ServiceButton }
     }[] = [{
-        typeName: "input field",
-        elementType: HTMLInputElement,
+        typeName: "input",
         elements: uiElements.inputFields
     }, {
         typeName: "button",
-        elementType: HTMLButtonElement,
         elements: uiElements.buttons
     }, {
         typeName: "select",
-        elementType: HTMLElement,
         elements: uiElements.selects
-
     }, {
         typeName: "checkbox",
-        elementType: HTMLInputElement,
         elements: uiElements.checkBoxes
     }, {
         typeName: "fileinput",
-        elementType: HTMLInputElement,
         elements: uiElements.fileinputs
     }]
 
     for (let elementType of elements) {
         for (let [elementName, element] of Object.entries(elementType.elements)) {
-            const elementId = `input_${serviceName}_${elementName}${id_postfix !== "" ? "_" + id_postfix : ""}`
+            const elementId = `${elementType.typeName}_${serviceName}_${elementName}${id_postfix !== "" ? "_" + id_postfix : ""}`
             const htmlElement = document.querySelector("#" + elementId)
             if (htmlElement) {
                 if (element instanceof ServiceButton && htmlElement instanceof HTMLButtonElement) {
