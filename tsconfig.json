@@ -1,10 +1,10 @@
 {
   "compilerOptions": {
-    "target": "es6",
-    "module": "es2022",
+    "target": "ES2018",
+    "module": "esnext",
     // commonjs, esnext
     "lib": [
-      "esnext",
+      "ES2018",
       "dom"
     ],
     "sourceMap": true,
@@ -12,11 +12,10 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": false,
-    //    "allowJs": true,
     "strictNullChecks": true,
     "moduleResolution": "node",
-    "skipLibCheck": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "allowJs": true
   },
   "include": [
     "src"

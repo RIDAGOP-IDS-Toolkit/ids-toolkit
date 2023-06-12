@@ -1,17 +1,17 @@
-import Ajv, {AnySchema, JSONSchemaType} from "ajv/dist/2020"
+import Ajv, {AnySchema, JSONSchemaType, ErrorObject} from "ajv/dist/2020"
 import addFormats from "ajv-formats"
 import {get_data} from "./util";
 import isEmpty from "lodash/isEmpty"
 import {ProcessServiceUIType} from "./data_types/ProcessTypes";
 import {getToolkit} from "./models/tk_model";
-import {AnyValidateFunction, ErrorObject} from "ajv/dist/core";
+import { AnyValidateFunction } from "ajv/dist/types";
 
 
 const ajv = new Ajv({allErrors: true, strict: "log", useDefaults: true})
 const draft7MetaSchema = require("ajv/dist/refs/json-schema-draft-07.json")
 ajv.addMetaSchema(draft7MetaSchema)
 
-addFormats(ajv)
+//addFormats(ajv)
 
 let globalSchemaUri: string
 

@@ -342,7 +342,7 @@ export function createLCHubReference(lc_hub_project_data) {
  */
 export function shouldPublish(persistentId, type) {
   // console.log("should publish", persistentId, type)
-  const dataset = getIDS().getStorageValue("dataset", "data_repo")
+  const dataset = Window.getToolkit().getStorageValue("dataset", "data_repo")
   if (dataset.data.latestVersion.versionState === "DRAFT") {
     throw new Error("draft will not be published", {cause: "cancel"})
   }

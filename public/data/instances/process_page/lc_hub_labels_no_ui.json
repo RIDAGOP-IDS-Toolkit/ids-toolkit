@@ -1,15 +1,6 @@
 {
   "title": "Local Contexts Hub Labels",
   "services": {
-    "lc_hub": {
-      "ui": {
-        "sections": {
-          "status": {
-            "display": true
-          }
-        }
-      }
-    },
     "data_repo": {
       "title": "Dataverse",
       "bridge": {
@@ -36,7 +27,6 @@
     }
   },
   "process": {
-    "comment": "uri:http://localhost:8000/data/schema/idstk_schema/process/instances/lc_hub_labels.json",
     "instance": {
       "name": "tk_labels",
       "title": "Local Contexts Hub Labels",
@@ -57,13 +47,13 @@
               }
             }
           },
-          "parameters": {
-            "project_id": {
-              "field": "project_id"
-            }
-          },
           "activities": {
             "read_lc_hub_data": {
+              "parameters": {
+                "project_id": {
+                  "field": "project_id"
+                }
+              },
               "title": "fetch project data",
               "preProcess": "checkProjectID",
               "bridgeCapability": "read_dataset_metadata",
