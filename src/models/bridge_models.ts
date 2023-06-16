@@ -55,7 +55,7 @@ export abstract class Bridge<T extends BridgeCapability> {
                             validate: boolean = true): Promise<Bridge<any>> {
         console.debug("loading bridge for", serviceName, bridgeDescription)
         let bridgeInstance: BridgeType
-        const errorStringInit = `Loading bridge failed for service:'${serviceName}', uri: ${bridgeDescription.source.uri}.\n`
+        const errorStringInit = `Loading bridge failed for service:'${serviceName}'.\n`
         try {
             bridgeInstance = await LoadsFiles.loadInstance<BridgeType>({
                 ...bridgeDescription.source,
