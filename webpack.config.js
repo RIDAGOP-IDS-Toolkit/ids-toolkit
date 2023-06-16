@@ -1,5 +1,4 @@
 const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
@@ -45,9 +44,6 @@ module.exports = {
     },
     plugins: [
         new BundleAnalyzerPlugin(),
-        new HtmlWebpackPlugin({
-            template: path.resolve(__dirname, './index.html'), // path to your index.html file
-        }),
         new CopyWebpackPlugin({
             patterns: [
                 {from: 'dist/index.js', to: '../public/toolkit/index.js'}

@@ -113,8 +113,7 @@
     }
   },
   "required": [
-    "process",
-    "schemaUri"
+    "process"
   ],
   "additionalProperties": false,
   "$defs": {

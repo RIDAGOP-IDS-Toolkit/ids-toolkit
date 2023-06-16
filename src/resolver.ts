@@ -10,12 +10,20 @@ function addPrefix(uri: string) {
     let prefix_path = ""
     if (window.getToolkit()) {
         prefix_path = window.getToolkit().processPage.local_prefix_path
-        // console.log(prefix_path)
+        console.debug("addPrefix:", prefix_path, "for uri", uri)
     }
     try {
         new URL(uri)
+        console.debug("addPrefix. uri valid", uri)
     } catch (e) {
         // uri is not absolute... add prefix
+        if (prefix_path === "") {
+            const url = new URL(window.location.href)
+            const pathParts = url.pathname.split('/')
+            pathParts.pop()
+            prefix_path = url.origin + pathParts.join('/') + "/"
+        }
+        console.debug("prefixed uri", prefix_path + uri)
         return prefix_path + uri
     }
     return uri
@@ -73,7 +81,7 @@ export class LoadsFiles {
             try {
                 console.debug(uri)
                 if (!uri.startsWith("http")) {
-                    uri = "./"+uri
+                    uri = "./" + uri
                 }
                 // const module = (await import(uri))
                 const module = (await import(/* webpackIgnore: true */uri ))

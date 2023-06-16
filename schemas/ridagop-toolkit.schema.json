@@ -1566,11 +1566,6 @@
             }
           }
         },
-        "schemaUri": {
-          "title": "Ridagop schema uri",
-          "description": "The uri to the RIDAGOP schema to be used. The uri of this file",
-          "type": "string"
-        },
         "local_prefix_path": {
           "type": "string",
           "title": "Prefix path",
@@ -1578,8 +1573,7 @@
         }
       },
       "required": [
-        "process",
-        "schemaUri"
+        "process"
       ],
       "additionalProperties": false
     },
