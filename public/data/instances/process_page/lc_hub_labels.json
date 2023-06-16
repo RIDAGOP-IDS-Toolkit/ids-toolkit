@@ -66,12 +66,6 @@
                       "path": "/api/v1/projects/{project_id}/",
                       "method": "get"
                     }
-                  },
-                  "download_dataset_metadata": {
-                    "operation": {
-                      "path": "/projects/download/{project_id}/",
-                      "method": "get"
-                    }
                   }
                 }
               }

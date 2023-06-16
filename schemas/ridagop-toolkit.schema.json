@@ -1,129 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "http://localhost:8000/data/schema/idstk_schema/ridagop-ids-toolkit.schema.json",
+  "$id": "ridagop-toolkit.schema.json",
   "title": "Ridagop IDS Toolkit Schema",
-  "type": "object",
-  "properties": {
-    "title": {
-      "type": "string",
-      "description": "The title of the process page"
-    },
-    "process": {
-      "type": "object",
-      "title": "Process",
-      "description": "The process to be used. Either the full instance or a uri to the process description.",
-      "$comment": "formatted like this, there are no strict-mode errors",
-      "properties": {
-        "comment": {
-          "type": "string",
-          "description": "A comment for other developers."
-        },
-        "uri": {
-          "type": "string",
-          "title": "URI to process",
-          "description": "The uri to the process description. (Not required)",
-          "format": "uri"
-        },
-        "instance": {
-          "title": "Process instance",
-          "description": "The full process instance, which needs to be a valid Process",
-          "$ref": "#/$defs/Process"
-        }
-      },
-      "oneOf": [
-        {
-          "type": "object",
-          "properties": {
-            "uri": {
-              "title": "URI to process",
-              "description": "The uri to the process description.",
-              "type": "string",
-              "format": "uri"
-            }
-          },
-          "required": [
-            "uri"
-          ]
-        },
-        {
-          "type": "object",
-          "properties": {
-            "instance": {
-              "title": "Process instance",
-              "description": "The full process instance, which needs to be a valid Process",
-              "$ref": "#/$defs/Process"
-            }
-          },
-          "required": [
-            "instance"
-          ]
-        }
-      ],
-      "additionalProperties": false
-    },
-    "services": {
-      "type": "object",
-      "title": "Map of services (service-name: description)",
-      "description": "Process-page description for the services to be used in the process. The services here must match the services in the process.",
-      "additionalProperties": {
-        "description": "Keys are service names.",
-        "$ref": "#/$defs/PP-Service"
-      },
-      "minProperties": 1
-    },
-    "uri": {
-      "$comment": "/DOCS-IGNORE. not sure why this is here",
-      "type": "string"
-    },
-    "view": {
-      "type": "object",
-      "title": "Page view mode",
-      "description": "The type property of the view defines if the page view should be generated (build) or if specified ui elements should be mapped to existing ui elements in the html page.",
-      "properties": {
-        "type": {
-          "type": "string",
-          "description": "The type of the view ('build' or 'map')",
-          "enum": [
-            "build",
-            "map"
-          ]
-        }
-      }
-    },
-    "scriptUri": {
-      "title": "ProcessPage module",
-      "description": "Absolute or relative url to the process-page module. this module will be merged with the process module. Activities can use the module function when they specify a 'moduleFunction' instead of 'bridgeCapability'.",
-      "type": "string",
-      "format": "uri-reference"
-    },
-    "common": {
-      "type": "object",
-      "title": "Common User interface",
-      "description": "Settings for the common part. Common activities can reference to all services",
-      "properties": {
-        "ui": {
-          "title": "Common UI settings",
-          "description": "Settings of the common UI part",
-          "$ref": "#/$defs/PP-UISettings"
-        }
-      }
-    },
-    "schemaUri": {
-      "title": "Ridagop schema uri",
-      "description": "The uri to the RIDAGOP schema to be used. The uri of this file",
-      "type": "string"
-    },
-    "local_prefix_path": {
-      "type": "string",
-      "title": "Prefix path",
-      "description": "Prefix path for all files specified with relative path"
-    }
-  },
-  "required": [
-    "process",
-    "schemaUri"
-  ],
-  "additionalProperties": false,
+  "$ref": "#/$defs/ProcessPage",
   "$defs": {
     "B-Operation": {
       "type": "object",
@@ -260,7 +139,7 @@
                 "properties": {
                   "operation": {
                     "$comment": "in case OpenAPI ",
-                    "$ref": "#/$defs/CapabilityNames"
+                    "$ref": "#/$defs/B-Operation"
                   }
                 },
                 "required": [
@@ -1577,6 +1456,131 @@
           "default": true
         }
       },
+      "additionalProperties": false
+    },
+    "ProcessPage": {
+      "title": "RIDAGOP IDS Toolkit ProcessPage Schema",
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "The title of the process page"
+        },
+        "process": {
+          "type": "object",
+          "title": "Process",
+          "description": "The process to be used. Either the full instance or a uri to the process description.",
+          "$comment": "formatted like this, there are no strict-mode errors",
+          "properties": {
+            "comment": {
+              "type": "string",
+              "description": "A comment for other developers."
+            },
+            "uri": {
+              "type": "string",
+              "title": "URI to process",
+              "description": "The uri to the process description. (Not required)",
+              "format": "uri"
+            },
+            "instance": {
+              "title": "Process instance",
+              "description": "The full process instance, which needs to be a valid Process",
+              "$ref": "#/$defs/Process"
+            }
+          },
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {
+                "uri": {
+                  "title": "URI to process",
+                  "description": "The uri to the process description.",
+                  "type": "string",
+                  "format": "uri"
+                }
+              },
+              "required": [
+                "uri"
+              ]
+            },
+            {
+              "type": "object",
+              "properties": {
+                "instance": {
+                  "title": "Process instance",
+                  "description": "The full process instance, which needs to be a valid Process",
+                  "$ref": "#/$defs/Process"
+                }
+              },
+              "required": [
+                "instance"
+              ]
+            }
+          ],
+          "additionalProperties": false
+        },
+        "services": {
+          "type": "object",
+          "title": "Map of services (service-name: description)",
+          "description": "Process-page description for the services to be used in the process. The services here must match the services in the process.",
+          "additionalProperties": {
+            "description": "Keys are service names.",
+            "$ref": "#/$defs/PP-Service"
+          },
+          "minProperties": 1
+        },
+        "uri": {
+          "$comment": "/DOCS-IGNORE. not sure why this is here",
+          "type": "string"
+        },
+        "view": {
+          "type": "object",
+          "title": "Page view mode",
+          "description": "The type property of the view defines if the page view should be generated (build) or if specified ui elements should be mapped to existing ui elements in the html page.",
+          "properties": {
+            "type": {
+              "type": "string",
+              "description": "The type of the view ('build' or 'map')",
+              "enum": [
+                "build",
+                "map"
+              ]
+            }
+          }
+        },
+        "scriptUri": {
+          "title": "ProcessPage module",
+          "description": "Absolute or relative url to the process-page module. this module will be merged with the process module. Activities can use the module function when they specify a 'moduleFunction' instead of 'bridgeCapability'.",
+          "type": "string",
+          "format": "uri-reference"
+        },
+        "common": {
+          "type": "object",
+          "title": "Common User interface",
+          "description": "Settings for the common part. Common activities can reference to all services",
+          "properties": {
+            "ui": {
+              "title": "Common UI settings",
+              "description": "Settings of the common UI part",
+              "$ref": "#/$defs/PP-UISettings"
+            }
+          }
+        },
+        "schemaUri": {
+          "title": "Ridagop schema uri",
+          "description": "The uri to the RIDAGOP schema to be used. The uri of this file",
+          "type": "string"
+        },
+        "local_prefix_path": {
+          "type": "string",
+          "title": "Prefix path",
+          "description": "Prefix path for all files specified with relative path"
+        }
+      },
+      "required": [
+        "process",
+        "schemaUri"
+      ],
       "additionalProperties": false
     },
     "CapabilityNames": {

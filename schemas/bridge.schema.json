@@ -62,7 +62,7 @@
             "properties": {
               "operation": {
                 "$comment": "in case OpenAPI ",
-                "$ref": "capabilities_list.schema.json"
+                "$ref": "#/$defs/B-Operation"
               }
             },
             "required": [

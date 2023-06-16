@@ -2,7 +2,7 @@ const fs = require('fs');
 const project_dir = process.env.PWD
 const base_path = project_dir + "/../schemas/"
 
-const destinationPath = base_path + "ridagop-ids-toolkit.schema.json"
+const destinationPath = base_path + "ridagop-toolkit.schema.json"
 
 const files = [
     base_path + "bridge.schema.json",
@@ -95,15 +95,16 @@ for (let file of files) {
 }
 
 const process_page = resultDefs["ProcessPage"]
-delete resultDefs["ProcessPage"]
-delete process_page["title"]
+// delete resultDefs["ProcessPage"]
+// delete process_page["title"]
 
 
 const resultSchema = Object.assign({
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "http://localhost:8000/data/schema/idstk_schema/ridagop-ids-toolkit.schema.json",
+    "$id": "ridagop-toolkit.schema.json",
     "title": "Ridagop IDS Toolkit Schema",
-}, process_page, {"$defs": resultDefs})
+    "$ref": "#/$defs/ProcessPage",
+}, {"$defs": resultDefs})
 
 
 // write result to file

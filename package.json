@@ -1,6 +1,6 @@
 {
   "name": "ridagop-toolkit",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -29,8 +29,7 @@
     "webpack-dev-server": "^4.15.0"
   },
   "files": [
-    "dist/index.js",
-    "schemas/ridagop-ids-toolkit.schema.json"
+    "dist/index.js"
   ],
   "keywords": [
     "data-sovereignty"

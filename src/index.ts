@@ -46,7 +46,7 @@ export async function _init_toolkit_(process_page_url: string,
     }
     // initialize Ajv with all required json-schemas
     try {
-        await initAjv(processPageData.schemaUri)
+        await initAjv()
     } catch (e) {
         const errorMsg = "loading relevant schemas failed: " + e
         alert_throw({errorMsg, alert_, throw_})

@@ -1,6 +1,6 @@
-import Ajv, {AnySchema, JSONSchemaType, ErrorObject} from "ajv/dist/2020"
+import Ajv, {JSONSchemaType, ErrorObject} from "ajv/dist/2020"
+import toolkit_schema from '../schemas/ridagop-toolkit.schema.json'
 import addFormats from "ajv-formats"
-import {get_data} from "./util";
 import isEmpty from "lodash/isEmpty"
 import {ProcessServiceUIType} from "./data_types/ProcessTypes";
 import {getToolkit} from "./models/tk_model";
@@ -11,27 +11,18 @@ const ajv = new Ajv({allErrors: true, strict: "log", useDefaults: true})
 const draft7MetaSchema = require("ajv/dist/refs/json-schema-draft-07.json")
 ajv.addMetaSchema(draft7MetaSchema)
 
-//addFormats(ajv)
+addFormats(ajv)
 
 let globalSchemaUri: string
 
 /**
  * Init the json-schema validator with all required schemas.
  */
-export async function initAjv(schemaUri: string): Promise<any> {
-    if(!schemaUri) {
-        throw "No schemaUri in processPageData"
-    }
+export async function initAjv(): Promise<any> {
     try {
-        // TODO use new URL with the schemaUri if its relative, to get an absolute url,
-        // that might prevent the error in the next line for when the url is relative
-        const schema = await get_data<AnySchema>(schemaUri)
-        globalSchemaUri = schemaUri
-        if(schemaUri !== schema["$id"]) {
-            console.error("SchemaUri and schema.id do not match", schemaUri, schema["$id"])
-        }
-        ajv.addSchema(schema)
-        console.debug("Schema loaded:", schemaUri)
+        globalSchemaUri = toolkit_schema["$id"]
+        ajv.addSchema(toolkit_schema)
+        console.debug("Schema loaded:", toolkit_schema["$id"])
     } catch (e) {
         console.error("Failed to load schemas", e)
         throw e

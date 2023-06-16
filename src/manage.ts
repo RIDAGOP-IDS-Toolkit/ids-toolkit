@@ -25,7 +25,7 @@ export async function loadPP(process_page_url: string, validate: boolean = true,
 
 async function start(process_pages: string[]) {
 
-    await initAjv("http://localhost:8000/data/schema/idstk_schema/ridagop-ids-toolkit.schema.json")
+    await initAjv()
 
     for (let pp_uri of process_pages) {
         console.log(pp_uri)
