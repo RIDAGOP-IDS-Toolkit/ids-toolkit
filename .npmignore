@@ -1,3 +1,8 @@
-/dist/
+index.html
+tsconfig.json
+webpack.config.js
+/dist/index.html
 /.idea/
 /scripts/
+/public/
+/src/
