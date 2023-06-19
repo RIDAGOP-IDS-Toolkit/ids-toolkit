@@ -46,7 +46,8 @@ module.exports = {
         new BundleAnalyzerPlugin(),
         new CopyWebpackPlugin({
             patterns: [
-                {from: 'dist/index.js', to: '../public/toolkit/index.js'}
+                {from: 'dist/index.js', to: '../public/toolkit/index.js'},
+                {from:'schemas/ridagop-toolkit.schema.json', to: '../public/toolkit/ridagop-toolkit.schema.json'},
             ],
         })
     ],

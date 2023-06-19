@@ -1,0 +1,167 @@
+{
+  "name": "data_request",
+  "title": "Data access request form",
+  "description": "Request data. Request needs ultimately be sent via email",
+  "services": {
+    "access_request": {
+      "title": "Data repository",
+      "ui": {
+        "inputFields": {
+          "dataset_id": {
+            "label": "Dataset id",
+            "fromQueryParam": "datasetId",
+            "default": "doi:10.70122/FK2/DKNBH5"
+          },
+          "motivation": {
+            "label": "Motivation",
+            "textArea": true,
+            "default": "I want to use the data for my research"
+          },
+          "email": {
+            "label": "Your email address",
+            "default": "transfluxus@posteo.de"
+          }
+        }
+      },
+      "activities": {
+        "storeData": {
+          "title": "Store data",
+          "moduleFunction": "storeData",
+          "storeResult": {
+            "context": "process",
+            "key": "storeData"
+          },
+          "parameters": {
+            "dataset_id": {
+              "type": "string",
+              "field": "dataset_id"
+            },
+            "motivation": {
+              "type": "string",
+              "field": "motivation"
+            },
+            "email": {
+              "type": "string",
+              "field": "email"
+            }
+          },
+          "ui": {
+            "alert": false
+          }
+        },
+        "sendEmail": {
+          "title": "Send Email",
+          "moduleFunction": "sendEmail",
+          "parameters": {
+            "receiver": {
+              "type": "string",
+              "constant": "Ramin.Soleymani@uab.cat",
+              "comment": "could be obscured and fixed in the JS function that sends email"
+            },
+            "dataset_id": {
+              "type": "string",
+              "field": "dataset_id"
+            },
+            "motivation": {
+              "type": "string",
+              "field": "motivation"
+            },
+            "applicationData": {
+              "store": {
+                "context": "process",
+                "key": "applicationId"
+              }
+            },
+            "emailAddress": {
+              "type": "string",
+              "field": "email"
+            }
+          }
+        }
+      }
+    },
+    "process-storage": {
+      "title": "Storage",
+      "activities": {
+        "store": {
+          "title": "Store request",
+          "bridgeCapability": "write_dataset_file",
+          "storeResult": {
+            "context": "process",
+            "key": "applicationId"
+          },
+          "parameters": {
+            "d": {
+              "type": "string",
+              "generate": {
+                "moduleFunction": "generate_process_id"
+              }
+            },
+            "body": {
+              "store": {
+                "context": "process",
+                "key": "storeData"
+              }
+            }
+          },
+          "requestBody": {
+            "data": {
+              "store": {
+                "context": "process",
+                "key": "storeData"
+              }
+            }
+          },
+          "ui": {
+            "alert": false
+          }
+        },
+        "delete": {
+          "title": "Delete data",
+          "bridgeCapability": "delete_dataset_file",
+          "parameters": {
+            "d": {
+              "type": "string",
+              "store": {
+                "context": "process",
+                "key": "applicationId"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "common": {
+    "ui": {
+      "buttons": {
+        "send": {
+          "label": "Send",
+          "triggerActivity": "store.send.all"
+        }
+      }
+    },
+    "activities": {
+      "store.send.all": {
+        "title": "Store and send request",
+        "serviceName": "access_request",
+        "activityName": "storeData",
+        "subActivities": {
+          "store.send": {
+            "title": "Store request",
+            "serviceName": "process-storage",
+            "activityName": "store",
+            "priority": 1
+          },
+          "send": {
+            "title": "Send request",
+            "serviceName": "access_request",
+            "activityName": "sendEmail",
+            "priority": 2
+          }
+        }
+      }
+    }
+  },
+  "scriptUri": "http://localhost:8000/data/schema/idstk_schema/process/instances/data_request.js"
+}

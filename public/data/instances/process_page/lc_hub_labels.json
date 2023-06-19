@@ -261,6 +261,5 @@
       "scriptUri": "http://localhost:8080/data/scripts/process/lc_hub_labels.js"
     }
   },
-  "local_prefix_path": "data/",
-  "schemaUri": "http://localhost:8080/data/schemas/ridagop-ids-toolkit.schema.json"
+  "local_prefix_path": "data/"
 }
