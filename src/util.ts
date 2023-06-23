@@ -36,7 +36,7 @@ export async function get_data<Type>(url: string): Promise<Type> {
             } else {
                 return reject(`error fetching file, ${url}`)
             }
-        })
+        }, err => reject(err))
     })
 }
 

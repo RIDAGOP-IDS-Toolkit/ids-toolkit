@@ -56,36 +56,44 @@ export abstract class BaseService<T extends ProcessType | ServiceData> extends S
          * @param parentActivity
          * @return [activities, activityOrder]
          */
-        const createActivityObjects = (activitiesMap: { [activityName: string]: (ProcessServiceActivityType | ActivityReferenceType) },
-                                       parentActivity?: Activity)
-            : [{ [activityName: string]: Activity }, string[]] => {
 
-            const activities: { [activityName: string]: Activity } = {}
-
-            for (let [activityName, activityData] of Object.entries(activitiesMap || {})) {
-                // console.log(activityName, activityData, "activityName" in activityData)
-                // check if activityData has a key "activityName" (which is the case if it is a reference)
-                // not sure why "in" doesn't work here
-                const activity = new Activity(activityName, this, activityData, parentActivity)
-                // console.log(activity.title, activityData.subActivities)
-                const [subActivities, activityOrder] = createActivityObjects(activityData.subActivities || {}, activity)
-                activity.subActivities = subActivities
-                activity.subActivitiesOrder = activityOrder
-                activities[activityName] = activity
-            }
-
-            const [activityNames, activitiesData] = unzip(Object.entries(activitiesMap || {}))
-            // get priorities (take inf as default)
-            const activitiesPriorities = map(activitiesData, d => get(d, "priority", Number.POSITIVE_INFINITY))
-            // zip props with names again, sort by prio and only take names
-            // todo...
-            // @ts-ignore
-            const sortedActivities: string[] = map(sortBy(zip(activityNames, activitiesPriorities), [a => a[1]]), a => a[0])
-            return [activities, sortedActivities]
-        }
-
-        const [activities] = createActivityObjects(this.getActivityData())
+        const [activities] = this.createFromActivitiesMap(this.getActivityData())
         this.activities = activities
+    }
+
+    createFromActivitiesMap(activitiesMap: {
+        [activityName: string]: (ProcessServiceActivityType | ActivityReferenceType)
+    }, parentActivity ?: Activity): [{ [activityName: string]: Activity }, string[]] {
+
+        const activities: { [activityName: string]: Activity } = {}
+        for (let [activityName, activityData] of Object.entries(activitiesMap || {})) {
+            activities[activityName] = this.createActivity(activityName, activityData, parentActivity)
+        }
+        const [activityNames, activitiesData] = unzip(Object.entries(activitiesMap || {}))
+        // get priorities (take inf as default)
+        const activitiesPriorities = map(activitiesData, d => get(d, "priority", Number.POSITIVE_INFINITY))
+        // zip props with names again, sort by prio and only take names
+        // @ts-ignore
+        const sortedActivities: string[] = map(sortBy(zip(activityNames, activitiesPriorities), [a => a[1]]), a => a[0])
+        return [activities, sortedActivities]
+    }
+
+    createActivity(activityName: string, activityData: ProcessServiceActivityType | ActivityReferenceType, parentActivity ?: Activity) {
+        const activity = new Activity(activityName, this, activityData, parentActivity)
+        const [subActivities, activityOrder] = this.createFromActivitiesMap(activityData.subActivities || {}, activity)
+        activity.subActivities = subActivities
+        activity.subActivitiesOrder = activityOrder
+        return activity
+    }
+
+    addActivity(activityName: string, activityData: ProcessServiceActivityType) {
+        /**
+         * This is not used anywhere, but it allows to dynamically add activities to a service
+         */
+        if (activityName in this.activities) {
+            throw new Error(`Activity ${activityName} already exists`)
+        }
+        this.activities[activityName] = this.createActivity(activityName, activityData)
     }
 
     createSequences() {

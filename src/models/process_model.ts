@@ -148,6 +148,10 @@ export default class Process extends BaseService<ProcessType> implements HasModu
             } else {
                 console.debug(`service: ${serviceName} is getting bridge from process-page`)
                 serviceBridge = this.processPage.getServicesBridge(serviceName)
+                console.debug("...", serviceBridge)
+                if (!serviceBridge) {
+                    throw `Service ${serviceName} has no bridge defined.`
+                }
             }
             this.services[serviceName] = new Service(serviceName,
                 this,

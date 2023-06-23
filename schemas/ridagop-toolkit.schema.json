@@ -169,7 +169,7 @@
         },
         "supportModuleUri": {
           "type": "string",
-          "format": "uri",
+          "format": "uri-reference",
           "description": "The URI of the module that contains the support functions."
         },
         "uri": {
@@ -1480,7 +1480,7 @@
               "type": "string",
               "title": "URI to process",
               "description": "The uri to the process description. (Not required)",
-              "format": "uri"
+              "format": "uri-reference"
             },
             "instance": {
               "title": "Process instance",
@@ -1496,7 +1496,7 @@
                   "title": "URI to process",
                   "description": "The uri to the process description.",
                   "type": "string",
-                  "format": "uri"
+                  "format": "uri-reference"
                 }
               },
               "required": [

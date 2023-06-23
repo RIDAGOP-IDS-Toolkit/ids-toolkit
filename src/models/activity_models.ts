@@ -86,8 +86,8 @@ export class Activity {
         this.parentActivity = parentActivity
 
         try {
-            this.setExecution()
-            this.setPreProcessExecution()
+            this.setupExecution()
+            this.setupPreProcessExecution()
         } catch (e) {
             console.error(`${this.toString()} Setting execution failed`)
             this.active = false
@@ -98,7 +98,7 @@ export class Activity {
         return `[Activity ${this.service.title}:${this.title}]`
     }
 
-    setExecution() {
+    setupExecution() {
         /**
          * Retrieve the execution Capability from the bridge. The capability is wrapping either a
          */
@@ -157,7 +157,7 @@ export class Activity {
         }
     }
 
-    setPreProcessExecution() {
+    setupPreProcessExecution() {
         const activityData = this.data as ProcessServiceActivityType
         if (activityData.preProcess) {
             const preProcessFunctionName = activityData.preProcess

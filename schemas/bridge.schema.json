@@ -92,7 +92,7 @@
     },
     "supportModuleUri": {
       "type": "string",
-      "format": "uri",
+      "format": "uri-reference",
       "description": "The URI of the module that contains the support functions."
     },
     "uri": {

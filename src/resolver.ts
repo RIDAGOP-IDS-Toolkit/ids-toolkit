@@ -17,13 +17,15 @@ function addPrefix(uri: string) {
         console.debug("addPrefix. uri valid", uri)
     } catch (e) {
         // uri is not absolute... add prefix
-        if (prefix_path === "") {
+        if (prefix_path === "" || prefix_path === undefined) {
             const url = new URL(window.location.href)
+            // console.log("page url", url)
             const pathParts = url.pathname.split('/')
             pathParts.pop()
+            // console.log("put together...", url.origin, pathParts)
             prefix_path = url.origin + pathParts.join('/') + "/"
         }
-        console.debug("prefixed uri", prefix_path + uri)
+        console.debug("final prefixed uri", prefix_path + uri)
         return prefix_path + uri
     }
     return uri
@@ -33,9 +35,9 @@ export class LoadsFiles {
 
     static async loadInstance<Type extends anyDataInstanceType>(source: DevSourceType,
                                                                 validate: boolean = true): Promise<Type> {
-        // console.log("LOAD INSTANCE", source.uri)
         let instance: Type
         if (source.uri) {
+            // console.log("Loading Instance", source.uri)
             const uri = addPrefix(source.uri)
             try {
                 // console.log("prefix_path", prefix_path)
@@ -45,7 +47,7 @@ export class LoadsFiles {
                 instance.uri = source.uri
                 DevHelper.addSource({...source, instance})
             } catch (e) {
-                return await Promise.reject(e)
+                return Promise.reject(`Failed loading bridge for service ${source.uri}: ${e}`)
             }
         } else if (source.instance) {
             instance = source.instance

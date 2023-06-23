@@ -20,7 +20,7 @@
           "type": "string",
           "title": "URI to process",
           "description": "The uri to the process description. (Not required)",
-          "format": "uri"
+          "format": "uri-reference"
         },
         "instance": {
           "title": "Process instance",
@@ -36,7 +36,7 @@
               "title": "URI to process",
               "description": "The uri to the process description.",
               "type": "string",
-              "format": "uri"
+              "format": "uri-reference"
             }
           },
           "required": [

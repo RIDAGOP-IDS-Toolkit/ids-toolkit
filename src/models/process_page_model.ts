@@ -41,12 +41,12 @@ export default class ProcessPage {
      */
     async load(validate: boolean = true): Promise<void> {
         try {
+            console.log("load bridges...")
             await this.loadServicesBridges(validate)
             const processPageModule = await LoadsFiles.importModule(
                 this.processPageData.scriptUri,
                 InstanceTypeEnum.moduleProcessPage,
                 {type: InstanceTypeEnum.instanceProcessPage, path: "scriptUri"})
-
             this.process = await Process.loadProcess(this, this.processPageData.process, processPageModule, validate)
         } catch (e) {
             return Promise.reject(e)
@@ -65,6 +65,7 @@ export default class ProcessPage {
         const process_page_services = this.processPageData.services || {}
         for (let [serviceName, service_description] of Object.entries(process_page_services)) {
             if (service_description.bridge) {
+                console.debug("load bridge for service", serviceName, service_description.bridge)
                 const promise = Bridge.loadBridge(
                     serviceName,
                     service_description.bridge,
@@ -77,6 +78,7 @@ export default class ProcessPage {
                 promise.then(bridge => {
                     this.servicesBridges[serviceName] = bridge
                 }, error => {
+                    console.error("Bridge error", error)
                     return Promise.reject(error)
                 })
             }

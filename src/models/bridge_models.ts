@@ -65,6 +65,7 @@ export abstract class Bridge<T extends BridgeCapability> {
             }, validate)
             console.debug(`Service ${serviceName} loaded bridgeSchema`, bridgeInstance)
         } catch (e) {
+            console.log("failed to load bridge", e)
             return Promise.reject(`${errorStringInit}\n${e}`)
         }
 

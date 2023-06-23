@@ -29,8 +29,6 @@ export async function initAjv(): Promise<any> {
     }
 }
 
-
-
 export function validation(schemaId_ref: string, instance: object):
     ErrorObject<string, Record<string, any>, unknown>[] {
     // console.log("trying to validate", schemaId_ref)
