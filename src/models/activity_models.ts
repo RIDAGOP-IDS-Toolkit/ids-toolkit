@@ -71,7 +71,8 @@ export class Activity {
         this.data = activityData
 
         this.title = activityData.title
-        // only regular activities (not references)
+        // only not references
+        // todo, strange...
         if (this.isActivityReference()) {
             const activityData_ = activityData as unknown as ProcessServiceActivityType
             // this.storeResult = activityData_.storeResult
@@ -86,11 +87,16 @@ export class Activity {
         this.parentActivity = parentActivity
 
         try {
-            this.setupExecution()
+            if (this.isActivityReference()) {
+                this.setupReferenceExecution()
+            } else {
+                this.setupExecution()
+            }
             this.setupPreProcessExecution()
         } catch (e) {
-            console.error(`${this.toString()} Setting execution failed`)
             this.active = false
+            throw `${this.toString()} Setting execution failed. ${e}`
+            // console.error()
         }
     }
 
@@ -102,49 +108,41 @@ export class Activity {
         /**
          * Retrieve the execution Capability from the bridge. The capability is wrapping either a
          */
-            // TODO this function needs some fixing!
         let bridge: Bridge<any>
         // only for process(lookup activity in service)
         // console.log("SET-EXEC", this.service.name, this.name, this.data)
-        if ("serviceName" in this.data) {
-            // console.log("... reference")
-            const activity = this.service.getActivity(this.data as ActivityReferenceType)
-            if (activity) {
-                this.execution = new ReferenceActivity(activity)
+
+        const activityData = this.data as ProcessServiceActivityType
+        let capability
+        // debugger
+        if (activityData.bridgeCapability) {
+            // console.log("... bridge")
+            if (this.service.serviceType === ServiceTypeEnum.service) {
+                bridge = (this.service as Service).bridge
+                capability = bridge.getCapability(activityData.bridgeCapability)
+                this.execution = capability
+                this.active = capability.active
+            } else {
+                // create errorMsg log it and throw error
+                const errorMsg = "bridgeCapability is only allowed for services, not for process"
+                console.error(errorMsg)
+                throw(errorMsg)
+            }
+            // console.log("bridge-capability", bridgeCapability)
+        } else if (activityData.moduleFunction) { // moduleFunction
+            // console.log("... module")
+            if (this.service.getProcess().hasModuleFunction(activityData.moduleFunction)) {
+                const function_: Function = this.service.getProcess().getModuleFunction(activityData.moduleFunction)
+                const functionSource = this.service.getProcess().module.srcMap[activityData.moduleFunction]
+                this.execution = new ModuleFunction(function_, functionSource)
+            } else {
+                console.error(`no module function in service/page module for Activity: '${this.name}'. Name of Function: ${activityData.moduleFunction}`)
+                console.error(this.service.getProcess().module)
+                this.active = false
+                throw(getMsg("MODULE_FUNCTION_NOT_FOUND", {functionName: activityData.moduleFunction}))
             }
         } else {
-            const activityData = this.data as ProcessServiceActivityType
-            let capability
-            // debugger
-            if (activityData.bridgeCapability) {
-                // console.log("... bridge")
-                if (this.service.serviceType === ServiceTypeEnum.service) {
-                    bridge = (this.service as Service).bridge
-                    capability = bridge.getCapability(activityData.bridgeCapability)
-                    this.execution = capability
-                    this.active = capability.active
-                } else {
-                    // create errorMsg log it and throw error
-                    const errorMsg = "bridgeCapability is only allowed for services, not for process"
-                    console.error(errorMsg)
-                    throw(errorMsg)
-                }
-                // console.log("bridge-capability", bridgeCapability)
-            } else if (activityData.moduleFunction) { // moduleFunction
-                // console.log("... module")
-                if (this.service.getProcess().hasModuleFunction(activityData.moduleFunction)) {
-                    const function_: Function = this.service.getProcess().getModuleFunction(activityData.moduleFunction)
-                    const functionSource = this.service.getProcess().module.srcMap[activityData.moduleFunction]
-                    this.execution = new ModuleFunction(function_, functionSource)
-                } else {
-                    console.error(`no module function in service/page module for Activity: '${this.name}'. Name of Function: ${activityData.moduleFunction}`)
-                    console.error(this.service.getProcess().module)
-                    this.active = false
-                    throw(getMsg("MODULE_FUNCTION_NOT_FOUND", {functionName: activityData.moduleFunction}))
-                }
-            } else {
-                console.error("No execution found for Activity", this.name, this.data)
-            }
+            console.error("No execution found for Activity", this.name, this.data)
         }
         // console.log(this.title, this.execution)
         // todo needed our caught earlier?
@@ -154,6 +152,18 @@ export class Activity {
             //     console.error("options would be", bridge.capabilities)
             this.active = false
             return
+        }
+    }
+
+    setupReferenceExecution() {
+        // console.log("... reference")
+        const data = this.data as ActivityReferenceType
+        const activity = this.service.getActivity(data)
+        if (activity) {
+            this.execution = new ReferenceActivity(activity)
+        } else {
+            throw new Error(`Reference-Activity '${this.service.name}.${this.name}' references to 
+                a service that does not exist ${data.serviceName}`)
         }
     }
 
@@ -413,7 +423,7 @@ export class Activity {
         // console.debug(`exec: ${this.name} 5`)
         // 5. check and execute sub-activities
         console.debug(`${this.name}:SubActivities`, Object.keys(this.subActivities))
-        let previousSubActivityResult
+        let previousSubActivityResult = undefined
         for (let orderedSubActivityName of this.subActivitiesOrder) {
             try {
                 previousSubActivityResult = await this.subActivities[orderedSubActivityName].execute(result, previousSubActivityResult)

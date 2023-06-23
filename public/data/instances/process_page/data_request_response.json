@@ -5,7 +5,7 @@
       "comment": " this is just for validation. there could be a copy in proces_page/data_request_response.json",
       "name": "data_request_response",
       "services": {
-        "process-storage": {
+        "request_storage": {
           "title": "Request",
           "bridge": {
             "source": {
@@ -88,7 +88,7 @@
             "readRequest"
           ]
         },
-        "dataverse": {
+        "data_repo": {
           "title": "Dataverse settings",
           "parameters": {
             "identifier": {
@@ -261,7 +261,7 @@
             },
             "reject": {
               "label": "Reject request",
-              "activityService": "process-storage",
+              "activityService": "request-storage",
               "triggerActivity": "reject"
             }
           }
@@ -285,7 +285,7 @@
             "subActivities": {
               "readDataset": {
                 "title": "Read dataset",
-                "serviceName": "dataverse",
+                "serviceName": "data_repo",
                 "activityName": "read_dataset_metadata"
               },
               "changeDatasetMetaData": {
@@ -306,17 +306,17 @@
               },
               "uploadNewDataset": {
                 "title": "Upload new dataset",
-                "serviceName": "dataverse",
+                "serviceName": "data_repo",
                 "activityName": "create_dataset"
               },
               "uploadFile": {
                 "title": "Upload files",
-                "serviceName": "dataverse",
+                "serviceName": "data_repo",
                 "activityName": "copy_files"
               },
               "createPrivateUrl": {
                 "title": "Create private url",
-                "serviceName": "dataverse",
+                "serviceName": "data_repo",
                 "activityName": "createPrivateUrl"
               },
               "sendAcceptEmail": {
@@ -345,7 +345,7 @@
     }
   },
   "services": {
-    "process-storage": {
+    "request_storage": {
       "ui": {
         "sections": {
           "status": {
@@ -357,7 +357,7 @@
         }
       }
     },
-    "dataverse": {
+    "data_repo": {
       "ui": {
         "sections": {
           "status": {

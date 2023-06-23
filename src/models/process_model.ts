@@ -205,6 +205,9 @@ export default class Process extends BaseService<ProcessType> implements HasModu
 
     getActivity({serviceName, activityName}: BasicActivityReferenceType): Activity {
         // console.log(this.services, this.services[serviceName])
+        if(!(serviceName in this.services)) {
+            throw `Service '${serviceName}' not found. ${serviceName}.${activityName}.`
+        }
         return this.services[serviceName].activities[activityName]
     }
 

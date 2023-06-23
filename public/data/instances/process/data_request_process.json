@@ -82,8 +82,8 @@
         }
       }
     },
-    "process-storage": {
-      "title": "Storage",
+    "request_storage": {
+      "title": "Request storage",
       "activities": {
         "store": {
           "title": "Store request",
@@ -151,7 +151,7 @@
         "subActivities": {
           "store.send": {
             "title": "Store request",
-            "serviceName": "process-storage",
+            "serviceName": "request_storage",
             "activityName": "store",
             "priority": 1
           },

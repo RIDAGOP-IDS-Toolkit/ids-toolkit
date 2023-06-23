@@ -185,11 +185,8 @@ export type BasicActivityReferenceType = {
  * We use "serviceName" to differentiate this from ProcessServiceActivityType
  */
 export type ActivityReferenceType = BasicActivityReferenceType & {
-
     title: string
-
     subActivities?: { [activityName: string]: ProcessServiceActivityType }
-
     debug?: {
         execute?: boolean
         resultData: object
