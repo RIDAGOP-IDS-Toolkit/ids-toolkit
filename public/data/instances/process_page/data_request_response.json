@@ -1,16 +1,15 @@
 {
-  "title": "Datarequest response",
+  "title": "Data-request response",
   "process": {
     "instance": {
-      "$comment": " this is just for validation. there could be a copy in proces_page/data_request_response.json",
-      "name": "datarequest_response",
-      "title": "Datarequest response",
+      "comment": " this is just for validation. there could be a copy in proces_page/data_request_response.json",
+      "name": "data_request_response",
       "services": {
         "process-storage": {
           "title": "Request",
           "bridge": {
             "source": {
-              "uri": "http://localhost:8000/data/schema/idstk_schema/bridge/instances/datastorage.json"
+              "uri": "instances/bridge/datastorage_bridge.json"
             }
           },
           "ui": {
@@ -100,7 +99,7 @@
             "inputFields": {
               "apiKey": {
                 "label": "API Key",
-                "default": "682f1775-6274-415a-be1a-4312ff450f63"
+                "default": ""
               }
             }
           },
@@ -342,16 +341,11 @@
           }
         }
       },
-      "scriptUri": "http://localhost:8000/data/schema/idstk_schema/process/instances/data_request.js"
+      "scriptUri": "http://localhost:8080/public/data/scripts/process/data_request.js"
     }
   },
   "services": {
     "process-storage": {
-      "bridge": {
-        "source": {
-          "uri": "http://localhost:8000/data/schema/idstk_schema/bridge/instances/datastorage.json"
-        }
-      },
       "ui": {
         "sections": {
           "status": {
@@ -381,7 +375,7 @@
         "source": {
           "instance": {
             "execute": {
-              "openapiSchemaUri": "http://localhost:8000/data/schema/openapi/instances/dataverse3.json"
+              "openapiSchemaUri": "openapi/dataverse_openapi.json"
             },
             "capabilities": {
               "read_dataset_metadata": {
@@ -421,7 +415,7 @@
                 "functionName": "copy_dataset_files"
               }
             },
-            "supportModuleUri": "http://localhost:8000/data/schema/idstk_schema/process_page/instances/dataverse_tests.js"
+            "supportModuleUri": "http://localhost:8080/public/data/scripts/bridge_support/dataverse_support_module.js"
           }
         },
         "authorization": {
@@ -441,5 +435,5 @@
       }
     }
   },
-  "schemaUri": "https://toolkit.ridagop.net/schemas/ridagop-ids-toolkit.schema.json"
+  "local_prefix_path": "public/data/"
 }

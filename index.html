@@ -1,16 +1,17 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8"/>
-    <title>RIDAGOP IDS Toolkit</title>
+    <title>RIDAGOP Toolkit (root)</title>
+    <script src="/index.js"></script>
 </head>
 <body>
 <script>
-    window.onload = function() {
+    window.onload = function () {
         let queryParams = new URLSearchParams(window.location.search)
         let process = queryParams.get("process") || "lc_hub_labels"
         try {
-            _init_toolkit_(`data/instances/process_page/${process}.json`)
+            _init_toolkit_(`public/data/instances/process_page/${process}.json`)
         } catch (e) {
             console.error(e)
         }

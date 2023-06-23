@@ -1,0 +1,1 @@
+{  "title": "Data request",  "services": {    "process-storage": {      "bridge": {        "source": {          "uri": "instances/bridge/datastorage_bridge.json"        }      },      "ui": {        "display": false      }    }  },  "process": {    "uri": "instances/process/data_request_process.json"  },  "local_prefix_path": "public/data/"}

@@ -15,7 +15,11 @@
     },
     "description": {
       "type": "string",
-      "description": "A description of the process. (For other developers)"
+      "description": "A description of the process."
+    },
+    "comment": {
+      "type": "string",
+      "description": "A comment for the process. (For other developers)"
     },
     "services": {
       "description": "Services with their UI-elements and activities.",

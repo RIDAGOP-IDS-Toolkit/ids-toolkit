@@ -1,6 +1,5 @@
 {
   "name": "data_request",
-  "title": "Data access request form",
   "description": "Request data. Request needs ultimately be sent via email",
   "services": {
     "access_request": {
@@ -9,8 +8,7 @@
         "inputFields": {
           "dataset_id": {
             "label": "Dataset id",
-            "fromQueryParam": "datasetId",
-            "default": "doi:10.70122/FK2/DKNBH5"
+            "fromQueryParam": "datasetId"
           },
           "motivation": {
             "label": "Motivation",
@@ -18,9 +16,13 @@
             "default": "I want to use the data for my research"
           },
           "email": {
-            "label": "Your email address",
-            "default": "transfluxus@posteo.de"
+            "label": "Your email address"
           }
+        }
+      },
+      "bridge": {
+        "source": {
+          "uri": "instances/bridge/dataverse_bridge_openapi.json"
         }
       },
       "activities": {
@@ -163,5 +165,5 @@
       }
     }
   },
-  "scriptUri": "http://localhost:8000/data/schema/idstk_schema/process/instances/data_request.js"
+  "scriptUri": "http://localhost:8080/public/data/scripts/process/data_request.js"
 }

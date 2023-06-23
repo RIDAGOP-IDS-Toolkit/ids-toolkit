@@ -131,7 +131,6 @@ export default class Process extends BaseService<ProcessType> implements HasModu
         for (let [serviceName, processService] of Object.entries(this.data.services)) {
             const processPageServiceDescr = this.processPage.getServiceDescription(serviceName)
             let serviceBridge: Bridge<any>
-            // @ts-ignore
             if (processService.bridge) {
                 // @ts-ignore
                 const uriS = processService.bridge.uri ? "at: " + processService.bridge.uri : "with data."

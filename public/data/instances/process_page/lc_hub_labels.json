@@ -1,7 +1,6 @@
 {
   "title": "Local Contexts Hub Labels",
   "process": {
-    "comment": "uri:http://localhost:8000/data/schema/idstk_schema/process/instances/lc_hub_labels.json",
     "instance": {
       "name": "tk_labels",
       "title": "Local Contexts Hub Labels",
@@ -258,8 +257,8 @@
           }
         }
       },
-      "scriptUri": "http://localhost:8080/data/scripts/process/lc_hub_labels.js"
+      "scriptUri": "http://localhost:8080/public/data/scripts/process/lc_hub_labels.js"
     }
   },
-  "local_prefix_path": "data/"
+  "local_prefix_path": "public/data/"
 }

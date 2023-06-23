@@ -1,0 +1,27 @@
+{
+  "execute": {
+    "openapiSchemaUri": "openapi/datastorage_openapi.json"
+  },
+  "capabilities": {
+    "read_dataset_file": {
+      "operation": {
+        "path": "/file",
+        "method": "get"
+      }
+    },
+    "write_dataset_file": {
+      "functionName": "post",
+      "_operation": {
+        "path": "/file",
+        "method": "post"
+      }
+    },
+    "delete_dataset_file": {
+      "operation": {
+        "path": "/file",
+        "method": "delete"
+      }
+    }
+  },
+  "supportModuleUri": "http://localhost:8080/public/data/scripts/bridge_support/datastore.js"
+}

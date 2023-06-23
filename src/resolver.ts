@@ -87,11 +87,12 @@ export class LoadsFiles {
                 }
                 // const module = (await import(uri))
                 const module = (await import(/* webpackIgnore: true */uri ))
+                console.debug("module loaded: ",moduleName, uri)
                 // todo, that is actually strange that I can pass the module as instance
                 DevHelper.addSource({
                     type: moduleType,
                     name: moduleName ?? moduleType,
-                    "uri": moduleUri,
+                    uri: moduleUri,
                     instance: module,
                     location
                 })
