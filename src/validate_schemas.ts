@@ -1,4 +1,4 @@
-import Ajv, {JSONSchemaType, ErrorObject} from "ajv"
+import Ajv, {JSONSchemaType, ErrorObject} from "ajv/dist/2020"
 import toolkit_schema from '../schemas/ridagop-toolkit.schema.json'
 import addFormats from "ajv-formats"
 import isEmpty from "lodash/isEmpty"
@@ -8,8 +8,8 @@ import { AnyValidateFunction } from "ajv/dist/types";
 
 
 const ajv = new Ajv({allErrors: true, strict: "log", useDefaults: true})
-const draft7MetaSchema = require("ajv/dist/refs/json-schema-draft-07.json")
-ajv.addMetaSchema(draft7MetaSchema)
+// const draft7MetaSchema = require("ajv/dist/refs/json-schema-draft-07.json")
+// ajv.addMetaSchema(draft7MetaSchema)
 
 addFormats(ajv)
 

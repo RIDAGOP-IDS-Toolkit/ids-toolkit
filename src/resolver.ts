@@ -6,6 +6,15 @@ import DevHelper from "./dev_helper";
 import {getMsg} from "./i18nLLL";
 import {ModuleType} from "./data_types/bridge_types";
 
+function getAppPath() {
+    const url = new URL(window.location.href)
+    // console.log("page url", url)
+    const pathParts = url.pathname.split('/')
+    pathParts.pop()
+    // console.log("put together...", url.origin, pathParts)
+    return url.origin + pathParts.join('/') + "/"
+}
+
 function addPrefix(uri: string) {
     let prefix_path = ""
     if (window.getToolkit()) {
@@ -18,12 +27,7 @@ function addPrefix(uri: string) {
     } catch (e) {
         // uri is not absolute... add prefix
         if (prefix_path === "" || prefix_path === undefined) {
-            const url = new URL(window.location.href)
-            // console.log("page url", url)
-            const pathParts = url.pathname.split('/')
-            pathParts.pop()
-            // console.log("put together...", url.origin, pathParts)
-            prefix_path = url.origin + pathParts.join('/') + "/"
+            prefix_path = getAppPath()
         }
         console.debug("final prefixed uri", prefix_path + uri)
         return prefix_path + uri
@@ -83,11 +87,11 @@ export class LoadsFiles {
             try {
                 console.debug(uri)
                 if (!uri.startsWith("http")) {
-                    uri = "./" + uri
+                    uri = getAppPath() + uri
                 }
                 // const module = (await import(uri))
                 const module = (await import(/* webpackIgnore: true */uri ))
-                console.debug("module loaded: ",moduleName, uri)
+                console.debug("module loaded: ", moduleName, uri)
                 // todo, that is actually strange that I can pass the module as instance
                 DevHelper.addSource({
                     type: moduleType,
