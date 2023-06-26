@@ -22,7 +22,6 @@ module.exports = {
         path: path.resolve(__dirname, 'dist'),
         clean: true,
     },
-    devtool: 'inline-source-map',
     optimization: {
         minimize: true,
         mergeDuplicateChunks: false,
@@ -30,24 +29,12 @@ module.exports = {
         usedExports: true,
         concatenateModules: true,
     },
-    devServer: {
-        watchFiles: ['src/**/*'],
-        // ignore public folder
-        static: {
-            directory: path.join(__dirname, 'public'),
-            publicPath: '/',
-            watch: true,
-        },
-        client: {
-            overlay: false,
-        }
-    },
     plugins: [
         new BundleAnalyzerPlugin(),
         new CopyWebpackPlugin({
             patterns: [
-                {from: 'dist/index.js', to: '../public/toolkit/index.js'},
-                {from:'schemas/ridagop-toolkit.schema.json', to: '../public/toolkit/ridagop-toolkit.schema.json'},
+                // {from: 'dist/index.js', to: '../public/toolkit/index.js'},
+                {from: 'schemas/ridagop-toolkit.schema.json', to: '../public/toolkit/ridagop-toolkit.schema.json'},
             ],
         })
     ],

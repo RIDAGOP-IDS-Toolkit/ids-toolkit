@@ -1,10 +1,10 @@
 {
   "name": "ridagop-toolkit",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "webpack serve",
+    "start": "webpack serve --config webpack.config.dev.js",
     "build": "webpack"
   },
   "author": "Ramin Soleymani",
@@ -12,7 +12,7 @@
   "dependencies": {
     "ajv": "8.12.0",
     "swagger-client": "3.19.8",
-    "typesafe-i18n": "^5.19.1"
+    "typesafe-i18n": "5.24.3"
   },
   "devDependencies": {
     "@types/json-schema": "^7.0.11",

@@ -7,7 +7,7 @@
       "ES2018",
       "dom"
     ],
-    "sourceMap": true,
+    "sourceMap": false,
     "outDir": "./dist/",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
@@ -24,5 +24,4 @@
   "exclude": [
     "node_modules"
   ]
-  // Exclude all files in node_modules
 }

@@ -1,4 +1,4 @@
-import Ajv, {JSONSchemaType, ErrorObject} from "ajv/dist/2020"
+import Ajv, {JSONSchemaType, ErrorObject} from "ajv"
 import toolkit_schema from '../schemas/ridagop-toolkit.schema.json'
 import addFormats from "ajv-formats"
 import isEmpty from "lodash/isEmpty"
