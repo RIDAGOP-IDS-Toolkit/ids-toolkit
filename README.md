@@ -27,3 +27,9 @@ This repository contains the code for the RIDAGOP toolkit.
 The Research on Indigenous Data Governance Protocols (RIDAGOP) toolkit tries to tackle some of these problems, by
 allowing developers to create data-management processes that can interact with data repositories and can be used with
 custom built websites, tailored to the requirements of individuals communities, peoples, institutions or requests.
+
+## Install
+
+The toolkit is hosted on [npm](https://www.npmjs.com/package/ridagop-toolkit).
+`npm install ridagop-toolkit`
+
