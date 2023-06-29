@@ -31,5 +31,7 @@ custom built websites, tailored to the requirements of individuals communities, 
 ## Install
 
 The toolkit is hosted on [npm](https://www.npmjs.com/package/ridagop-toolkit).
+
+
 `npm install ridagop-toolkit`
 
