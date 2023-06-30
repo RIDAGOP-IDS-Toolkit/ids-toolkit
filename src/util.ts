@@ -61,7 +61,7 @@ export function findInOpenApiSpec(openapi_spec: OpenAPISpecSimple,
         const resultParameters = cloneDeep(pathParameters)
         // console.log("adding parameters", operationParameters)
         for (let opParam of operationParameters) {
-            const overwriteIndex = findIndex(pathParameters,p => p.name === opParam.name && p.in === opParam.in)
+            const overwriteIndex = findIndex(pathParameters, p => p.name === opParam.name && p.in === opParam.in)
             if (overwriteIndex !== -1) {
                 resultParameters[overwriteIndex] = opParam
             } else {
@@ -193,6 +193,10 @@ export function loadingAnimation() {
     loader.style.height = "120px"
     loader.style.animation = "spin 2s linear infinite"
     // add this the spin keyframes to the document:
+    if (!document.styleSheets[0]) {
+        let style = document.createElement('style');
+        document.head.appendChild(style);
+    }
     document.styleSheets[0].insertRule(`
     @keyframes spin {
         0% { transform: rotate(0deg); }

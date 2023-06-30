@@ -10,8 +10,9 @@ import {StoreContextEnum} from "../store_wrapper";
 export type ProcessType = BaseSourceType & {
     title: string
     services: { [name: string]: ProcessServiceType }
-    common: ProcessCommonsType
-    scriptUri: string
+    common?: ProcessCommonsType
+    scriptUri?: string
+    description?: string
 }
 /**
  * Process (level 2)
@@ -19,6 +20,7 @@ export type ProcessType = BaseSourceType & {
 
 export type ProcessServiceType = {
     title: string
+    description: string
     ui: ProcessServiceUIType
     activities: { [activityName: string]: ProcessServiceActivityType }
     sequences: { [sequenceName: string]: ProcessServiceSequenceType }

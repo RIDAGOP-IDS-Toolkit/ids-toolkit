@@ -6,6 +6,10 @@
       "type": "string",
       "description": "The title of the process page"
     },
+    "description": {
+      "type": "string",
+      "description": "The description of the process page"
+    },
     "process": {
       "type": "object",
       "title": "Process",

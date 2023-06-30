@@ -39,7 +39,8 @@ export default class Process extends BaseService<ProcessType> implements HasModu
         this.processPage = processPage
         this.title = this.processPage.title || processData.title || "Process"
         // todo, not sure if using defaults in the schema would be good.
-        this.UIElements = new ServiceUIElements(this, processData.common.ui)
+        this.UIElements = new ServiceUIElements(this, processData?.common?.ui ?? {})
+        this.description = processData.description || ""
     }
 
     static async loadProcess(processPage: ProcessPage,
@@ -83,41 +84,43 @@ export default class Process extends BaseService<ProcessType> implements HasModu
      * the module of the process
      */
     async loadModule(processPageModule: ModuleType): Promise<void> {
-        try {
-            // this might fail
-            let processModule: ModuleType = {}
-            const sourceMap: { [functionName: string]: FunctionSourceEnum } = {} // for descriptions. store process-page or process
+        if(this.data.scriptUri) {
             try {
-                const sourceType = this.data.uri ? InstanceTypeEnum.instanceProcessPage
-                    : InstanceTypeEnum.instanceProcess
-                const source = LoadsFiles.getSourceLocationDefinition(sourceType, InstanceTypeEnum.moduleProcess)
-                processModule = await LoadsFiles.importModule(
-                    this.data.scriptUri,
-                    InstanceTypeEnum.moduleProcess,
-                    source)
-                for (let funcName in Object.keys(processModule)) {
-                    sourceMap[funcName] = FunctionSourceEnum.process
-                }
-            } catch (e) {
-                const msg = `Could not import process-page module of (${this.title}), module uri: ${this.data.scriptUri}`
-                console.error(msg + ".  " + e)
-                throw msg + ".  " + e
-            }
-            // merge with process-page module
-            const resultModule: ModuleType = {}
-            for (let module of [processModule, processPageModule]) {
-                for (let [funcName, func] of Object.entries(module)) {
-                    if (resultModule[funcName]) {
-                        console.warn("Overwriting process-module function: ", funcName, "with function from process-page module")
+                // this might fail
+                let processModule: ModuleType = {}
+                const sourceMap: { [functionName: string]: FunctionSourceEnum } = {} // for descriptions. store process-page or process
+                try {
+                    const sourceType = this.data.uri ? InstanceTypeEnum.instanceProcessPage
+                        : InstanceTypeEnum.instanceProcess
+                    const source = LoadsFiles.getSourceLocationDefinition(sourceType, InstanceTypeEnum.moduleProcess)
+                    processModule = await LoadsFiles.importModule(
+                        this.data.scriptUri,
+                        InstanceTypeEnum.moduleProcess,
+                        source)
+                    for (let funcName in Object.keys(processModule)) {
+                        sourceMap[funcName] = FunctionSourceEnum.process
                     }
-                    resultModule[funcName] = func
-                    sourceMap[funcName] = FunctionSourceEnum.processPage
+                } catch (e) {
+                    const msg = `Could not import process-page module of (${this.title}), module uri: ${this.data.scriptUri}`
+                    console.error(msg + ".  " + e)
+                    throw msg + ".  " + e
                 }
+                // merge with process-page module
+                const resultModule: ModuleType = {}
+                for (let module of [processModule, processPageModule]) {
+                    for (let [funcName, func] of Object.entries(module)) {
+                        if (resultModule[funcName]) {
+                            console.warn("Overwriting process-module function: ", funcName, "with function from process-page module")
+                        }
+                        resultModule[funcName] = func
+                        sourceMap[funcName] = FunctionSourceEnum.processPage
+                    }
+                }
+                this.module = new Module_wrapper(resultModule, sourceMap)
+                await Promise.resolve()
+            } catch (e) {
+                return Promise.reject(e)
             }
-            this.module = new Module_wrapper(resultModule, sourceMap)
-            await Promise.resolve()
-        } catch (e) {
-            return Promise.reject(e)
         }
     }
 
@@ -205,7 +208,7 @@ export default class Process extends BaseService<ProcessType> implements HasModu
 
     getActivity({serviceName, activityName}: BasicActivityReferenceType): Activity {
         // console.log(this.services, this.services[serviceName])
-        if(!(serviceName in this.services)) {
+        if (!(serviceName in this.services)) {
             throw `Service '${serviceName}' not found. ${serviceName}.${activityName}.`
         }
         return this.services[serviceName].activities[activityName]

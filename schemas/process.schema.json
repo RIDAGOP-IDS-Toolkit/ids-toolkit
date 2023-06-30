@@ -145,6 +145,10 @@
           "type": "string",
           "description": "The user visible title of the service"
         },
+        "description": {
+          "type": "string",
+          "description": "The description of the process page"
+        },
         "ui": {
           "default": {},
           "description": "The UI-elements of the service",

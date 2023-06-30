@@ -261,7 +261,7 @@
             },
             "reject": {
               "label": "Reject request",
-              "activityService": "request-storage",
+              "activityService": "request_storage",
               "triggerActivity": "reject"
             }
           }
@@ -341,7 +341,7 @@
           }
         }
       },
-      "scriptUri": "http://localhost:8080/public/data/scripts/process/data_request.js"
+      "scriptUri": "scripts/process/data_request.js"
     }
   },
   "services": {
@@ -415,7 +415,7 @@
                 "functionName": "copy_dataset_files"
               }
             },
-            "supportModuleUri": "http://localhost:8080/public/data/scripts/bridge_support/dataverse_support_module.js"
+            "supportModuleUri": "scripts/bridge_support/dataverse_support_module.js"
           }
         },
         "authorization": {
@@ -435,5 +435,5 @@
       }
     }
   },
-  "local_prefix_path": "public/data/"
+  "local_prefix_path": "data/"
 }

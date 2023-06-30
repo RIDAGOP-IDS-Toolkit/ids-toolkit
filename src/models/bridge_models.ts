@@ -84,8 +84,8 @@ export abstract class Bridge<T extends BridgeCapability> {
 
             let bridge: Bridge<BridgeCapability>
             if (bridgeExecution.type === "openapi") {
-                bridge = await new BridgeAsOpenApi(serviceName, bridgeInstance, bridgeDescription, bridgeExecution.object, supportModule)
-
+                bridge = new BridgeAsOpenApi(serviceName, bridgeInstance, bridgeDescription, bridgeExecution.object, supportModule)
+                await (bridge as BridgeAsOpenApi).createSwaggerClient()
             } else {//if (bridgeExecution.type === "module") {
                 bridge = new BridgeAsModule(serviceName, bridgeInstance, bridgeExecution.object, supportModule)
             }
@@ -165,8 +165,6 @@ export class BridgeAsOpenApi extends Bridge<BridgeOpenApiCapability> {
             this.authorization = bridgeDescription.authorization
         }
         this.openapiSchema = openAPISchema
-        // todo this is async...
-        this.createSwaggerClient()
     }
 
 
@@ -201,7 +199,9 @@ export class BridgeAsOpenApi extends Bridge<BridgeOpenApiCapability> {
             try {
                 // console.log("capabilityData", capabilityData)
                 this.capabilities[capabilityName] =
-                    new BridgeOpenApiCapability(this, capabilityName, capabilityData as BridgeCapabilityOpenApiType, this.swaggerClient)
+                    new BridgeOpenApiCapability(this,
+                        capabilityName,
+                        capabilityData as BridgeCapabilityOpenApiType, this.swaggerClient)
                 continue
             } catch (err) {
                 error = err
@@ -209,8 +209,8 @@ export class BridgeAsOpenApi extends Bridge<BridgeOpenApiCapability> {
             }
             try {
                 if (this.supportModule !== undefined) {
-                    console.warn("open-api method not found, checking support module")
-                    console.debug("open-api method not found, checking support module")
+                    // console.warn("open-api method not found, checking support module")
+                    console.warn(`open-api method not found for capability: ${this.serviceName},${capabilityName} checking support module.`)
                     // console.log(capabilityData)
                     this.capabilities[capabilityName] =
                         new BridgeClientCapability(this, capabilityName, capabilityData as BridgeCapabilityModuleType)
@@ -278,7 +278,7 @@ export class BridgeAsOpenApi extends Bridge<BridgeOpenApiCapability> {
                 }
                 if (authValue) {
                     console.log("auth-value", authValue)
-                    console.log(this.swaggerClient,authName)
+                    console.log(this.swaggerClient, authName)
                     this.swaggerClient.authorizations = {
                         [authName]: authValue
                     }

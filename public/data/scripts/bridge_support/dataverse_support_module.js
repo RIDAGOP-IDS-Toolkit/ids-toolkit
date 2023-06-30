@@ -1,5 +1,5 @@
 const DATAVERSE_API_KEY_NAME = "X-Dataverse-key"
-
+const repo_service_name = "data_repo"
 export async function module_createDataset(serverUri, apiKey, dataverseIdentifier, body) {
   // we got this with OpenAPI
   console.log(body)
@@ -100,16 +100,16 @@ export async function downloadAndReUpload(files) {
   // console.log(files.data[0].dataFile.id)
 
   // for dataverse-tests
-  // let id = await getIDS().getValue("dataverse", "file")
+  // let id = await getIDS().getValue(repo_service_name", "file")
   // console.log(id)
 
-  let res = await getIDS().executeActivity("dataverse", "download_file", {
+  let res = await getToolkit().executeActivity(repo_service_name, "download_file", {
     fileId: files.data[2].dataFile.id
   })
   console.log(res)
   // reupload file to another dataset
   // const file = new File([res], files.data[2].dataFile.filename, {type: files.data[2].dataFile.contentType})
-  // await getIDS().executeActivity("dataverse", "addFile", {"persistentId": "doi:10.5072/FK2/7YEHNO"}, {"file": file})
+  // await getIDS().executeActivity(repo_service_name", "addFile", {"persistentId": "doi:10.5072/FK2/7YEHNO"}, {"file": file})
   return {}
 }
 
@@ -120,19 +120,19 @@ export async function copy_dataset_files(dataset_metadata) {
 
   const files = dataset_metadata.data.latestVersion.files
   // console.log("files", files)
-  const newDataSet = getIDS().getStorageValue("newDatasetId")
+  const newDataSet = getToolkit().getStorageValue("newDatasetId")
   const newDatasetPersistentId = newDataSet.data.persistentId
   // console.log(newDatasetPersistentId)
 
   for (let i = 0; i < files.length; i++) {
     const dataFile = files[i].dataFile
-    let res = await getIDS().executeActivity("dataverse", "download_file", {
+    let res = await getToolkit().executeActivity(repo_service_name, "download_file", {
       fileId: dataFile.id
     })
     console.log(res)
     // reupload file to another dataset
     const fileContent = new File([res], dataFile.filename, {type: dataFile.contentType})
-    await getIDS().executeActivity("dataverse", "addFile", {"persistentId": newDatasetPersistentId}, {"file": fileContent})
+    await getToolkit().executeActivity("data_repo", "addFile", {"persistentId": newDatasetPersistentId}, {"file": fileContent})
   }
 
   return {}

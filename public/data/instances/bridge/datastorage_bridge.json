@@ -23,5 +23,5 @@
       }
     }
   },
-  "supportModuleUri": "http://localhost:8080/public/data/scripts/bridge_support/datastore.js"
+  "supportModuleUri": "scripts/bridge_support/datastore.js"
 }

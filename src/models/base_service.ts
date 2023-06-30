@@ -9,7 +9,7 @@ import {
     ProcessType,
     ServiceData
 } from "../data_types/ProcessTypes";
-import {updateUI} from "../ui";
+// import {updateUI} from "../ui";
 import {toArray} from "../util";
 // import _ from "lodash";
 import unzip from "lodash/unzip";
@@ -31,6 +31,7 @@ export abstract class BaseService<T extends ProcessType | ServiceData> extends S
     name: string
     public readonly serviceType: ServiceTypeEnum
     title: string
+    description: string
     data: T
     active: boolean
     activities: { [activityName: string]: Activity } = {}
@@ -151,7 +152,8 @@ export abstract class BaseService<T extends ProcessType | ServiceData> extends S
     }
 
     activityFinished() {
-        updateUI()
+        // todo check this..
+        // updateUI()
         this.currentlyRunningActivity = null
         getToolkit().activityStore.clearStore()
         this.getProcess().processPage.activityFinished()

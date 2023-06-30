@@ -32,11 +32,12 @@ export class Service extends BaseService<ServiceData> {
         this.process = _process
         this.name = serviceName
         this.title = processPageServiceDescription.title || (processServiceDescription.title || "")
+        this.description = processPageServiceDescription.description || (processServiceDescription.description || "")
         this.UIElements = new ServiceUIElements(this, processServiceDescription.ui || {})
 
         this.data = {
             processServiceDescription,
-            processPageServiceDescription
+            processPageServiceDescription,
         }
         this.bridge = bridge
         this.bridge.setService(this)

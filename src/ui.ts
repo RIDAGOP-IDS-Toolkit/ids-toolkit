@@ -27,7 +27,10 @@ export function createProcessUI(processPage: ProcessPage) {
     const processWrapper = document.createElement("div")
     const titleElem = document.createElement("h2")
     titleElem.innerText = processPage.getTitle()
+    const descriptionElem = document.createElement("p")
+    descriptionElem.innerHTML = `<p>${processPage.description}</p><p>${processPage.process.description}</p>`
     processWrapper.appendChild(titleElem)
+    processWrapper.appendChild(descriptionElem)
 
     Object.values(processPage.process.services).forEach(service => processWrapper.appendChild(createServiceElements(service)))
     document.body.appendChild(processWrapper)
@@ -56,6 +59,9 @@ export function createServiceElements(service: Service) {
     const service_header = document.createElement("h3")
     service_header.innerText = service.title
     serviceWrapper.appendChild(service_header)
+    const service_description = document.createElement("p")
+    service_description.innerText = service.description
+    serviceWrapper.appendChild(service_description)
 
     // UIElements
     const uiElementsSection = createUiElements(service.UIElements, service.name, uiSettings?.sections?.input)

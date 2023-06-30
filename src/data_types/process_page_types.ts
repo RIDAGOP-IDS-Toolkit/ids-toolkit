@@ -7,6 +7,7 @@ import {UIModeEnum} from "../const";
  */
 export type ProcessPageType = BaseSourceType & {
     title: string
+    description: string
     process: DataSourceType<ProcessType>
     services: { [key: string]: ProcessPageServiceType }
     scriptUri: string
@@ -32,6 +33,7 @@ export type ProcessPageServiceType = {
      * instance of process_page/process_page.schema.json#/properties/services
      */
     title?: string,
+    description?: string,
     //InstanceType<BridgeType> means schema or uri.
     bridge: ServiceBridgeType
     parameters: { [processParamName: string]: string }

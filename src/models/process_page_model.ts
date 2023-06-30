@@ -25,6 +25,7 @@ export default class ProcessPage {
     public process: Process
     public view: ProcessPageViewType
     public local_prefix_path: string = ""
+    public description: string = ""
 
     constructor(url: string, processPageData: ProcessPageType) {
         this.url = url
@@ -32,6 +33,7 @@ export default class ProcessPage {
         this.title = processPageData.title
         this.local_prefix_path = processPageData.local_prefix_path
         this.view = processPageData.view ?? {type: UIModeEnum.build}
+        this.description = processPageData.description || ""
     }
 
 

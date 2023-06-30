@@ -257,8 +257,8 @@
           }
         }
       },
-      "scriptUri": "http://localhost:8080/public/data/scripts/process/lc_hub_labels.js"
+      "scriptUri": "scripts/process/lc_hub_labels.js"
     }
   },
-  "local_prefix_path": "public/data/"
+  "local_prefix_path": "data/"
 }

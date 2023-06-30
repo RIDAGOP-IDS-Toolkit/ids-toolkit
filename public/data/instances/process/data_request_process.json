@@ -1,87 +1,7 @@
 {
   "name": "data_request",
-  "description": "Request data. Request needs ultimately be sent via email",
+  "description": "Request data for a dataset on demo.dataverse.org. Data request is sent via email. This is only a demo process.",
   "services": {
-    "access_request": {
-      "title": "Data repository",
-      "ui": {
-        "inputFields": {
-          "dataset_id": {
-            "label": "Dataset id",
-            "fromQueryParam": "datasetId"
-          },
-          "motivation": {
-            "label": "Motivation",
-            "textArea": true,
-            "default": "I want to use the data for my research"
-          },
-          "email": {
-            "label": "Your email address"
-          }
-        }
-      },
-      "bridge": {
-        "source": {
-          "uri": "instances/bridge/dataverse_bridge_openapi.json"
-        }
-      },
-      "activities": {
-        "storeData": {
-          "title": "Store data",
-          "moduleFunction": "storeData",
-          "storeResult": {
-            "context": "process",
-            "key": "storeData"
-          },
-          "parameters": {
-            "dataset_id": {
-              "type": "string",
-              "field": "dataset_id"
-            },
-            "motivation": {
-              "type": "string",
-              "field": "motivation"
-            },
-            "email": {
-              "type": "string",
-              "field": "email"
-            }
-          },
-          "ui": {
-            "alert": false
-          }
-        },
-        "sendEmail": {
-          "title": "Send Email",
-          "moduleFunction": "sendEmail",
-          "parameters": {
-            "receiver": {
-              "type": "string",
-              "constant": "Ramin.Soleymani@uab.cat",
-              "comment": "could be obscured and fixed in the JS function that sends email"
-            },
-            "dataset_id": {
-              "type": "string",
-              "field": "dataset_id"
-            },
-            "motivation": {
-              "type": "string",
-              "field": "motivation"
-            },
-            "applicationData": {
-              "store": {
-                "context": "process",
-                "key": "applicationId"
-              }
-            },
-            "emailAddress": {
-              "type": "string",
-              "field": "email"
-            }
-          }
-        }
-      }
-    },
     "request_storage": {
       "title": "Request storage",
       "activities": {
@@ -136,6 +56,20 @@
   },
   "common": {
     "ui": {
+      "inputFields": {
+        "dataset_id": {
+          "label": "Dataset id",
+          "fromQueryParam": "datasetId"
+        },
+        "motivation": {
+          "label": "Motivation",
+          "textArea": true,
+          "default": "I want to use the data for my research"
+        },
+        "email": {
+          "label": "Your email address"
+        }
+      },
       "buttons": {
         "send": {
           "label": "Send",
@@ -146,24 +80,68 @@
     "activities": {
       "store.send.all": {
         "title": "Store and send request",
-        "serviceName": "access_request",
-        "activityName": "storeData",
+        "moduleFunction": "storeData",
+        "parameters": {
+          "dataset_id": {
+            "type": "string",
+            "field": "dataset_id"
+          },
+          "motivation": {
+            "type": "string",
+            "field": "motivation"
+          },
+          "email": {
+            "type": "string",
+            "field": "email"
+          }
+        },
+        "storeResult": {
+          "context": "process",
+          "key": "storeData"
+        },
         "subActivities": {
-          "store.send": {
+          "store": {
             "title": "Store request",
             "serviceName": "request_storage",
             "activityName": "store",
             "priority": 1
           },
           "send": {
-            "title": "Send request",
-            "serviceName": "access_request",
-            "activityName": "sendEmail",
+            "title": "Send Email",
+            "moduleFunction": "sendEmail",
+            "debug": {
+              "execute": false
+            },
+            "parameters": {
+              "receiver": {
+                "type": "string",
+                "constant": "Ramin.Soleymani@uab.cat",
+                "comment": "could be obscured and fixed in the JS function that sends email"
+              },
+              "dataset_id": {
+                "type": "string",
+                "field": "dataset_id"
+              },
+              "motivation": {
+                "type": "string",
+                "field": "motivation"
+              },
+              "applicationData": {
+                "store": {
+                  "context": "process",
+                  "key": "applicationId"
+                }
+              },
+              "emailAddress": {
+                "type": "string",
+                "field": "email"
+              }
+            },
             "priority": 2
           }
         }
       }
     }
   },
-  "scriptUri": "http://localhost:8080/public/data/scripts/process/data_request.js"
+  "scriptUri": "scripts/process/data_request.js"
 }

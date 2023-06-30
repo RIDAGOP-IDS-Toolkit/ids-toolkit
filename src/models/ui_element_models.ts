@@ -102,7 +102,7 @@ export class ServiceButton {
             const activityServiceName = (this.data as ProcessCommonButtonType).activityService
             if (activityServiceName) {
                 if(!(activityServiceName in this.service.getProcess().services)) {
-                    throw `No service called ${activityServiceName} for the button ${this.data}.`
+                    throw `No service called ${activityServiceName} for the button ${JSON.stringify(this.data)}.`
                 }
                 activityService = this.service.getProcess().services[activityServiceName]
             }
