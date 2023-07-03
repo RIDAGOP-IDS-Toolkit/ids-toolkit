@@ -48,8 +48,11 @@ export class Service extends BaseService<ServiceData> {
     }
 
     getAutostartActivities(): string[] {
-        // return merge of this.data.processServiceDescription.autostart and this.data.processPageServiceDescription.autostart
-        return [...(this.data.processServiceDescription.autostart || []), ...(this.data.processPageServiceDescription.autostart || [])]
+        let pAutostart = this.data.processServiceDescription.autostart || []
+        pAutostart = Array.isArray(pAutostart) ? pAutostart : [pAutostart];
+        let ppAutostart = this.data.processPageServiceDescription.autostart || []
+        ppAutostart = Array.isArray(ppAutostart) ? ppAutostart : [ppAutostart];
+        return [...pAutostart, ...ppAutostart]
     }
 
     getActivityData(): { [activityName: string]: (ProcessServiceActivityType | ActivityReferenceType) } {

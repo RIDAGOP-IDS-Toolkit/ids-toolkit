@@ -68,7 +68,7 @@ export function createServiceElements(service: Service) {
     serviceWrapper.appendChild(uiElementsSection)
 
     // const dynamic UISection
-    createDynamicUIElements(service.name, serviceWrapper)
+    serviceWrapper.appendChild(createDynamicUIElements(service.name))
 
     // status area
     const statusSection = createStatusArea(service.name, service.activities, uiSettings?.sections?.status)
@@ -87,6 +87,8 @@ export function createCommonContainer(processPage: ProcessPage): HTMLDivElement 
     // UI
     const uiElements = createUiElements(process.UIElements, "common", UISettings?.sections?.input)
     commonContainer.appendChild(uiElements)
+
+    commonContainer.appendChild(createDynamicUIElements("process"))
     // STATUS
     const statusWrapper = createStatusArea("process", process.activities, UISettings?.sections?.status)
     commonContainer.appendChild(statusWrapper)
@@ -241,7 +243,7 @@ function createUiElements(uiElements: ServiceUIElements,
     return inputWrapper
 }
 
-function createDynamicUIElements(serviceName: string, serviceWrapper: HTMLDivElement) {
+function createDynamicUIElements(serviceName: string) {
     const dynamicUI = document.createElement("div")
     dynamicUI.id = serviceName + "_dyn_ui"
     dynamicUI.style.display = "none"
@@ -249,7 +251,7 @@ function createDynamicUIElements(serviceName: string, serviceWrapper: HTMLDivEle
     dynamicUiHeader.style.color = "darkgreen"
     dynamicUiHeader.innerText = "Dynamic UI"
     dynamicUI.appendChild(dynamicUiHeader)
-    serviceWrapper.appendChild(dynamicUI)
+    return dynamicUI
 }
 
 function createStatusArea(parentName: string, activities: { [name: string]: Activity },

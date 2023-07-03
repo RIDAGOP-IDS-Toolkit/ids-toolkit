@@ -1,3 +1,6 @@
+
+const fileSelect_checkBox_prefix = "$DS_FILE_"
+
 export function storeData(dataset_id, motivation, email) {
     /**
      * merge data for the store it to grab it later
@@ -10,9 +13,7 @@ export function storeData(dataset_id, motivation, email) {
     }
     console.warn("Calling store-data", dataset_id, motivation, email)
     return {
-        dataset_id,
-        motivation,
-        email
+        dataset_id, motivation, email
     }
 }
 
@@ -46,9 +47,7 @@ export function generate_process_id() {
 
 export function createRequestHtml(requestData) {
     // create some html that includes requestData.dataset_id and requestData.motivation and email
-    const resultHtml = "<p>Dataset id: " + requestData.dataset_id + "</p>" +
-        "<p>Motivation: " + requestData.motivation + "</p>" +
-        "<p>Email: " + requestData.email + "</p>"
+    const resultHtml = "<p>Dataset id: " + requestData.dataset_id + "</p>" + "<p>Motivation: " + requestData.motivation + "</p>" + "<p>Email: " + requestData.email + "</p>"
     const wrapper = document.createElement("div")
     wrapper.innerHTML = resultHtml
     return wrapper
@@ -69,7 +68,7 @@ export function rejectRequest(requestData, rejectReason) {
 }
 
 export function acceptRequest(requestData) {
-    console.log(requestData)
+    // console.log(requestData)
     return requestData.dataset_id
 }
 
@@ -100,9 +99,28 @@ export function uploadNewDatasetTEST(newDataset) {
 export function sendAcceptEmail(requestData, privateUrl) {
     const subject = "Data access request rejected"
     // const body = "Data access request by " + encodeURIComponent(email) + ". Click here to respond to the request: " + href
-    const body = "Your request for the dataset " + requestData.dataset_id + " has been accepted. " +
-        "Read the dataset description for terms of use. The dataset is available here: " + encodeURIComponent(privateUrl)
+    const body = "Your request for the dataset " + requestData.dataset_id + " has been accepted. " + "Read the dataset description for terms of use. The dataset is available here: " + encodeURIComponent(privateUrl)
     console.log(requestData)
     console.log(privateUrl)
     window.location.href = `mailto:${requestData.email}?subject=${subject}&body=${body}`
+}
+
+export function selectFilesUI(datasetMetadata) {
+    // console.log("datasetMetadata", datasetMetadata)
+    const files = datasetMetadata.data.latestVersion.files
+    let result = files.reduce((obj, item) => {
+        obj[fileSelect_checkBox_prefix + (item.dataFile.id).toString()] = {label: item.label}
+        return obj;
+    }, {});
+    return {
+        "checkBoxes": result
+    }
+}
+
+
+export async function getSelectedFiles(dataset_metadata) {
+    const checkBoxes = await getToolkit().getUIValues("checkBoxes")
+    const selectedFiles = Object.keys(checkBoxes).filter(key => checkBoxes[key])
+        .map(key => key.replace(fileSelect_checkBox_prefix, ""))
+    return selectedFiles
 }

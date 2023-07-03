@@ -169,6 +169,7 @@ export type ProcessParamType = {
 export type ResultStoreType = {
     context: StoreContextEnum
     key: string
+    default?: any
 }
 
 export type ProcessCommonsType = {
@@ -176,6 +177,7 @@ export type ProcessCommonsType = {
     activities: { [activityName: string]: (ProcessServiceActivityType | ActivityReferenceType) }
     sequences: { [sequenceName: string]: ProcessServiceSequenceType }
     parameters: { [processParamName: string]: string }
+    autostart: string | string[]
 }
 
 

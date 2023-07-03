@@ -137,7 +137,7 @@ export class StoreParameter extends ActivityParameter {
 
     _getValue(): any {
         let key: string
-        let loc: string|undefined
+        let loc: string | undefined
 
         // if there is a dot in the key. split it by dot and get the value from the object
         const keyParts = this.storeSettings.key.split(".")
@@ -157,13 +157,15 @@ export class StoreParameter extends ActivityParameter {
         } else { // implicit default this.storeSettings.context === StoreContextEnum.SERVICE
             resultValue = this.service.getStoreValue(key)
         }
-
         if (loc) {
-            return get(resultValue, loc)
-        } else {
-            return resultValue
-
+            resultValue = get(resultValue, loc)
         }
+        if (resultValue === null) {
+            if (this.storeSettings.default) {
+                return this.storeSettings.default
+            }
+        }
+        return resultValue
     }
 
     getParameterType(): ActivityParameterType {
@@ -234,7 +236,7 @@ export class QueryParameter extends ActivityParameter {
         this.paramName = paramName
     }
 
-    _getValue(): string|null {
+    _getValue(): string | null {
         const query_params = new URLSearchParams(window.location.search)
         return query_params.get(this.paramName)
     }
@@ -393,7 +395,7 @@ export class FileInput extends UIInput {
             return
         return new Promise((resolve, reject) => {
             const files: FileList = (this.htmlElem as HTMLInputElement).files ?? new FileList()
-            if(files.length > 0){
+            if (files.length > 0) {
                 let file = files[0]
                 if (this.fileinputData().keepAsFile) {
                     this.readData = file

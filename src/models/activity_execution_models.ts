@@ -61,11 +61,11 @@ export class ReferenceActivity extends ActivityExecution {
     }
 
     async execute(parameters: object, requestBody: any): Promise<object> {
-        console.log("ReferenceActivity call ref activity...")
+        // console.log("ReferenceActivity call ref activity...")
         try {
             return await this.activity.execute(parameters)
         } catch (e) {
-            throw "Referenced activity failed: " + e
+            throw `Referenced activity failed : ${this.activity}: ${e}`
         }
     }
 

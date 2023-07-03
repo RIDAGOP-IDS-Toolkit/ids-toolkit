@@ -20,7 +20,8 @@ export type ProcessPageType = BaseSourceType & {
 
 export type ProcessPageCommonType = {
     ui?: ProcessPageServiceUiType
-    parameters: { [processParamName: string]: string }
+    parameters?: { [processParamName: string]: string }
+    autoStart?: string | string[]
 }
 
 

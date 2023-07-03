@@ -3,6 +3,7 @@ import cloneDeep from "lodash/cloneDeep"
 import {ActivityReferenceType, BasicActivityReferenceType} from "../data_types/ProcessTypes";
 import {Store} from "../store_wrapper";
 import {ToolkitEventType, ToolkitEventTypeEnum} from "../data_types/generic";
+import {UIInput} from "./parameter_models";
 
 export default class DSToolkit {
 
@@ -108,6 +109,25 @@ export default class DSToolkit {
             console.debug("options are", this.processPage.process.services[serviceName].UIElements.getNames())
             throw new Error(`Service-UIElement ${serviceName}:${uiElemName} failed: ${e}`)
         }
+    }
+
+    async getUIValues(type: string, serviceName: string = "process") {
+        // todo: add to docs
+        let uiElements
+        if (serviceName === "process") {
+            uiElements = this.processPage.process.UIElements
+        } else {
+            uiElements = this.processPage.process.services[serviceName].UIElements
+        }
+        if (!(type in uiElements)) {
+            throw new Error(`Service ${serviceName} does not have UI elements of type ${type}`)
+        }
+        uiElements = uiElements[type]
+        const results = {}
+        for (const [uiElementName,uiElement] of Object.entries(uiElements)) {
+            results[uiElementName] = await (uiElement as UIInput).getValue()
+        }
+        return results
     }
 
 }

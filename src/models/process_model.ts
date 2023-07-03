@@ -215,8 +215,11 @@ export default class Process extends BaseService<ProcessType> implements HasModu
     }
 
     getAutostartActivities(): string[] {
-        // TODO
-        return [];
+        let pAutostart = this.data?.common?.autostart ?? []
+        pAutostart  = Array.isArray(pAutostart) ? pAutostart : [pAutostart];
+        let ppAutostart = this.processPage.getCommonData()?.autoStart ?? []
+        ppAutostart = Array.isArray(ppAutostart) ? ppAutostart : [ppAutostart];
+        return [...pAutostart, ...ppAutostart]
     }
 
     getProcessParameters(): { [p: string]: string } {

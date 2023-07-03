@@ -115,6 +115,7 @@ export class Activity {
         const activityData = this.data as ProcessServiceActivityType
         let capability
         // debugger
+
         if (activityData.bridgeCapability) {
             // console.log("... bridge")
             if (this.service.serviceType === ServiceTypeEnum.service) {
@@ -137,7 +138,7 @@ export class Activity {
                 this.execution = new ModuleFunction(function_, functionSource)
             } else {
                 console.error(`no module function in service/page module for Activity: '${this.name}'. Name of Function: ${activityData.moduleFunction}`)
-                console.error(this.service.getProcess().module)
+                console.error(this.service.getProcess().module.listFunctions())
                 this.active = false
                 throw(getMsg("MODULE_FUNCTION_NOT_FOUND", {functionName: activityData.moduleFunction}))
             }
@@ -203,15 +204,16 @@ export class Activity {
          *
          *  Run same for all subActivities
          */
-
-        // console.log("*******", this.name)
-
         if (!this.active) {
             console.error(`No Parameter-mapping is done for inactive Activity: '${this.name}' of service: '${this.service.name}'`)
             return
         }
         if (this.execution.getExecutionType() === ExecutionType.referenceActivity) {
             // no mapping for reference activities
+            // but still do the subActivities
+            for (let subActivity of Object.values(this.subActivities)) {
+                subActivity.mapParameters(processParamMapping, processPageParamMapping, uiInputs)
+            }
             return
         }
         const executionParameters = this.execution.getParameterNames()

@@ -1132,7 +1132,8 @@
       },
       "required": [
         "key"
-      ]
+      ],
+      "additionalProperties": false
     },
     "P-StoreAccess": {
       "type": "object",
@@ -1151,11 +1152,15 @@
         "key": {
           "type": "string",
           "description": "key in the store"
+        },
+        "default": {
+          "description": "default value if the key is not found"
         }
       },
       "required": [
         "key"
-      ]
+      ],
+      "additionalProperties": false
     },
     "Process": {
       "title": "RIDAGOP toolkit Process-Schema",

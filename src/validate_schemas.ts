@@ -60,15 +60,16 @@ export function validation(schemaId_ref: string, instance: object):
  * @return true if valid, false otherwise
  */
 export function dynamicUIValidation(uiData: ProcessServiceUIType): boolean {
-    // @ts-ignore
-    // todo, do we need this?
-    const uiSchema: JSONSchemaType<any> = getToolkit().schemas.processSchema.$defs.ServiceUI as JSONSchemaType<any>
-    if (!uiSchema) {
-        const errors = validation("P-ServicesUI", uiData)
-        // TODO What todo on errors!
-        if (isEmpty(errors)) {
-            console.log("build UI")
-            return true
+    const baseSchema = ajv.getSchema(globalSchemaUri)
+    if(baseSchema) {
+        const uiSchema: JSONSchemaType<any> = baseSchema.schema["$defs"]["P-ServiceUI"] as JSONSchemaType<any>
+        if (uiSchema) {
+            const errors = validation("P-ServiceUI", uiData)
+            // TODO What todo on errors!
+            if (isEmpty(errors)) {
+                console.log("build UI")
+                return true
+            }
         }
     }
     return false

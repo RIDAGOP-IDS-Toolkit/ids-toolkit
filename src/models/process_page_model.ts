@@ -166,8 +166,9 @@ export default class ProcessPage {
      * Run the autostart-activities of the process and all services
      */
     async autostart() {
+        // services
         for (let service of Object.values(this.process.services)) {
-            // console.log("AUTOSTART...", service.name, service.title)
+            console.log("AUTOSTART...", service.name, service.title)
             try {
                 await service.autostart()
             } catch (e) {
@@ -175,6 +176,14 @@ export default class ProcessPage {
                 console.error(errMsg)
                 throw errMsg
             }
+        }
+        // run autostart activities defines in common
+        try {
+            await this.process.autostart()
+        } catch (e) {
+            const errMsg = `autostart failed: ${e}, of Process`
+            console.error(errMsg)
+            throw errMsg
         }
     }
 
