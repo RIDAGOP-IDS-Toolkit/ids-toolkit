@@ -109,9 +109,6 @@
           "send": {
             "title": "Send Email",
             "moduleFunction": "sendEmail",
-            "debug": {
-              "execute": false
-            },
             "parameters": {
               "receiver": {
                 "type": "string",

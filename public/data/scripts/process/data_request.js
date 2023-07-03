@@ -3,7 +3,7 @@ const dataverse_instance = "https://demo.dataverse.org/"
 
 export function storeData(dataset_id, motivation, email) {
     /**
-     * store it to grab it from the other service right after
+     * merge data for the store it to grab it later
      */
     if (dataset_id === "") {
         return Promise.reject("No dataset id provided")

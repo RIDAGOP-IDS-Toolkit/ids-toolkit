@@ -210,7 +210,8 @@ export class BridgeAsOpenApi extends Bridge<BridgeOpenApiCapability> {
             try {
                 if (this.supportModule !== undefined) {
                     // console.warn("open-api method not found, checking support module")
-                    console.warn(`open-api method not found for capability: ${this.serviceName},${capabilityName} checking support module.`)
+                    console.warn(`open-api method not found for capability: ${this.serviceName}, 
+                    ${capabilityName} \n${JSON.stringify(capabilityData)}\nchecking support module.`)
                     // console.log(capabilityData)
                     this.capabilities[capabilityName] =
                         new BridgeClientCapability(this, capabilityName, capabilityData as BridgeCapabilityModuleType)
