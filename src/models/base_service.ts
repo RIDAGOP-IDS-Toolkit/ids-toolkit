@@ -211,6 +211,7 @@ export abstract class BaseService<T extends ProcessType | ServiceData> extends S
     mapActivitiesParameters() {
         // console.log("prepare activities:", this.name, this.title)
         for (let activity of Object.values(this.activities)) {
+            // console.log("BaseService.mapActivitiesParameters", this.name)
             activity.mapParameters(
                 this.getProcessParameters(),
                 this.getProcessPageParameters(),

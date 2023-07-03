@@ -1,6 +1,3 @@
-const data_request_base_url = "http://localhost:8080/?process=data_request_response"
-const dataverse_instance = "https://demo.dataverse.org/"
-
 export function storeData(dataset_id, motivation, email) {
     /**
      * merge data for the store it to grab it later
@@ -19,13 +16,13 @@ export function storeData(dataset_id, motivation, email) {
     }
 }
 
-export async function sendEmail(receiver, dataset_id, motivation, applicationData, email) {
+export async function sendEmail(response_page_url, dataverse_instance, receiver, dataset_id, motivation, applicationData, email) {
     console.log("sendEmail", receiver, motivation, applicationData)
     // const subject_ = subject + ": " +data.body.title
 
-
     const subject = "Data access request"
-    const href = `${data_request_base_url}${encodeURIComponent("&")}request_id=${applicationData.filename}`
+    const paramS = response_page_url.indexOf("?") !== -1 ? encodeURIComponent("&") : encodeURIComponent("?")
+    const href = `${response_page_url}${paramS}request_id=${applicationData.filename}`
     console.log("href", decodeURIComponent(href))
     const body = "Data access request by " + encodeURIComponent(email) + `.\n See the dataset here ${dataverse_instance}/dataset.xhtml?persistentId=${dataset_id} .Click here to respond to the request: ${href}`
 // https://demo.dataverse.org/dataset.xhtml?

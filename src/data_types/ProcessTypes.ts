@@ -175,6 +175,7 @@ export type ProcessCommonsType = {
     ui: ProcessServiceUIType,
     activities: { [activityName: string]: (ProcessServiceActivityType | ActivityReferenceType) }
     sequences: { [sequenceName: string]: ProcessServiceSequenceType }
+    parameters: { [processParamName: string]: string }
 }
 
 

@@ -84,7 +84,7 @@ export default class Process extends BaseService<ProcessType> implements HasModu
      * the module of the process
      */
     async loadModule(processPageModule: ModuleType): Promise<void> {
-        if(this.data.scriptUri) {
+        if (this.data.scriptUri) {
             try {
                 // this might fail
                 let processModule: ModuleType = {}
@@ -220,12 +220,11 @@ export default class Process extends BaseService<ProcessType> implements HasModu
     }
 
     getProcessParameters(): { [p: string]: string } {
-        return {}
+        return this.data?.common?.parameters ?? {}
     }
 
     getProcessPageParameters(): { [paramName: string]: string } {
-        // todo doesnt exist yet. ProcessPage.common.parameters
-        return {}
+        return this.processPage.getCommonData()?.parameters ?? {}
     }
 
     isProcess(): boolean {

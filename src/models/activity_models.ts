@@ -260,6 +260,7 @@ export class Activity {
                 return false
             }
 
+            // console.log(executionParameter, processPageParamMapping, processParamMapping)
             if (findInCollection("process-page", processPageParamMapping))
                 continue
             if (findInCollection("process", processParamMapping))

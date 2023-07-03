@@ -13,13 +13,14 @@ export type ProcessPageType = BaseSourceType & {
     scriptUri: string
     common: ProcessPageCommonType
     schemaUri: string
-    view : ProcessPageViewType
+    view: ProcessPageViewType
     local_prefix_path: string
 }
 
 
 export type ProcessPageCommonType = {
-     ui?: ProcessPageServiceUiType
+    ui?: ProcessPageServiceUiType
+    parameters: { [processParamName: string]: string }
 }
 
 
@@ -53,7 +54,6 @@ export type ProcessPageServiceUiType = {
         status?: ProcessPageServiceUiStatusType
     }
 }
-
 
 
 export type ProcessPageServiceUiInputType = {

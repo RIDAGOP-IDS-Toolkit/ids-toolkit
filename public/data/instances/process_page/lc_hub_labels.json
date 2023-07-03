@@ -260,5 +260,5 @@
       "scriptUri": "scripts/process/lc_hub_labels.js"
     }
   },
-  "local_prefix_path": "data/"
+  "local_prefix_path": "/data/"
 }
