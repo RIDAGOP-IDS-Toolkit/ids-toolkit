@@ -273,11 +273,10 @@
           }
         }
       },
-      "scriptUri": "http://localhost:8080/data/scripts/process/lc_hub_labels.js"
+      "scriptUri": "scripts/process/lc_hub_labels.js"
     }
   },
   "local_prefix_path": "/data/",
-  "schemaUri": "http://localhost:8080/data/schemas/ridagop-ids-toolkit.schema.json",
   "view": {
     "mode": "map"
   }

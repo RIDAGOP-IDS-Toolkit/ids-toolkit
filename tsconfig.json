@@ -2,7 +2,8 @@
   "compilerOptions": {
     "target": "ES2018",
     "module": "esnext",
-    // commonjs, esnext
+//    "module": "umd",
+//     commonjs, esnext
     "lib": [
       "ES2018",
       "dom"

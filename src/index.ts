@@ -27,9 +27,9 @@ let currentLanguage = "en"
  * @param eventCallback callback function, that will be called, when an event is triggered (experimental)
  */
 export async function _init_toolkit_(process_page_url: string,
-                                 alert_: boolean = true,
-                                 throw_: boolean = true,
-                                 eventCallback: Function): Promise<DSToolkit> {
+                                     alert_: boolean = true,
+                                     throw_: boolean = true,
+                                     eventCallback: Function): Promise<DSToolkit> {
     const NODE_ENV = process.env.NODE_ENV
     console.info("VERSION:", packageJson.version, "mode:", NODE_ENV)
     if (NODE_ENV === 'development') {

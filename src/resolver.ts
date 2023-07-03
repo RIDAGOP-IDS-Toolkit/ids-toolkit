@@ -6,13 +6,17 @@ import DevHelper from "./dev_helper";
 import {getMsg} from "./i18nLLL";
 import {ModuleType} from "./data_types/bridge_types";
 
-function getAppPath() {
+function getAppPath(only_origin: boolean = false): string {
     const url = new URL(window.location.href)
     // console.log("page url", url)
     const pathParts = url.pathname.split('/')
     pathParts.pop()
     // console.log("put together...", url.origin, pathParts)
-    return url.origin + pathParts.join('/') + "/"
+    if (only_origin) {
+        return url.origin
+    } else {
+        return url.origin + pathParts.join('/') + "/"
+    }
 }
 
 function addPrefix(uri: string) {
@@ -32,6 +36,11 @@ function addPrefix(uri: string) {
         console.debug("final prefixed uri", prefix_path + uri)
         return prefix_path + uri
     }
+
+    if (!uri.startsWith("http")) {
+        uri = getAppPath(uri.startsWith("/")) + uri
+    }
+
     return uri
 }
 
@@ -86,9 +95,6 @@ export class LoadsFiles {
             let uri = addPrefix(moduleUri)
             try {
                 console.debug(uri)
-                if (!uri.startsWith("http")) {
-                    uri = getAppPath() + uri
-                }
                 // const module = (await import(uri))
                 const module = (await import(/* webpackIgnore: true */uri ))
                 console.debug("module loaded: ", moduleName, uri)

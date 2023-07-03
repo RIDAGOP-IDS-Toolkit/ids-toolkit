@@ -29,7 +29,7 @@ module.exports = {
         concatenateModules: true,
     },
     plugins: [
-        new BundleAnalyzerPlugin(),
+        // new BundleAnalyzerPlugin(),
         new CopyWebpackPlugin({
             patterns: [
                 // {from: 'dist/index.js', to: '../public/toolkit/index.js'},
