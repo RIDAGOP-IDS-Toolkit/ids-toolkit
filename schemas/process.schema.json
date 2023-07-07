@@ -360,8 +360,8 @@
               ]
             },
             "resultAsDynamicUI": {
-              "type": "boolean",
-              "description": "The result of this activity is used to generate some new UI-elements. The result data needs to validate against the process-Service UI schema."
+              "type": "string",
+              "description": "The result of this activity is used to generate some new UI-elements. The result data needs to validate against the process-Service UI schema. The string represents the postfix. use empty string for the default position (after the UI) or 'pre' to put it before the UI"
             },
             "resultsAsOpenInput": {
               "$comment": "/DOCS-IGNORE",

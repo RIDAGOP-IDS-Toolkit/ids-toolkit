@@ -5,7 +5,7 @@ import Module_wrapper from "./module_wrapper";
 import {Bridge} from "./bridge_models";
 import {
     ActivityReferenceType,
-    BasicActivityReferenceType,
+    BasicActivityReferenceType, ProcessCommonsType,
     ProcessServiceActivityType,
     ProcessServiceSequenceType,
     ProcessServiceType,
@@ -165,6 +165,10 @@ export default class Process extends BaseService<ProcessType> implements HasModu
         }
     }
 
+    getCommonData(): ProcessCommonsType {
+        return this.data?.common ?? {}
+    }
+
     /**
      * Get the definition the activities.
      * Defines the abstract BaseService method.
@@ -172,6 +176,7 @@ export default class Process extends BaseService<ProcessType> implements HasModu
      * @return {Object} map activityName -> activityDefinition
      */
     getActivityData(): { [activityName: string]: (ProcessServiceActivityType | ActivityReferenceType) } {
+        // todo use: getCommonData
         return this.data?.common?.activities || {}
     }
 
@@ -179,6 +184,7 @@ export default class Process extends BaseService<ProcessType> implements HasModu
      * From base-service: Get the sequences from data.
      */
     getSequencesData(): { [sequenceName: string]: ProcessServiceSequenceType } {
+        // todo use: getCommonData
         return this.data?.common?.sequences || {}
     }
 

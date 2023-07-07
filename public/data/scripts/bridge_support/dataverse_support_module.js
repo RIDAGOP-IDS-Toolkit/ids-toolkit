@@ -120,7 +120,7 @@ export async function copy_dataset_files(dataset_metadata, selected_files) {
     // console.log(files.data[0].dataFile.id)
     let files = dataset_metadata.data.latestVersion.files
     // filter files for restricted access
-    if(selected_files !== null) { // that is the store default
+    if(selected_files !== undefined) { // that is the store default
         files = files.filter(file => selected_files.includes(file.dataFile.id.toString()))
     }
     // console.log("files", files)

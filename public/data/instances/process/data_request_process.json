@@ -100,7 +100,7 @@
           "key": "storeData"
         },
         "subActivities": {
-          "store": {
+          "store_request": {
             "title": "Store request",
             "serviceName": "request_storage",
             "activityName": "store",
@@ -110,11 +110,6 @@
             "title": "Send Email",
             "moduleFunction": "sendEmail",
             "parameters": {
-              "receiver": {
-                "type": "string",
-                "constant": "Ramin.Soleymani@uab.cat",
-                "comment": "could be obscured and fixed in the JS function that sends email"
-              },
               "dataset_id": {
                 "type": "string",
                 "field": "dataset_id"

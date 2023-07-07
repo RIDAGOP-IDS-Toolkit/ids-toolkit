@@ -135,7 +135,7 @@ export default class DSToolkit {
         [propName: string]: object | string | number | null
     }): string {
         if ((id in this.nodes)) {
-            throw new Error(`Node ${id} already registered`)
+            console.error(`Node ${id} already registered`)
         }
         this.nodes[id] = {id, label, type, links: [], props: props || {}}
         for (let link of destinations) {
@@ -146,10 +146,10 @@ export default class DSToolkit {
 
     register_edge(source: string, dest: string, props: object): void {
         if (!(source in this.nodes)) {
-            throw new Error(`Node ${source} not registered`)
+            console.error(`Node ${source} not registered`)
         }
         if (!(dest in this.nodes)) {
-            throw new Error(`Node ${dest} not registered`)
+            console.error(`Node ${dest} not registered`)
         }
         this.nodes[source].links.push({dest, props})
     }

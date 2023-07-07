@@ -65,9 +65,11 @@ export function createServiceElements(service: Service) {
 
     // UIElements
     const uiElementsSection = createUiElements(service.UIElements, service.name, uiSettings?.sections?.input)
-    serviceWrapper.appendChild(uiElementsSection)
 
-    // const dynamic UISection
+    // 1. dynamic UI part
+    serviceWrapper.appendChild(createDynamicUIElements(service.name, "pre"))
+    serviceWrapper.appendChild(uiElementsSection)
+    // 2. dynamic UISection
     serviceWrapper.appendChild(createDynamicUIElements(service.name))
 
     // status area
@@ -82,12 +84,23 @@ export function createServiceElements(service: Service) {
 export function createCommonContainer(processPage: ProcessPage): HTMLDivElement {
     // console.log(processPage.process.data.common)
     const commonContainer = document.createElement("div")
+
+    const description_elem = document.createElement("p")
+    const pCommonData = processPage.process.getCommonData()
+    const ppCommonData = processPage.getCommonData()
+    console.log(ppCommonData)
+    description_elem.innerText = pCommonData?.description || ppCommonData.description || ""
+
+    commonContainer.appendChild(description_elem)
     const process = processPage.process
-    const UISettings = processPage.getCommonData().ui || {}
+
+    // 1. dynamic UI
+    commonContainer.appendChild(createDynamicUIElements("process", "pre"))
+    const UISettings = ppCommonData.ui || {}
     // UI
     const uiElements = createUiElements(process.UIElements, "common", UISettings?.sections?.input)
     commonContainer.appendChild(uiElements)
-
+    // 2. dynamic UI
     commonContainer.appendChild(createDynamicUIElements("process"))
     // STATUS
     const statusWrapper = createStatusArea("process", process.activities, UISettings?.sections?.status)
@@ -243,9 +256,9 @@ function createUiElements(uiElements: ServiceUIElements,
     return inputWrapper
 }
 
-function createDynamicUIElements(serviceName: string) {
+function createDynamicUIElements(serviceName: string, postfix: string = "") {
     const dynamicUI = document.createElement("div")
-    dynamicUI.id = serviceName + "_dyn_ui"
+    dynamicUI.id = `${serviceName}_dyn_ui_${postfix}`
     dynamicUI.style.display = "none"
     const dynamicUiHeader = document.createElement("h4")
     dynamicUiHeader.style.color = "darkgreen"
@@ -581,10 +594,9 @@ export function addToOpenInputs(service: BaseService<any>, html: HTMLElement | s
     }
 }
 
-export function buildDynamicUI(service: BaseService<any>, uiElements: ServiceUIElements) {
-
+export function buildDynamicUI(service: BaseService<any>, uiElements: ServiceUIElements, postfix = "") {
     // console.log(uiData)
-    const dynamic_ui_elem = document.getElementById(`${service.name}_dyn_ui`)
+    const dynamic_ui_elem = document.getElementById(`${service.name}_dyn_ui_${postfix}`)
     if (dynamic_ui_elem) {
         // console.log(dynamic_ui_elem)
         // const serviceUiElements = new ServiceUIElements(service, uiData)

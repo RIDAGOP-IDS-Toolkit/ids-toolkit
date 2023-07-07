@@ -2,7 +2,7 @@
   "title": "Data-request response",
   "process": {
     "instance": {
-      "comment": " this is just for validation. there could be a copy in proces_page/data_request_response.json",
+      "comment": " this is just for validation. there could be a copy in process_page/data_request_response.json",
       "name": "data_request_response",
       "services": {
         "request_storage": {
@@ -251,6 +251,7 @@
         }
       },
       "common": {
+        "description": "Select the files you want to share",
         "ui": {
           "buttons": {
             "accept": {
@@ -287,7 +288,7 @@
                   }
                 },
                 "ui": {
-                  "resultAsDynamicUI": true
+                  "resultAsDynamicUI": "pre"
                 }
               }
             }

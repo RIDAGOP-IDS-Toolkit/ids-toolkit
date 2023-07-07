@@ -135,7 +135,7 @@ export type ProcessServiceActivityType = {
 
     ui?: {
         resultAsOutputHtml?: string
-        resultAsDynamicUI?: boolean // todo, make this a string too
+        resultAsDynamicUI?: string
         resultsAsOpenInput?: boolean | "start" | "end"
         alert?: boolean
         includeInStatus?: boolean
@@ -173,11 +173,12 @@ export type ResultStoreType = {
 }
 
 export type ProcessCommonsType = {
-    ui: ProcessServiceUIType,
-    activities: { [activityName: string]: (ProcessServiceActivityType | ActivityReferenceType) }
-    sequences: { [sequenceName: string]: ProcessServiceSequenceType }
-    parameters: { [processParamName: string]: string }
-    autostart: string | string[]
+    description?: string
+    ui?: ProcessServiceUIType,
+    activities?: { [activityName: string]: (ProcessServiceActivityType | ActivityReferenceType) }
+    sequences?: { [sequenceName: string]: ProcessServiceSequenceType }
+    parameters?: { [processParamName: string]: string }
+    autostart?: string | string[]
 }
 
 

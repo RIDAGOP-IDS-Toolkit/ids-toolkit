@@ -534,9 +534,9 @@ export class Activity {
         const resultAsOutputHtml = this.activityData().ui?.resultAsOutputHtml
         if (resultAsOutputHtml) {
             outputHtml(this.service, result, resultAsOutputHtml)
-        } else if (this.activityData().ui?.resultAsDynamicUI) {
+        } else if (this.activityData().ui?.resultAsDynamicUI !== undefined) {
             const dynUIElements = this.service.registerDynamicUIElements(result)
-            buildDynamicUI(this.service, dynUIElements)
+            buildDynamicUI(this.service, dynUIElements, this.activityData().ui?.resultAsDynamicUI)
         } else if (this.activityData().ui?.resultsAsOpenInput) {
             if (typeof this.activityData().ui?.resultsAsOpenInput === "string")
                 addToOpenInputs(this.service, result, this.activityData().ui?.resultsAsOpenInput as string)
