@@ -103,10 +103,38 @@
       "title": "Common User interface",
       "description": "Settings for the common part. Common activities can reference to all services",
       "properties": {
+        "description": {
+          "type": "string",
+          "title": "Description",
+          "description": "The description of the common part"
+        },
         "ui": {
           "title": "Common UI settings",
           "description": "Settings of the common UI part",
           "$ref": "#/$defs/PP-UISettings"
+        },
+        "parameters": {
+          "type": "object",
+          "title": "Global common parameters",
+          "description": "Parameters that are available to all activities of common",
+          "additionalProperties": {
+            "$ref": "process.schema.json#/$defs/P-Parameter"
+          }
+        },
+        "autostart": {
+          "title": "Autostart activities",
+          "description": "List of activities (names/keys in the the activities objects) that should be started automatically on startup (either a string or a list of strings)",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
         }
       }
     },

@@ -34,12 +34,12 @@
     "common": {
       "type": "object",
       "description": "Common activities and ui elements (access to activities of other services)",
-      "$comment": "KEEP THE default UP-TO-DATE",
-      "default": {
-        "ui": {},
-        "activities": {}
-      },
+      "$comment": "REMOVE DEFAULT",
       "properties": {
+        "description": {
+          "type": "string",
+          "description": "The description for the common part"
+        },
         "ui": {
           "type": "object",
           "description": "UI-elements that are available for the activities defined in the common section",
@@ -80,6 +80,13 @@
             }
           }
         },
+        "parameters": {
+          "type": "object",
+          "description": "Parameters that are usable by all activities of this service.",
+          "additionalProperties": {
+            "$ref": "#/$defs/P-Parameter"
+          }
+        },
         "activities": {
           "type": "object",
           "description": "Some activities. Consider that the bridge does not have a bridge, so these activities can only have module-functions",
@@ -116,6 +123,22 @@
               }
             }
           }
+        },
+        "autostart": {
+          "description": "Activities that are started on page load",
+          "anyOf": [
+            {
+              "type": "string",
+              "description": "One activity name"
+            },
+            {
+              "type": "array",
+              "description": "A list of activity names",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
         }
       }
     },

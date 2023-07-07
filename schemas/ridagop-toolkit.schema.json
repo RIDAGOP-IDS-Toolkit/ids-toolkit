@@ -1198,12 +1198,12 @@
         "common": {
           "type": "object",
           "description": "Common activities and ui elements (access to activities of other services)",
-          "$comment": "KEEP THE default UP-TO-DATE",
-          "default": {
-            "ui": {},
-            "activities": {}
-          },
+          "$comment": "REMOVE DEFAULT",
           "properties": {
+            "description": {
+              "type": "string",
+              "description": "The description for the common part"
+            },
             "ui": {
               "type": "object",
               "description": "UI-elements that are available for the activities defined in the common section",
@@ -1244,6 +1244,13 @@
                 }
               }
             },
+            "parameters": {
+              "type": "object",
+              "description": "Parameters that are usable by all activities of this service.",
+              "additionalProperties": {
+                "$ref": "#/$defs/P-Parameter"
+              }
+            },
             "activities": {
               "type": "object",
               "description": "Some activities. Consider that the bridge does not have a bridge, so these activities can only have module-functions",
@@ -1280,6 +1287,22 @@
                   }
                 }
               }
+            },
+            "autostart": {
+              "description": "Activities that are started on page load",
+              "anyOf": [
+                {
+                  "type": "string",
+                  "description": "One activity name"
+                },
+                {
+                  "type": "array",
+                  "description": "A list of activity names",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              ]
             }
           }
         },
@@ -1576,10 +1599,38 @@
           "title": "Common User interface",
           "description": "Settings for the common part. Common activities can reference to all services",
           "properties": {
+            "description": {
+              "type": "string",
+              "title": "Description",
+              "description": "The description of the common part"
+            },
             "ui": {
               "title": "Common UI settings",
               "description": "Settings of the common UI part",
               "$ref": "#/$defs/PP-UISettings"
+            },
+            "parameters": {
+              "type": "object",
+              "title": "Global common parameters",
+              "description": "Parameters that are available to all activities of common",
+              "additionalProperties": {
+                "$ref": "#/$defs/P-Parameter"
+              }
+            },
+            "autostart": {
+              "title": "Autostart activities",
+              "description": "List of activities (names/keys in the the activities objects) that should be started automatically on startup (either a string or a list of strings)",
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              ]
             }
           }
         },
