@@ -1,5 +1,5 @@
 import {Store} from "../store_wrapper";
-import {InputTypeEnum, ServiceTypeEnum} from "../const";
+import {InputTypeEnum, NodeType, ServiceTypeEnum} from "../const";
 import {
     ActivityReferenceType,
     BasicActivityReferenceType,
@@ -46,7 +46,7 @@ export abstract class BaseService<T extends ProcessType | ServiceData> extends S
         this.title = title
         this.serviceType = serviceType
         this.data = data
-        this.node_id =getToolkit().register_node( this.name, this.title, "service")
+        this.node_id =getToolkit().register_node( this.name, this.title, NodeType.service)
     }
 
     /**

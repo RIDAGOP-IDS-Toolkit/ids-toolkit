@@ -117,7 +117,7 @@ export default class Process extends BaseService<ProcessType> implements HasModu
                         sourceMap[funcName] = FunctionSourceEnum.processPage
                     }
                 }
-                this.module = new Module_wrapper(resultModule, sourceMap)
+                this.module = new Module_wrapper(resultModule, sourceMap, this.name)
                 await Promise.resolve()
             } catch (e) {
                 return Promise.reject(e)

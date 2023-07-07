@@ -50,7 +50,15 @@ export type ModuleTypes =
     | InstanceTypeEnum.moduleBridgeSupport
 
 
-export enum UIModeEnum  {
-    build= "build",
-    map= "map"
+export enum UIModeEnum {
+    build = "build",
+    map = "map"
+}
+
+export enum NodeType {
+    service = "service",
+    activity = "activity",
+    bridge = "bridge",
+    module = "module"
+
 }

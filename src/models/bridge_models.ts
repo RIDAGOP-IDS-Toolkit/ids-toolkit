@@ -14,12 +14,13 @@ import {
 import {BridgeCapability, BridgeClientCapability, BridgeOpenApiCapability} from "./activity_execution_models";
 import {InputField, QueryParameter} from "./parameter_models";
 import {Service} from "./service_model";
-import {FunctionSourceEnum, InputTypeEnum, InstanceTypeEnum, SchemaTypes} from "../const";
+import {FunctionSourceEnum, InputTypeEnum, InstanceTypeEnum, NodeType, SchemaTypes} from "../const";
 import SwaggerClient from "swagger-client"
 import mapValues from "lodash/mapValues"
 import isEmpty from "lodash/isEmpty"
 
 import {anyBridgeExecutionType, DevSourceLocationType} from "../data_types/generic";
+import {getToolkit} from "./tk_model";
 
 export enum ExecutionType {
     moduleFunction = "modelFunction",
@@ -35,13 +36,17 @@ export abstract class Bridge<T extends BridgeCapability> {
     protected service: Service // this is added by the service
     readonly supportModule: Module_wrapper
     protected readonly bridgeData: BridgeType
+    node_id: string
 
-    protected constructor(serviceName: string, bridgeData: BridgeType, supportModule?: ModuleType) {
+    protected constructor(serviceName: string, bridgeData: BridgeType, bridgeDescription: ServiceBridgeType, supportModule?: ModuleType) {
         this.serviceName = serviceName
         this.bridgeData = bridgeData
+        if(bridgeDescription.source.uri){
+            this.node_id = getToolkit().register_node(serviceName,serviceName,NodeType.bridge)
+        }
         if (supportModule) {
             const sourceMap = mapValues(supportModule, () => FunctionSourceEnum.supportModule)
-            this.supportModule = new Module_wrapper(supportModule, sourceMap)
+            this.supportModule = new Module_wrapper(supportModule, sourceMap, serviceName)
         }
     }
 
@@ -81,13 +86,12 @@ export abstract class Bridge<T extends BridgeCapability> {
             if (results.length > 1) {
                 supportModule = results[1]
             }
-
             let bridge: Bridge<BridgeCapability>
             if (bridgeExecution.type === "openapi") {
                 bridge = new BridgeAsOpenApi(serviceName, bridgeInstance, bridgeDescription, bridgeExecution.object, supportModule)
                 await (bridge as BridgeAsOpenApi).createSwaggerClient()
             } else {//if (bridgeExecution.type === "module") {
-                bridge = new BridgeAsModule(serviceName, bridgeInstance, bridgeExecution.object, supportModule)
+                bridge = new BridgeAsModule(serviceName, bridgeInstance, bridgeDescription, bridgeExecution.object, supportModule)
             }
             return Promise.resolve(bridge)
         } catch (e) {
@@ -160,7 +164,7 @@ export class BridgeAsOpenApi extends Bridge<BridgeOpenApiCapability> {
 
     constructor(serviceName: string, bridgeData: BridgeType,
                 bridgeDescription: ServiceBridgeType, openAPISchema: OpenAPISpecSimple, supportModule?: ModuleType) {
-        super(serviceName, bridgeData, supportModule)
+        super(serviceName, bridgeData, bridgeDescription, supportModule)
         if (bridgeDescription.authorization) {
             this.authorization = bridgeDescription.authorization
         }
@@ -293,10 +297,10 @@ export class BridgeAsModule extends Bridge<BridgeClientCapability> implements Ha
 
     private module: Module_wrapper
 
-    constructor(serviceName: string, bridgeData: BridgeType, bridgeExecution: ModuleType, supportModule?: ModuleType) {
-        super(serviceName, bridgeData, supportModule)
+    constructor(serviceName: string, bridgeData: BridgeType,
+                bridgeDescription: ServiceBridgeType, bridgeExecution: ModuleType, supportModule?: ModuleType) {
+        super(serviceName, bridgeData, bridgeDescription, supportModule)
         const sourceMap = mapValues(bridgeExecution, () => FunctionSourceEnum.bridgeModule)
-        this.module = new Module_wrapper(bridgeExecution, sourceMap)
         for (let [capabilityName, capabilityData] of Object.entries(bridgeData.capabilities)) {
             // console.log(capabilityData)
             this.capabilities[capabilityName] =

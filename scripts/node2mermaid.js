@@ -2,50 +2,76 @@ function node2mermaid(nodes, chartDirection = "TD") {
     let mermaid = `flowchart ${chartDirection}\n`;
     for (let node in nodes) {
         const nodeData = nodes[node];
-       // console.log(nodeData)
+        // console.log(nodeData)
         let label = nodeData.label // ? nodeData.label : nodeData.id;
-        if (nodeData.type === "service") {
-            label = `[${label}]`
-        } else {
-            label = `(${label})`
+        switch (nodeData.type) {
+            case "service":
+                label = `[${label}]`
+                break;
+            case "activity":
+                label = `[/${label}\\]`
+                break
+            case "bridge":
+                label = `[[${label}]]`
+                break
+            case "module":
+                label= `((${label}))`
+                break
+            default:
+                console.warn("type", nodeData.type)
         }
         mermaid += `${nodeData.id}${label}\n`;
         for (let link of nodeData.links) {
             mermaid += `${node} --> ${link.dest}\n`;
         }
     }
+    console.log("************")
     return mermaid;
 }
 
-const data ={
-  "process": {
+const data = {
+  "service_process": {
     "id": "process",
     "label": "Local Contexts Hub Labels",
     "type": "service",
     "links": [],
     "props": {}
   },
-  "lc_hub": {
+  "service_lc_hub": {
     "id": "lc_hub",
     "label": "LC Hub",
     "type": "service",
     "links": [],
     "props": {}
   },
-  "data_repo": {
+  "bridge_data_repo": {
+    "id": "data_repo",
+    "label": "data_repo",
+    "type": "bridge",
+    "links": [],
+    "props": {}
+  },
+  "service_data_repo": {
     "id": "data_repo",
     "label": "Dataverse",
     "type": "service",
     "links": [],
     "props": {}
   },
-  "read_lc_hub_data": {
+  "module_process_module": {
+    "id": "process_module",
+    "label": "process_module",
+    "type": "module",
+    "links": [],
+    "props": {}
+  },
+  "activity_read_lc_hub_data": {
     "id": "read_lc_hub_data",
     "label": "Fetch project data",
     "type": "activity",
     "links": [
       {
-        "dest": "lc_hub",
+        "dest": "service_lc_hub",
         "props": {
           "type": "service"
         }
@@ -53,19 +79,13 @@ const data ={
     ],
     "props": {}
   },
-  "displayLabels": {
+  "activity_displayLabels": {
     "id": "displayLabels",
     "label": "Display project labels",
     "type": "activity",
     "links": [
       {
-        "dest": "lc_hub",
-        "props": {
-          "type": "service"
-        }
-      },
-      {
-        "dest": "read_lc_hub_data",
+        "dest": "activity_read_lc_hub_data",
         "props": {
           "type": "parent"
         }
@@ -73,13 +93,13 @@ const data ={
     ],
     "props": {}
   },
-  "read_dataset": {
+  "activity_read_dataset": {
     "id": "read_dataset",
     "label": "Fetch dataset metadata",
     "type": "activity",
     "links": [
       {
-        "dest": "data_repo",
+        "dest": "service_data_repo",
         "props": {
           "type": "service"
         }
@@ -87,19 +107,13 @@ const data ={
     ],
     "props": {}
   },
-  "findReference": {
+  "activity_findReference": {
     "id": "findReference",
     "label": "Find LCHub Project Reference",
     "type": "activity",
     "links": [
       {
-        "dest": "data_repo",
-        "props": {
-          "type": "service"
-        }
-      },
-      {
-        "dest": "read_dataset",
+        "dest": "activity_read_dataset",
         "props": {
           "type": "parent"
         }
@@ -107,19 +121,13 @@ const data ={
     ],
     "props": {}
   },
-  "createLCHubReference": {
+  "activity_createLCHubReference": {
     "id": "createLCHubReference",
     "label": "Create LCHub Reference",
     "type": "activity",
     "links": [
       {
-        "dest": "data_repo",
-        "props": {
-          "type": "service"
-        }
-      },
-      {
-        "dest": "findReference",
+        "dest": "activity_findReference",
         "props": {
           "type": "parent"
         }
@@ -127,19 +135,13 @@ const data ={
     ],
     "props": {}
   },
-  "updateDatasetMetadata": {
+  "activity_updateDatasetMetadata": {
     "id": "updateDatasetMetadata",
     "label": "Update the metadata of the dataset",
     "type": "activity",
     "links": [
       {
-        "dest": "data_repo",
-        "props": {
-          "type": "service"
-        }
-      },
-      {
-        "dest": "findReference",
+        "dest": "activity_findReference",
         "props": {
           "type": "parent"
         }
@@ -147,19 +149,13 @@ const data ={
     ],
     "props": {}
   },
-  "display_updated_description": {
+  "activity_display_updated_description": {
     "id": "display_updated_description",
     "label": "Display updated dataset description",
     "type": "activity",
     "links": [
       {
-        "dest": "data_repo",
-        "props": {
-          "type": "service"
-        }
-      },
-      {
-        "dest": "findReference",
+        "dest": "activity_findReference",
         "props": {
           "type": "parent"
         }
@@ -167,13 +163,13 @@ const data ={
     ],
     "props": {}
   },
-  "postDatasetMetadata": {
+  "activity_postDatasetMetadata": {
     "id": "postDatasetMetadata",
     "label": "Post updated metadata",
     "type": "activity",
     "links": [
       {
-        "dest": "data_repo",
+        "dest": "service_data_repo",
         "props": {
           "type": "service"
         }
@@ -181,19 +177,13 @@ const data ={
     ],
     "props": {}
   },
-  "publishUpdatedDataset": {
+  "activity_publishUpdatedDataset": {
     "id": "publishUpdatedDataset",
     "label": "Publish updated dataset",
     "type": "activity",
     "links": [
       {
-        "dest": "data_repo",
-        "props": {
-          "type": "service"
-        }
-      },
-      {
-        "dest": "postDatasetMetadata",
+        "dest": "activity_postDatasetMetadata",
         "props": {
           "type": "parent"
         }

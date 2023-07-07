@@ -7,7 +7,7 @@ import {
 } from "../data_types/ProcessTypes";
 import {Bridge, ExecutionType} from "./bridge_models";
 import {ActivityParameter, UIInput} from "./parameter_models";
-import {PreProcessErrorCancelCommand, ServiceTypeEnum} from "../const";
+import {NodeType, PreProcessErrorCancelCommand, ServiceTypeEnum} from "../const";
 import {getMsg} from "../i18nLLL";
 import {addToOpenInputs, buildDynamicUI, outputHtml} from "../ui";
 import {Service} from "./service_model";
@@ -101,11 +101,13 @@ export class Activity {
             // console.error()
         }
 
-        const edges: {dest: string, props: object}[] = [{dest:this.service.node_id, props: {type: "service"}}]
+        const edges: {dest: string, props: object}[] = []
         if (this.parentActivity) {
             edges.push({dest:this.parentActivity.node_id, props: {type: "parent"}})
+        } else {
+            edges.push({dest:this.service.node_id, props: {type: "service"}})
         }
-        this.node_id = getToolkit().register_node(this.name, this.title, "activity", edges)
+        this.node_id = getToolkit().register_node(this.name, this.title, NodeType.activity, edges)
     }
 
     toString() {

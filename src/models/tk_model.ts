@@ -4,6 +4,7 @@ import {ActivityReferenceType, BasicActivityReferenceType} from "../data_types/P
 import {Store} from "../store_wrapper";
 import {Node, ToolkitEventType, ToolkitEventTypeEnum} from "../data_types/generic";
 import {UIInput} from "./parameter_models";
+import {NodeType} from "../const";
 
 export default class DSToolkit {
 
@@ -131,17 +132,18 @@ export default class DSToolkit {
         return results
     }
 
-    register_node(id: string, label: string, type: string, destinations: {dest: string, props: object}[] = [], props?: {
+    register_node(id: string, label: string, type: NodeType, destinations: {dest: string, props: object}[] = [], props?: {
         [propName: string]: object | string | number | null
     }): string {
-        if ((id in this.nodes)) {
-            console.error(`Node ${id} already registered`)
+        const full_id = `${type}_${id}`
+        if ((full_id in this.nodes)) {
+            console.error(`Node ${full_id} already registered`)
         }
-        this.nodes[id] = {id, label, type, links: [], props: props || {}}
+        this.nodes[full_id] = {id, label, type, links: [], props: props || {}}
         for (let link of destinations) {
-            this.register_edge(id, link.dest, link.props)
+            this.register_edge(full_id, link.dest, link.props)
         }
-        return id
+        return full_id
     }
 
     register_edge(source: string, dest: string, props: object): void {
