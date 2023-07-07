@@ -18,7 +18,7 @@ import {Activity} from "./activity_models";
  */
 export class Service extends BaseService<ServiceData> {
 
-    name: string
+    // name: string
     process: Process
     bridge: Bridge<any>
 
@@ -28,10 +28,10 @@ export class Service extends BaseService<ServiceData> {
                 processServiceDescription: ProcessServiceType,
                 processPageServiceDescription: ProcessPageServiceType,
                 bridge: Bridge<any>) {
-        super(serviceName, ServiceTypeEnum.service, {processServiceDescription, processPageServiceDescription})
+        const title = processPageServiceDescription.title || (processServiceDescription.title || "")
+        super(serviceName, title, ServiceTypeEnum.service, {processServiceDescription, processPageServiceDescription})
         this.process = _process
         this.name = serviceName
-        this.title = processPageServiceDescription.title || (processServiceDescription.title || "")
         this.description = processPageServiceDescription.description || (processServiceDescription.description || "")
         this.UIElements = new ServiceUIElements(this, processServiceDescription.ui || {})
 

@@ -19,6 +19,7 @@ import {ServiceUIElements} from "./ui_element_models";
 import {checkProcessPageServices} from "../integrity";
 import {getMsg} from "../i18nLLL";
 import {DataSourceType} from "../data_types/generic";
+import {getToolkit} from "./tk_model";
 
 
 /**
@@ -35,9 +36,9 @@ export default class Process extends BaseService<ProcessType> implements HasModu
 
     constructor(processPage: ProcessPage, processData: ProcessType) {
         // process as service
-        super("process", ServiceTypeEnum.process, processData as ProcessType)
+        const title = processPage.title || processData.title || "Process"
+        super("process", title, ServiceTypeEnum.process, processData as ProcessType)
         this.processPage = processPage
-        this.title = this.processPage.title || processData.title || "Process"
         // todo, not sure if using defaults in the schema would be good.
         this.UIElements = new ServiceUIElements(this, processData?.common?.ui ?? {})
         this.description = processData.description || ""

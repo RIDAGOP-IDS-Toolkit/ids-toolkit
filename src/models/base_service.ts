@@ -27,7 +27,7 @@ import {dynamicUIValidation} from "../validate_schemas";
 
 export abstract class BaseService<T extends ProcessType | ServiceData> extends Store {
 
-    id: string
+    //id: string
     name: string
     public readonly serviceType: ServiceTypeEnum
     title: string
@@ -38,12 +38,15 @@ export abstract class BaseService<T extends ProcessType | ServiceData> extends S
     sequences: { [sequenceName: string]: Activity[] } = {}
     public UIElements: ServiceUIElements
     private currentlyRunningActivity: Activity | null = null
+    node_id: string
 
-    protected constructor(name: string, serviceType: ServiceTypeEnum, data: T) {
+    protected constructor(name: string, title: string, serviceType: ServiceTypeEnum, data: T) {
         super(name)
         this.name = name
+        this.title = title
         this.serviceType = serviceType
         this.data = data
+        this.node_id =getToolkit().register_node( this.name, this.title, "service")
     }
 
     /**
@@ -65,7 +68,6 @@ export abstract class BaseService<T extends ProcessType | ServiceData> extends S
     createFromActivitiesMap(activitiesMap: {
         [activityName: string]: (ProcessServiceActivityType | ActivityReferenceType)
     }, parentActivity ?: Activity): [{ [activityName: string]: Activity }, string[]] {
-
         const activities: { [activityName: string]: Activity } = {}
         for (let [activityName, activityData] of Object.entries(activitiesMap || {})) {
             activities[activityName] = this.createActivity(activityName, activityData, parentActivity)
@@ -227,7 +229,6 @@ export abstract class BaseService<T extends ProcessType | ServiceData> extends S
         return this.UIElements.getInputs(type)
     }
 
-
     registerDynamicUIElements(uiData: ProcessServiceUIType): ServiceUIElements {
         const valid = dynamicUIValidation(uiData)
         if (!valid) {
@@ -237,7 +238,6 @@ export abstract class BaseService<T extends ProcessType | ServiceData> extends S
         this.UIElements.merge(serviceUiElements)
         return serviceUiElements
     }
-
 
     abstract getActivity(activityReference: BasicActivityReferenceType): Activity
 

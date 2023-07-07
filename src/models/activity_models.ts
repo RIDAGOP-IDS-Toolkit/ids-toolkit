@@ -59,6 +59,8 @@ export class Activity {
     public subActivities: { [activityName: string]: Activity } = {}
     public subActivitiesOrder: string[] = []
     private active: boolean = true // might be inactive because execution not found
+    //
+    node_id: string = ""
 
     constructor(name: string,
                 service: BaseService<any>,
@@ -98,6 +100,12 @@ export class Activity {
             throw `${this.toString()} Setting execution failed. ${e}`
             // console.error()
         }
+
+        const edges: {dest: string, props: object}[] = [{dest:this.service.node_id, props: {type: "service"}}]
+        if (this.parentActivity) {
+            edges.push({dest:this.parentActivity.node_id, props: {type: "parent"}})
+        }
+        this.node_id = getToolkit().register_node(this.name, this.title, "activity", edges)
     }
 
     toString() {

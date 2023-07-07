@@ -2,7 +2,7 @@ import ProcessPage from "./process_page_model";
 import cloneDeep from "lodash/cloneDeep"
 import {ActivityReferenceType, BasicActivityReferenceType} from "../data_types/ProcessTypes";
 import {Store} from "../store_wrapper";
-import {ToolkitEventType, ToolkitEventTypeEnum} from "../data_types/generic";
+import {Node, ToolkitEventType, ToolkitEventTypeEnum} from "../data_types/generic";
 import {UIInput} from "./parameter_models";
 
 export default class DSToolkit {
@@ -13,6 +13,7 @@ export default class DSToolkit {
     public uiElements: { [id: string]: HTMLElement } = {}
     readonly activityStore: Store = new Store("Activity store")
     readonly eventCallback: Function
+    nodes: { [id: string]: Node } = {}
 
     constructor(pp: ProcessPage, eventCallback: Function) {
         this.processPage = pp
@@ -124,10 +125,33 @@ export default class DSToolkit {
         }
         uiElements = uiElements[type]
         const results = {}
-        for (const [uiElementName,uiElement] of Object.entries(uiElements)) {
+        for (const [uiElementName, uiElement] of Object.entries(uiElements)) {
             results[uiElementName] = await (uiElement as UIInput).getValue()
         }
         return results
+    }
+
+    register_node(id: string, label: string, type: string, destinations: {dest: string, props: object}[] = [], props?: {
+        [propName: string]: object | string | number | null
+    }): string {
+        if ((id in this.nodes)) {
+            throw new Error(`Node ${id} already registered`)
+        }
+        this.nodes[id] = {id, label, type, links: [], props: props || {}}
+        for (let link of destinations) {
+            this.register_edge(id, link.dest, link.props)
+        }
+        return id
+    }
+
+    register_edge(source: string, dest: string, props: object): void {
+        if (!(source in this.nodes)) {
+            throw new Error(`Node ${source} not registered`)
+        }
+        if (!(dest in this.nodes)) {
+            throw new Error(`Node ${dest} not registered`)
+        }
+        this.nodes[source].links.push({dest, props})
     }
 
 }

@@ -92,3 +92,16 @@ export type CompletePPType = ProcessPageType & {
 }
 
 
+export type Node = {
+    id: string,
+    label: string,
+    links: NodeLink[]
+    type: string,
+    props: object
+}
+
+export type NodeLink = {
+    id?: string,
+    dest: string,
+    props: object
+}
