@@ -20,12 +20,11 @@ export function storeData(dataset_id, motivation, email) {
 export async function sendEmail(response_page_url, dataverse_instance, receiver, dataset_id, motivation, applicationData, email) {
     console.log("sendEmail", receiver, motivation, applicationData)
     // const subject_ = subject + ": " +data.body.title
-    debugger
     const subject = "Data access request"
     const paramS = response_page_url.indexOf("?") !== -1 ? encodeURIComponent("&") : encodeURIComponent("?")
     const href = `${response_page_url}${paramS}request_id=${applicationData.filename}`
     console.log("href", decodeURIComponent(href))
-    const body = "data por favor"//"Data access request by " + encodeURIComponent(email) + `.\n See the dataset here ${dataverse_instance}/dataset.xhtml?persistentId=${dataset_id} .Click here to respond to the request: ${href}`
+    const body = "Data access request by " + encodeURIComponent(email) + `.\n See the dataset here ${dataverse_instance}/dataset.xhtml?persistentId=${dataset_id} .Click here to respond to the request: ${href}`
 // https://demo.dataverse.org/dataset.xhtml?
     // console.log(body)
     window.location.href = `mailto:${receiver}?subject=${subject}&body=${body}`
