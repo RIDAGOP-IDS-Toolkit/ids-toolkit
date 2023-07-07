@@ -954,6 +954,10 @@
         "comment": {
           "type": "string",
           "description": "A comment for other developers."
+        },
+        "fromQueryParam": {
+          "type": "string",
+          "description": "Overwrite const with queryParam of this name (works for text inputs and constant) parameters"
         }
       },
       "additionalProperties": false

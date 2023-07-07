@@ -127,7 +127,7 @@ export function checkSequences(service: ProcessServiceType | ProcessCommonsType)
     const failed: { sequenceName: string, missingActivity: string }[] = []
     for (let [sequenceName, sequence] of Object.entries(service.sequences || {})) {
         for (let activityName of sequence.activities) {
-            if (!(activityName in service.activities)) {
+            if (!(activityName in (service.activities ?? {}))) {
                 console.error(`Sequence '${sequenceName}' references activity '${activityName}' that does not exists`)
                 failed.push({sequenceName, missingActivity: activityName})
             }

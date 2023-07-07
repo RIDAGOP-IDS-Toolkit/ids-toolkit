@@ -49,7 +49,7 @@ export abstract class ActivityParameter {
         } else if (paramDef.previous) {
             return new PreviousActivityResultParameter()
         } else if (paramDef.constant) {
-            return new ConstantParameter(paramDef.constant)
+            return new ConstantParameter(paramDef)
         } else if (paramDef.store) {
             return new StoreParameter(activity.service, paramDef.store)
         } else if (paramDef.queryParam) {
@@ -61,9 +61,20 @@ export abstract class ActivityParameter {
         } else {
             console.error(`Undefined parameter assignment for Activity parameter: '${executionParameter}' of activity: '${activity.title}'`)
             console.error("Parameter definition", paramDef)
-            return new ConstantParameter(undefined)
+            return new ConstantParameter({type:"string", constant:undefined})
         }
     }
+
+    fromQueryParam(queryParam?: string): string|null {
+        if(queryParam) {
+            const query_params = new URLSearchParams(window.location.search)
+            if (query_params.has(queryParam)) {
+                return query_params.get(queryParam)
+            }
+        }
+        return null
+    }
+
 
     abstract getParameterType(): ActivityParameterType
 
@@ -105,9 +116,13 @@ export class ConstantParameter extends ActivityParameter {
 
     private readonly value: any
 
-    constructor(value: any) {
+    constructor(param: ProcessParamType) {
         super()
-        this.value = value
+        if(param.fromQueryParam) {
+           this.value = this.fromQueryParam(param.fromQueryParam)
+        } else {
+            this.value = param.constant
+        }
     }
 
     _getValue(): Promise<any> {
@@ -311,6 +326,7 @@ export class InputField extends UIInput {
         super(data, service)
     }
 
+
     setHtmlElem(elem: HTMLInputElement) {
         /**
          * set the html input element and make some adjustments if needed.
@@ -323,9 +339,10 @@ export class InputField extends UIInput {
         */
         const data_ = (this.data as ServiceInputFieldsType)
         if (data_.fromQueryParam) {
-            const query_params = new URLSearchParams(window.location.search)
-            if (query_params.has(data_.fromQueryParam)) {
-                this.htmlElem.value = query_params.get(data_.fromQueryParam) ?? ""
+
+            const queryParam = this.fromQueryParam(data_.fromQueryParam)
+            if (queryParam !== null) {
+                this.htmlElem.value = queryParam
                 this.htmlElem.readOnly = true
                 this.htmlElem.style.backgroundColor = "lightgrey"
             }

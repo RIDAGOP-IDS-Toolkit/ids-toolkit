@@ -164,6 +164,7 @@ export type ProcessParamType = {
     generate?: ParamGenerationType
     fileInput?: string // from file input defined in ProcessServiceType.fileInputs
     dynamic?: boolean
+    fromQueryParam?: string
 }
 
 export type ResultStoreType = {
