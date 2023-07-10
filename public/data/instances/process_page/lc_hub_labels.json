@@ -81,14 +81,12 @@
               },
               "data_repo_id": {
                 "label": "Dataverse dataset doi",
-                "default": "doi:10.5072/FK2/ZPGIZV",
                 "inputActions": {
                   "autoAction": "read_dataset"
                 }
               },
               "apiKey": {
-                "label": "API Key",
-                "default": "84a1ebba-357b-4cd6-b965-8810a8e3866d"
+                "label": "API Key"
               }
             },
             "buttons": {

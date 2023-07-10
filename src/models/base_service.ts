@@ -24,6 +24,7 @@ import {ServiceUIElements} from "./ui_element_models";
 import {getToolkit} from "./tk_model";
 import {UIInput} from "./parameter_models";
 import {dynamicUIValidation} from "../validate_schemas";
+import {updateUI} from "../ui";
 
 export abstract class BaseService<T extends ProcessType | ServiceData> extends Store {
 
@@ -154,8 +155,7 @@ export abstract class BaseService<T extends ProcessType | ServiceData> extends S
     }
 
     activityFinished() {
-        // todo check this..
-        // updateUI()
+        updateUI()
         this.currentlyRunningActivity = null
         getToolkit().activityStore.clearStore()
         this.getProcess().processPage.activityFinished()
