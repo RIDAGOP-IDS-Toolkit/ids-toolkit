@@ -85,11 +85,12 @@ export default class Process extends BaseService<ProcessType> implements HasModu
      * the module of the process
      */
     async loadModule(processPageModule: ModuleType): Promise<void> {
+        let processModule: ModuleType = {}
+        const sourceMap: { [functionName: string]: FunctionSourceEnum } = {} // for descriptions. store process-page or process
+
         if (this.data.scriptUri) {
             try {
                 // this might fail
-                let processModule: ModuleType = {}
-                const sourceMap: { [functionName: string]: FunctionSourceEnum } = {} // for descriptions. store process-page or process
                 try {
                     const sourceType = this.data.uri ? InstanceTypeEnum.instanceProcessPage
                         : InstanceTypeEnum.instanceProcess
@@ -106,23 +107,24 @@ export default class Process extends BaseService<ProcessType> implements HasModu
                     console.error(msg + ".  " + e)
                     throw msg + ".  " + e
                 }
-                // merge with process-page module
-                const resultModule: ModuleType = {}
-                for (let module of [processModule, processPageModule]) {
-                    for (let [funcName, func] of Object.entries(module)) {
-                        if (resultModule[funcName]) {
-                            console.warn("Overwriting process-module function: ", funcName, "with function from process-page module")
-                        }
-                        resultModule[funcName] = func
-                        sourceMap[funcName] = FunctionSourceEnum.processPage
-                    }
-                }
-                this.module = new Module_wrapper(resultModule, sourceMap, this.name)
-                await Promise.resolve()
             } catch (e) {
                 return Promise.reject(e)
             }
         }
+
+        // merge with process-page module
+        const resultModule: ModuleType = {}
+        for (let module of [processModule, processPageModule]) {
+            for (let [funcName, func] of Object.entries(module)) {
+                if (resultModule[funcName]) {
+                    console.warn("Overwriting process-module function: ", funcName, "with function from process-page module")
+                }
+                resultModule[funcName] = func
+                sourceMap[funcName] = FunctionSourceEnum.processPage
+            }
+        }
+        this.module = new Module_wrapper(resultModule, sourceMap, this.name)
+        await Promise.resolve()
     }
 
 
@@ -223,7 +225,7 @@ export default class Process extends BaseService<ProcessType> implements HasModu
 
     getAutostartActivities(): string[] {
         let pAutostart = this.data?.common?.autostart ?? []
-        pAutostart  = Array.isArray(pAutostart) ? pAutostart : [pAutostart];
+        pAutostart = Array.isArray(pAutostart) ? pAutostart : [pAutostart];
         let ppAutostart = this.processPage.getCommonData()?.autoStart ?? []
         ppAutostart = Array.isArray(ppAutostart) ? ppAutostart : [ppAutostart];
         return [...pAutostart, ...ppAutostart]

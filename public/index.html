@@ -9,9 +9,20 @@
 <script>
     window.onload = function () {
         let queryParams = new URLSearchParams(window.location.search)
-        let process = queryParams.get("process") || "lc_hub_labels"
+
+        let base_path = "data/instances/process_page/"
+        let pp_path = null
+        let example = queryParams.get("example")
+        if(example) {
+            base_path = "examples/"
+            pp_path = `${base_path}${example}.json`
+        } else {
+            let process = queryParams.get("process") || "lc_hub_labels"
+            pp_path = `${base_path}${process}.json`
+        }
+
         try {
-            _init_toolkit_(`data/instances/process_page/${process}.json`)
+            _init_toolkit_(`${pp_path}`)
         } catch (e) {
             console.error(e)
         }
