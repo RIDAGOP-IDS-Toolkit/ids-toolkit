@@ -341,7 +341,6 @@ export class InputField extends UIInput {
         */
         const data_ = (this.data as ServiceInputFieldsType)
         if (data_.fromQueryParam) {
-
             const queryParam = this.fromQueryParam(data_.fromQueryParam)
             if (queryParam !== null) {
                 this.htmlElem.value = queryParam

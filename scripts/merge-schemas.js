@@ -1,4 +1,5 @@
-const fs = require('fs');
+import {readFileSync, writeFile} from "fs"
+
 const project_dir = process.env.PWD
 const base_path = project_dir + "/../schemas/"
 
@@ -78,7 +79,7 @@ for (let file of files) {
     filename = filename[filename.length - 1]
     console.log("***", filename)
 
-    const data = fs.readFileSync(file, 'utf8')
+    const data = readFileSync(file, 'utf8')
     const jsonData = JSON.parse(data);
     // copy all objects from $defs
     Object.assign(resultDefs, jsonData.$defs)
@@ -108,7 +109,7 @@ const resultSchema = Object.assign({
 
 
 // write result to file
-fs.writeFile(destinationPath, JSON.stringify(resultSchema, null, 2), (err) => {
+writeFile(destinationPath, JSON.stringify(resultSchema, null, 2), (err) => {
     if (err) {
         console.error(err);
     }

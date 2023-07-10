@@ -1,0 +1,7 @@
+{
+  "type": "module",
+  "scripts": {
+    "merge_schemas": "node merge-schemas.js",
+    "collect_files": "node collect_files.js"
+  }
+}

@@ -1150,12 +1150,11 @@
             "service",
             "process",
             "activity"
-          ],
-          "default": "service"
+          ]
         },
         "key": {
           "type": "string",
-          "description": "key in the store"
+          "description": "key in the store. This can also be '.' separated in order to get nested properties. It is using the lodash get function : https://docs-lodash.com/v4/get/"
         },
         "default": {
           "description": "default value if the key is not found"
