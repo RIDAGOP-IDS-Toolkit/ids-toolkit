@@ -144,7 +144,7 @@ export abstract class Bridge<T extends BridgeCapability> {
     }
 
     hasModuleFunction(functionName: string): boolean {
-        return this.supportModule.hasModuleFunction(functionName)
+        return this.supportModule && this.supportModule.hasModuleFunction(functionName)
     }
 
     listFunctions() {

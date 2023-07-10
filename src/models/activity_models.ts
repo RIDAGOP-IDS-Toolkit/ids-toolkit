@@ -101,17 +101,43 @@ export class Activity {
             // console.error()
         }
 
-        const edges: {dest: string, props: object}[] = []
+        const edges: { dest: string, props: object }[] = []
         if (this.parentActivity) {
-            edges.push({dest:this.parentActivity.node_id, props: {type: "parent"}})
+            edges.push({dest: this.parentActivity.node_id, props: {type: "parent"}})
         } else {
-            edges.push({dest:this.service.node_id, props: {type: "service"}})
+            edges.push({dest: this.service.node_id, props: {type: "service"}})
         }
         this.node_id = getToolkit().register_node(this.name, this.title, NodeType.activity, edges)
     }
 
     toString() {
         return `[Activity ${this.service.title}:${this.title}]`
+    }
+
+    /**
+     *
+     * @param functionName
+     * @param context activity execution (preProcess). just for error-logging
+     */
+    fromModuleFunction(functionName: string, context: string = ""): ModuleFunction {
+        // console.log("... module")
+        const process = this.service.getProcess()
+        if (process.hasModuleFunction(functionName)) {
+            const function_: Function = process.getModuleFunction(functionName)
+            const functionSource = process.module.srcMap[functionName]
+            return new ModuleFunction(function_, functionSource)
+        } else if (!this.service.isProcess() && (this.service as Service).bridge.hasModuleFunction(functionName)) {
+            const bridge = (this.service as Service).bridge
+            console.log("coool")
+            const function_: Function = bridge.getModuleFunction(functionName)
+            const functionSource = bridge.supportModule.srcMap[functionName]
+            return new ModuleFunction(function_, functionSource)
+        } else {
+            console.error(`no module function in service/page module for ${context} Activity: '${this.name}'. Name of Function: ${functionName}`)
+            console.error(this.service.getProcess().module.listFunctions())
+            this.active = false
+            throw(getMsg("MODULE_FUNCTION_NOT_FOUND", {functionName: functionName}))
+        }
     }
 
     setupExecution() {
@@ -141,17 +167,7 @@ export class Activity {
             }
             // console.log("bridge-capability", bridgeCapability)
         } else if (activityData.moduleFunction) { // moduleFunction
-            // console.log("... module")
-            if (this.service.getProcess().hasModuleFunction(activityData.moduleFunction)) {
-                const function_: Function = this.service.getProcess().getModuleFunction(activityData.moduleFunction)
-                const functionSource = this.service.getProcess().module.srcMap[activityData.moduleFunction]
-                this.execution = new ModuleFunction(function_, functionSource)
-            } else {
-                console.error(`no module function in service/page module for Activity: '${this.name}'. Name of Function: ${activityData.moduleFunction}`)
-                console.error(this.service.getProcess().module.listFunctions())
-                this.active = false
-                throw(getMsg("MODULE_FUNCTION_NOT_FOUND", {functionName: activityData.moduleFunction}))
-            }
+            this.execution = this.fromModuleFunction(activityData.moduleFunction)
         } else {
             console.error("No execution found for Activity", this.name, this.data)
         }
@@ -182,24 +198,15 @@ export class Activity {
         const activityData = this.data as ProcessServiceActivityType
         if (activityData.preProcess) {
             const preProcessFunctionName = activityData.preProcess
-            if (this.service.getProcess().hasModuleFunction(preProcessFunctionName)) {
-                const function_: Function = this.service.getProcess().getModuleFunction(preProcessFunctionName)
-                const functionSource = this.service.getProcess().module.srcMap[preProcessFunctionName]
-                const preProcessFunction = new ModuleFunction(function_, functionSource)
-                if (!isEqual(preProcessFunction.getParameterNames(), this.execution.getParameterNames())) {
-                    console.error(`${this.service.name}: preProcessFunction ${preProcessFunctionName} has different parameters than 
+            this.preProcess = this.fromModuleFunction(preProcessFunctionName, "preProcess")
+            if (!isEqual(this.preProcess.getParameterNames(), this.execution.getParameterNames())) {
+                console.error(`${this.service.name}: preProcessFunction ${preProcessFunctionName} has different parameters than 
                     the execution of the activity ${this.name}`)
-                    console.error(
-                        "preProcessFunction", preProcessFunction.getParameterNames(),
-                        "execution", this.execution.getParameterNames())
-                }
-                this.preProcess = preProcessFunction
-            } else {
-                console.error(`no module function in service/page module for PreProcess of Activity: '${this.name}'. Name of Function: ${preProcessFunctionName}`)
-                console.error(this.service.getProcess().module.listFunctions())
-                this.active = false
-                throw(getMsg("MODULE_FUNCTION_NOT_FOUND", {functionName: preProcessFunctionName}))
+                console.error(
+                    "preProcessFunction", this.preProcess.getParameterNames(),
+                    "execution", this.execution.getParameterNames())
             }
+
         }
     }
 

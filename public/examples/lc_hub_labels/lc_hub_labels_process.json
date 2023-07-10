@@ -58,7 +58,8 @@
                   "method": "get"
                 }
               }
-            }
+            },
+            "supportModuleUri":"lc_hub_labels_bridge_support.js"
           }
         }
       }
