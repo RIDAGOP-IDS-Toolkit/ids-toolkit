@@ -61,12 +61,12 @@ export abstract class ActivityParameter {
         } else {
             console.error(`Undefined parameter assignment for Activity parameter: '${executionParameter}' of activity: '${activity.title}'`)
             console.error("Parameter definition", paramDef)
-            return new ConstantParameter({type:"string", constant:undefined})
+            return new ConstantParameter({type: "string", constant: undefined})
         }
     }
 
-    fromQueryParam(queryParam?: string): string|null {
-        if(queryParam) {
+    fromQueryParam(queryParam?: string): string | null {
+        if (queryParam) {
             const query_params = new URLSearchParams(window.location.search)
             if (query_params.has(queryParam)) {
                 return query_params.get(queryParam)
@@ -118,10 +118,12 @@ export class ConstantParameter extends ActivityParameter {
 
     constructor(param: ProcessParamType) {
         super()
-        if(param.fromQueryParam) {
-           this.value = this.fromQueryParam(param.fromQueryParam)
-        } else {
-            this.value = param.constant
+        this.value = param.constant
+        if (param.fromQueryParam) {
+            const queryValue = this.fromQueryParam(param.fromQueryParam)
+            if (queryValue !== null) {
+                this.value = queryValue
+            }
         }
     }
 
