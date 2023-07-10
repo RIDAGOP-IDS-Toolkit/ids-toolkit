@@ -1,0 +1,74 @@
+{
+  "title": "Local Contexts Hub Labels reader",
+  "process": {
+    "instance": {
+      "name": "tk_labels",
+      "title": "Local Contexts Hub Labels",
+      "description": "Show Local Contexts Project",
+      "services": {
+        "lc_hub": {
+          "title": "LC Hub",
+          "ui": {
+            "inputFields": {
+              "project_id": {
+                "label": "LC Hub Project ID",
+                "default": "259854f7-b261-4c8c-8556-4b153deebc18"
+              }
+            },
+            "buttons": {
+              "fetch_labels": {
+                "label": "Fetch labels",
+                "triggerActivity": "read_lc_hub_data"
+              }
+            }
+          },
+          "activities": {
+            "read_lc_hub_data": {
+              "title": "Fetch project data",
+              "bridgeCapability": "read_dataset_metadata",
+              "preProcess": "checkProjectID",
+              "parameters": {
+                "project_id": {
+                  "field": "project_id"
+                }
+              },
+              "subActivities": {
+                "displayLabels": {
+                  "title": "Display project labels",
+                  "moduleFunction": "display_project_labels",
+                  "parameters": {
+                    "lc_hub_project_data": {
+                      "parent": true
+                    }
+                  },
+                  "ui": {
+                    "resultAsOutputHtml": true
+                  }
+                }
+              }
+            }
+          },
+          "bridge": {
+            "source": {
+              "instance": {
+                "execute": {
+                  "openapiSchemaUri": "localcontextshub_openapi.json"
+                },
+                "capabilities": {
+                  "read_dataset_metadata": {
+                    "operation": {
+                      "path": "/api/v1/projects/{project_id}/",
+                      "method": "get"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "local_prefix_path": "/examples/lc_hub_labels/",
+  "scriptUri": "lc_hub_labels.js"
+}
