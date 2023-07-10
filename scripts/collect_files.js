@@ -1,4 +1,4 @@
-import get from "./lodash_get.mjs"
+import get from "./lodash_get.js"
 
 // const fs = require('fs');
 import {readFileSync} from "fs"
