@@ -194,6 +194,11 @@ export class Activity {
                         "execution", this.execution.getParameterNames())
                 }
                 this.preProcess = preProcessFunction
+            } else {
+                console.error(`no module function in service/page module for PreProcess of Activity: '${this.name}'. Name of Function: ${preProcessFunctionName}`)
+                console.error(this.service.getProcess().module.listFunctions())
+                this.active = false
+                throw(getMsg("MODULE_FUNCTION_NOT_FOUND", {functionName: preProcessFunctionName}))
             }
         }
     }

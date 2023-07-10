@@ -1,0 +1,8 @@
+{
+  "title": "Local Contexts Hub Labels reader",
+  "process": {
+    "uri": "lc_hub_labels_process.json"
+  },
+  "local_prefix_path": "/examples/lc_hub_labels/",
+  "scriptUri": "lc_hub_labels.js"
+}
