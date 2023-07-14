@@ -124,7 +124,7 @@
         "autostart": {
           "title": "Autostart activities",
           "description": "List of activities (names/keys in the the activities objects) that should be started automatically on startup (either a string or a list of strings)",
-          "anyOf": [
+          "oneOf": [
             {
               "type": "string"
             },
@@ -176,7 +176,7 @@
         "autostart": {
           "title": "Autostart activities",
           "description": "List of activities (names/keys in the the activities objects) that should be started automatically on startup (either a string or a list of strings)",
-          "anyOf": [
+          "oneOf": [
             {
               "type": "string"
             },

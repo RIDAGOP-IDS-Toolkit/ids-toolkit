@@ -37,7 +37,6 @@ export type ProcessPageServiceType = {
      */
     title?: string,
     description?: string,
-    //InstanceType<BridgeType> means schema or uri.
     bridge: ServiceBridgeType
     parameters: { [processParamName: string]: string }
     autostart?: string | string[]

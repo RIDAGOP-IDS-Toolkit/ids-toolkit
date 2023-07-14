@@ -89,7 +89,7 @@ export default class DSToolkit {
      * @param key: key of the stored value
      * @param serviceName: name of the service (optional)
      */
-    getStorageValue(key: string, serviceName?: string) {
+    getStorageValue(key: string, serviceName?: string): any {
         if (serviceName) {
             console.debug(`Getting stored-value: '${key}' from service: '${serviceName}'`)
             return this.processPage.process.services[serviceName].getStoreValue(key)
@@ -99,11 +99,12 @@ export default class DSToolkit {
     }
 
     /**
+     * @deprecated
      * Get a parameter value from a service
      * @param serviceName
      * @param uiElemName
      */
-    async getParameterValue(serviceName: string, uiElemName: string) {
+    async getParameterValue(serviceName: string, uiElemName: string): Promise<any> {
         try {
             return await this.processPage.process.services[serviceName].UIElements.getInput(uiElemName).getValue()
         } catch (e) {
@@ -113,7 +114,8 @@ export default class DSToolkit {
         }
     }
 
-    async getUIValues(type: string, serviceName: string = "process") {
+    async getUIValues(type: "inputFields" | "checkBoxes" | "buttons" | "fileinputs" | "selects",
+                      serviceName: string = "process") : Promise<{[uiElemName: string] : any}> {
         // todo: add to docs
         let uiElements
         if (serviceName === "process") {
@@ -132,7 +134,10 @@ export default class DSToolkit {
         return results
     }
 
-    register_node(id: string, label: string, type: NodeType, destinations: {dest: string, props: object}[] = [], props?: {
+    register_node(id: string, label: string, type: NodeType, destinations: {
+        dest: string,
+        props: object
+    }[] = [], props?: {
         [propName: string]: object | string | number | null
     }): string {
         const full_id = `${type}_${id}`

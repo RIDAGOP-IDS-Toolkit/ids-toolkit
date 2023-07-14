@@ -90,15 +90,15 @@ export type ProcessServiceUIType = {
     inputFields?: {
         [fieldName: string]: ServiceInputFieldsType
     }
-
     selects?: {
         [fieldName: string]: SelectType
     }
     checkBoxes?: {
         [fieldName: string]: ServiceCheckboxType
     }
+    // for ProcessCommonButtonType
     buttons?: {
-        [fieldName: string]: ProcessServiceButtonType
+        [fieldName: string]: ProcessServiceButtonType | ProcessCommonButtonType
     }
     fileInputs?: {
         [fileInputdName: string]: ProcessServiceFileInputType
@@ -175,6 +175,7 @@ export type ResultStoreType = {
 
 export type ProcessCommonsType = {
     description?: string
+    // todo: it is not reflected in the schema, that all ui elements can be defined, but only buttons.
     ui?: ProcessServiceUIType,
     activities?: { [activityName: string]: (ProcessServiceActivityType | ActivityReferenceType) }
     sequences?: { [sequenceName: string]: ProcessServiceSequenceType }

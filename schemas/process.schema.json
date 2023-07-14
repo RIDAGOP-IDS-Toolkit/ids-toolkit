@@ -126,7 +126,7 @@
         },
         "autostart": {
           "description": "Activities that are started on page load",
-          "anyOf": [
+          "oneOf": [
             {
               "type": "string",
               "description": "One activity name"
@@ -252,8 +252,24 @@
           "$comment": "(name of the moduleFunction. Throwing a Error with cause 'cancel' will cancel the activity"
         },
         "bridgeCapability": {
-          "$ref": "capabilities_list.schema.json",
-          "description": "The name of the bridge capability that is used to execute the activity."
+          "description": "The name of the bridge capability that is used to execute the activity.",
+          "anyOf": [
+            {
+              "propertyNames": {
+                "$ref": "capabilities_list.schema.json"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            {
+              "patternProperties": {
+                "^_.*$": {
+                  "type": "string"
+                }
+              }
+            }
+          ]
         },
         "moduleFunction": {
           "type": "string",
@@ -411,8 +427,24 @@
               "description": "The user visible title of the activity."
             },
             "bridgeCapability": {
-              "$ref": "capabilities_list.schema.json",
-              "description": "The name of the bridge capability that is used to execute the activity."
+              "description": "The name of the bridge capability that is used to execute the activity.",
+              "anyOf": [
+                {
+                  "propertyNames": {
+                    "$ref": "capabilities_list.schema.json"
+                  },
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "patternProperties": {
+                    "^_.*$": {
+                      "type": "string"
+                    }
+                  }
+                }
+              ]
             }
           },
           "required": [
@@ -617,8 +649,24 @@
               "$comment": "(name of the moduleFunction. Throwing a Error with cause 'cancel' will cancel the activity"
             },
             "bridgeCapability": {
-              "$ref": "capabilities_list.schema.json",
-              "description": "The name of the bridge capability that is used to execute the activity."
+              "description": "The name of the bridge capability that is used to execute the activity.",
+              "anyOf": [
+                {
+                  "propertyNames": {
+                    "$ref": "capabilities_list.schema.json"
+                  },
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "patternProperties": {
+                    "^_.*$": {
+                      "type": "string"
+                    }
+                  }
+                }
+              ]
             },
             "moduleFunction": {
               "type": "string",
@@ -741,8 +789,24 @@
                   "description": "The title of the activity."
                 },
                 "bridgeCapability": {
-                  "$ref": "capabilities_list.schema.json",
-                  "description": "The bridge-capability that is used for this activity."
+                  "description": "The bridge-capability that is used for this activity.",
+                  "anyOf": [
+                    {
+                      "propertyNames": {
+                        "$ref": "capabilities_list.schema.json"
+                      },
+                      "additionalProperties": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "patternProperties": {
+                        "^_.*$": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  ]
                 }
               },
               "required": [
@@ -792,7 +856,7 @@
               "type": "object",
               "description": "Sub-activities are activities that are executed after this parent activity is executed.",
               "additionalProperties": {
-                "oneOf": [
+                "anyOf": [
                   {
                     "description": "A normal activity.",
                     "$ref": "#/$defs/P-Activity"
@@ -905,8 +969,24 @@
           "description": "Generate a value based on an activity.",
           "properties": {
             "bridgeCapability": {
-              "type": "string",
-              "description": "The name of the bridge capability that is used to execute the activity."
+              "description": "The name of the bridge capability that is used to execute the activity.",
+              "anyOf": [
+                {
+                  "propertyNames": {
+                    "$ref": "capabilities_list.schema.json"
+                  },
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "patternProperties": {
+                    "^_.*$": {
+                      "type": "string"
+                    }
+                  }
+                }
+              ]
             },
             "moduleFunction": {
               "type": "string",
@@ -936,6 +1016,66 @@
         }
       },
       "additionalProperties": false
+    },
+    "P-BridgeDefinition": {
+      "type": "object",
+      "description": "The bridge definition, containing the source (either uri or the whole instance) and some additional properties.",
+      "properties": {
+        "source": {
+          "$ref": "#/$defs/P-ServiceBridge",
+          "description": "The source (uri or instance)"
+        },
+        "server": {
+          "$ref": "#/$defs/P-BridgeServerHost",
+          "description": "The server host of this service bridge."
+        },
+        "authorization": {
+          "type": "object",
+          "description": "From where to take the authorization code for OpenAPI bridge. Usually a API/Auth-Token",
+          "additionalProperties": {
+            "oneOf": [
+              {
+                "type": "string",
+                "description": "A constant value that contains the token (Only recommended for testing purposes)."
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "field": {
+                    "type": "string",
+                    "description": "A field (Inputfield UI-Element) that contains the token."
+                  }
+                },
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "queryParam": {
+                    "type": "string",
+                    "description": "A URL-query parameter that contains the token."
+                  }
+                },
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "constant": {
+                    "type": "string",
+                    "description": "A constant value that contains the token (Only recommended for testing purposes)."
+                  }
+                },
+                "additionalProperties": false
+              }
+            ]
+          }
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "source"
+      ]
     },
     "P-ServiceBridge": {
       "type": "object",
@@ -978,63 +1118,6 @@
         }
       ],
       "additionalProperties": false
-    },
-    "P-BridgeDefinition": {
-      "type": "object",
-      "description": "The bridge definition, containing the source (either uri or the whole instance) and some additional properties.",
-      "properties": {
-        "source": {
-          "$ref": "#/$defs/P-ServiceBridge",
-          "description": "The source (uri or instance)"
-        },
-        "server": {
-          "$ref": "#/$defs/P-BridgeServerHost",
-          "description": "The server host of this service bridge."
-        },
-        "authorization": {
-          "type": "object",
-          "description": "From where to take the authorization code for OpenAPI bridge. Usually a API/Auth-Token",
-          "additionalProperties": {
-            "anyOf": [
-              {
-                "type": "string",
-                "description": "A constant value that contains the token (Only recommended for testing purposes)."
-              },
-              {
-                "type": "object",
-                "properties": {
-                  "field": {
-                    "type": "string",
-                    "description": "A field (Inputfield UI-Element) that contains the token."
-                  }
-                }
-              },
-              {
-                "type": "object",
-                "properties": {
-                  "queryParam": {
-                    "type": "string",
-                    "description": "A URL-query parameter that contains the token."
-                  }
-                }
-              },
-              {
-                "type": "object",
-                "properties": {
-                  "constant": {
-                    "type": "string",
-                    "description": "A constant value that contains the token (Only recommended for testing purposes)."
-                  }
-                }
-              }
-            ]
-          }
-        }
-      },
-      "additionalProperties": false,
-      "required": [
-        "source"
-      ]
     },
     "P-BridgeServerHost": {
       "$comment": "taken from process.schema.json#$defs.parameters.additionalProperties.properties",

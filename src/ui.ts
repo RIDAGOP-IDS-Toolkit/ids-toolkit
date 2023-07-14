@@ -88,7 +88,7 @@ export function createCommonContainer(processPage: ProcessPage): HTMLDivElement 
     const description_elem = document.createElement("p")
     const pCommonData = processPage.process.getCommonData()
     const ppCommonData = processPage.getCommonData()
-    console.log(ppCommonData)
+    // console.log(ppCommonData)
     description_elem.innerText = pCommonData?.description || ppCommonData.description || ""
 
     commonContainer.appendChild(description_elem)
