@@ -3,7 +3,6 @@ import toolkit_schema from '../schemas/ridagop-toolkit.schema.json'
 import addFormats from "ajv-formats"
 import isEmpty from "lodash/isEmpty"
 import {ProcessServiceUIType} from "./data_types/ProcessTypes";
-import {getToolkit} from "./models/tk_model";
 import { AnyValidateFunction } from "ajv/dist/types";
 
 
