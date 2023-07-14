@@ -40,51 +40,23 @@
       "type": "object",
       "$comment": "todo: the EITHER OR DEFINITION with required...",
       "description": "Defines the capabilities of the bridge.",
-      "additionalProperties": {
-        "type": "object",
-        "description": "Each name defines a capability. The allowed names are defined in the capabilities_names_list.json file.",
-        "properties": {
-          "operation": {
-            "description": "Specifies an OpenAPI operation that should be executed.",
-            "$ref": "#/$defs/B-Operation"
+      "anyOf": [
+        {
+          "propertyNames": {
+            "$ref": "capabilities_list.schema.json"
           },
-          "functionName": {
-            "description": "Specifies the name of the function (in case of a client library).",
-            "type": "string"
-          },
-          "postProcess": {
-            "$comment": "function in the supportModule. Not sure if this is implemented /DOCS-IGNORE",
-            "type": "string"
+          "additionalProperties": {
+            "$ref": "#/$defs/Capability"
           }
         },
-        "anyOf": [
-          {
-            "properties": {
-              "operation": {
-                "$comment": "in case OpenAPI ",
-                "$ref": "#/$defs/B-Operation"
-              }
-            },
-            "required": [
-              "operation"
-            ]
-          },
-          {
-            "properties": {
-              "functionName": {
-                "$comment": "in case of a client library",
-                "type": "string"
-              }
-            },
-            "required": [
-              "functionName"
-            ]
+        {
+          "patternProperties": {
+            "^_.*$": {
+              "$ref": "#/$defs/Capability"
+            }
           }
-        ]
-      },
-      "propertyNames": {
-        "$ref": "capabilities_list.schema.json"
-      }
+        }
+      ]
     },
     "errorMessagePath": {
       "type": "string",
@@ -107,6 +79,48 @@
   ],
   "additionalProperties": false,
   "$defs": {
+    "Capability": {
+      "type": "object",
+      "description": "Each name defines a capability. The allowed names are defined in the capabilities_names_list.json file.",
+      "properties": {
+        "operation": {
+          "description": "Specifies an OpenAPI operation that should be executed.",
+          "$ref": "#/$defs/B-Operation"
+        },
+        "functionName": {
+          "description": "Specifies the name of the function (in case of a client library).",
+          "type": "string"
+        },
+        "postProcess": {
+          "$comment": "function in the supportModule. Not sure if this is implemented /DOCS-IGNORE",
+          "type": "string"
+        }
+      },
+      "anyOf": [
+        {
+          "properties": {
+            "operation": {
+              "$comment": "in case OpenAPI ",
+              "$ref": "#/$defs/B-Operation"
+            }
+          },
+          "required": [
+            "operation"
+          ]
+        },
+        {
+          "properties": {
+            "functionName": {
+              "$comment": "in case of a client library",
+              "type": "string"
+            }
+          },
+          "required": [
+            "functionName"
+          ]
+        }
+      ]
+    },
     "B-Operation": {
       "type": "object",
       "description": "Specifies an OpenAPI operation that is executed.",

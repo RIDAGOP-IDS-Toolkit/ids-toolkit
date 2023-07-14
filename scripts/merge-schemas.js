@@ -4,6 +4,8 @@ const project_dir = process.env.PWD
 const base_path = project_dir + "/../schemas/"
 
 const destinationPath = base_path + "ridagop-toolkit.schema.json"
+const destinationPath2 = project_dir + "/../public/data/schemas/ridagop-toolkit.schema.json"
+
 
 const files = [
     base_path + "bridge.schema.json",
@@ -110,6 +112,12 @@ const resultSchema = Object.assign({
 
 // write result to file
 writeFile(destinationPath, JSON.stringify(resultSchema, null, 2), (err) => {
+    if (err) {
+        console.error(err);
+    }
+});
+
+writeFile(destinationPath2, JSON.stringify(resultSchema, null, 2), (err) => {
     if (err) {
         console.error(err);
     }
